@@ -332,6 +332,14 @@ public class RayCastVisible : MonoBehaviour
         isMoving = false;
     }
 
+    private void OnEnable()
+    {
+        moveAlongArcAction.action.Enable();
+        moveAlongArcAction.action.performed += OnMoveAlongArcPerformed;
+        setRayLengthRollAction.action.Enable();
+        toggleArcVisibilityAction.action.Enable();
+    }
+
     private void OnDisable()
     {
         moveAlongArcAction.action.Disable();
