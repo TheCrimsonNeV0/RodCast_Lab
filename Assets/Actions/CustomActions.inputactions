@@ -1,0 +1,74 @@
+{
+    "name": "CustomActions",
+    "maps": [
+        {
+            "name": "Custom",
+            "id": "6efffe53-28ff-428f-93d7-f0bef888e172",
+            "actions": [
+                {
+                    "name": "rightHandPrimary",
+                    "type": "Button",
+                    "id": "b99cf432-d6a3-423f-addf-1ab7b5925e1f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "rightHandSecondary",
+                    "type": "Button",
+                    "id": "ac275d30-f91a-481b-bce1-19adfd10bad6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "rightHandTrigger",
+                    "type": "Button",
+                    "id": "0d455038-db6b-4a25-afde-9c30dd8ae31c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e33983b0-cc0c-47bd-a6ef-d04e14996d52",
+                    "path": "<XRController>{RightHand}/{PrimaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "rightHandPrimary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "564e6ce2-5183-465c-93e0-1366e4ddc084",
+                    "path": "<XRController>{RightHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "rightHandSecondary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b47a5391-4100-49a4-8e1a-cf7d787a442b",
+                    "path": "<XRController>{RightHand}/{TriggerButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "rightHandTrigger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
