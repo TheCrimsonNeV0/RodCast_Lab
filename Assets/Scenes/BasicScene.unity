@@ -509,7 +509,7 @@ MonoBehaviour:
   maxSineAmplitude: 3
   rotationSensitivity: 0.2
   positionSensitivity: 3
-  arcRotationOffsetSensitivity: 0.5
+  arcRotationOffsetSensitivity: 0.7
   rotation: {x: 0, y: 0, z: 0, w: 1}
   travelSpeed: 5
   moveAlongArcAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}

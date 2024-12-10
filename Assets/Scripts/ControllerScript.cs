@@ -58,7 +58,12 @@ public class RayCastVisible : MonoBehaviour
     private float positionOffset = 0f; // Current position offset
 
     private float left_lastPositionX = 0f;
-    private float left_positionOffset = 0f;
+    private float left_lastPositionY = 0f;
+    private float left_lastPositionZ = 0f;
+
+    private float left_positionOffsetX = 0f;
+    private float left_positionOffsetY = 0f;
+    private float left_positionOffsetZ = 0f;
 
     void Start()
     {
@@ -109,7 +114,9 @@ public class RayCastVisible : MonoBehaviour
         setRayRotation_Left.action.performed += context =>
         {
             left_lastPositionX = leftController.transform.position.x;
-};
+            left_lastPositionY = leftController.transform.position.y;
+            left_lastPositionZ = leftController.transform.position.z;
+        };
     }
 
     void Update()
@@ -126,6 +133,7 @@ public class RayCastVisible : MonoBehaviour
         else if (isArcVisible && !isMoving && isAdjusting_Left)
         {
             AdjustArcRotation_Left(leftController);
+            AdjustSineAmplitude_Left(leftController);
         }
 
         if (isArcVisible && !isMoving)
@@ -140,6 +148,8 @@ public class RayCastVisible : MonoBehaviour
         lastRotationZ = transform.rotation.eulerAngles.z;
         lastPositionY = transform.position.y;
         left_lastPositionX = leftController.transform.position.x;
+        left_lastPositionY = leftController.transform.position.y;
+        left_lastPositionZ = leftController.transform.position.z;
     }
 
     ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC START /////////////////////////////////////////
@@ -205,20 +215,46 @@ public class RayCastVisible : MonoBehaviour
 
     void AdjustArcRotation_Left(GameObject controller)
     {
-        left_positionOffset = ParsePositionOffset_Left(controller.transform.position.x);
+        left_positionOffsetX = ParsePositionX_Left(controller.transform.position.x);
 
-        if (left_positionOffset != 0)
+        if (left_positionOffsetX != 0)
         {
-            Debug.Log(left_positionOffset);
-            rotation = new Quaternion(rotation.x, rotation.y + arcRotationOffsetSensitivity * left_positionOffset, rotation.z, rotation.w);
+            Debug.Log(left_positionOffsetX);
+            rotation = new Quaternion(rotation.x, rotation.y + arcRotationOffsetSensitivity * left_positionOffsetX, rotation.z, rotation.w);
             sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
     }
 
-    float ParsePositionOffset_Left(float currentPositionX)
+    float ParsePositionX_Left(float currentPositionX)
     {
         float positionDifference = currentPositionX - left_lastPositionX;
         left_lastPositionX = currentPositionX;
+        return positionDifference;
+    }
+
+    void AdjustSineAmplitude_Left(GameObject controller)
+    {
+        // Calculate the difference in the Y position
+        left_positionOffsetY = ParsePositionY_Left(controller.transform.position.y);
+
+        // Adjust the sine amplitude based on the position offset
+        if (left_positionOffsetY != 0)
+        {
+            Debug.Log(left_positionOffsetY);
+            sineAmplitude += positionSensitivity * left_positionOffsetY;
+            sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
+        }
+    }
+
+    float ParsePositionY_Left(float currentPositionY)
+    {
+        // Calculate the difference in position
+        float positionDifference = currentPositionY - left_lastPositionY;
+
+        // Update lastPositionY for the next frame
+        left_lastPositionY = currentPositionY;
+
+        // Return the position offset (positive for upward, negative for downward)
         return positionDifference;
     }
 
