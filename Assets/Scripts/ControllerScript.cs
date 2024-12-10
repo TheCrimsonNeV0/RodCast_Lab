@@ -134,6 +134,7 @@ public class RayCastVisible : MonoBehaviour
         {
             AdjustArcRotation_Left(leftController);
             AdjustSineAmplitude_Left(leftController);
+            AdjustRayLength_Left(leftController);
         }
 
         if (isArcVisible && !isMoving)
@@ -219,7 +220,7 @@ public class RayCastVisible : MonoBehaviour
 
         if (left_positionOffsetX != 0)
         {
-            Debug.Log(left_positionOffsetX);
+            // Debug.Log(left_positionOffsetX);
             rotation = new Quaternion(rotation.x, rotation.y + arcRotationOffsetSensitivity * left_positionOffsetX, rotation.z, rotation.w);
             sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
@@ -240,7 +241,7 @@ public class RayCastVisible : MonoBehaviour
         // Adjust the sine amplitude based on the position offset
         if (left_positionOffsetY != 0)
         {
-            Debug.Log(left_positionOffsetY);
+            // Debug.Log(left_positionOffsetY);
             sineAmplitude += positionSensitivity * left_positionOffsetY;
             sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
@@ -248,13 +249,27 @@ public class RayCastVisible : MonoBehaviour
 
     float ParsePositionY_Left(float currentPositionY)
     {
-        // Calculate the difference in position
         float positionDifference = currentPositionY - left_lastPositionY;
-
-        // Update lastPositionY for the next frame
         left_lastPositionY = currentPositionY;
+        return positionDifference;
+    }
 
-        // Return the position offset (positive for upward, negative for downward)
+    void AdjustRayLength_Left(GameObject controller)
+    {
+        left_positionOffsetZ = ParsePositionZ_Left(controller.transform.rotation.z);
+
+        if (left_positionOffsetZ != 0)
+        {
+            Debug.Log(left_positionOffsetZ);
+            rayLength += positionSensitivity * 10 * left_positionOffsetZ;
+            rayLength = Mathf.Clamp(rayLength, minRayLength, maxRayLength);
+        }
+    }
+
+    float ParsePositionZ_Left(float currentPositionZ)
+    {
+        float positionDifference = currentPositionZ - left_lastPositionZ;
+        left_lastPositionZ = currentPositionZ;
         return positionDifference;
     }
 
