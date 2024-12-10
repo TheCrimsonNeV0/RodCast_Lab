@@ -494,6 +494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81e2afb9d6fe84b42a11aa73b1108c7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftController: {fileID: 647390466}
   rayLength: 5
   lineMaterial: {fileID: 2100000, guid: c1cece25cfa74e44fa6f7ad8630adc20, type: 2}
   lineMaterialNoHit: {fileID: 2100000, guid: 9bf64b01f38787549bb35625d8324db5, type: 2}
@@ -508,10 +509,13 @@ MonoBehaviour:
   maxSineAmplitude: 3
   rotationSensitivity: 0.2
   positionSensitivity: 3
+  arcRotationOffsetSensitivity: 0.5
+  rotation: {x: 0, y: 0, z: 0, w: 1}
   travelSpeed: 5
   moveAlongArcAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   setRayLengthRollAction: {fileID: 5984737789167544495, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   toggleArcVisibilityAction: {fileID: 7844728918808831619, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
+  setRayRotation_Left: {fileID: -15472980402651157, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
 --- !u!1001 &441087506
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -595,6 +599,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 313118135}
   m_SourcePrefab: {fileID: 100100000, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+--- !u!1 &647390466 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 202364687, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 441087506}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &756192406
 GameObject:
   m_ObjectHideFlags: 0

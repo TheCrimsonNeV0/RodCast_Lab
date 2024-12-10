@@ -2,9 +2,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System.Collections;
+using static UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics.HapticsUtility;
 
 public class RayCastVisible : MonoBehaviour
 {
+    public GameObject leftController;
+
     public float rayLength = 5.0f; // Length of the RayCast
     private LineRenderer lineRenderer;
     public Material lineMaterial;
@@ -29,15 +32,22 @@ public class RayCastVisible : MonoBehaviour
     public float rotationSensitivity = 0.1f; // How much the length changes with rotation
     public float positionSensitivity = 0.1f; // Sensitivity factor for adjusting amplitude
 
+    public float arcRotationOffsetSensitivity = 0.1f; // Sensitivity factor for adjusting amplitude
+
+    public Quaternion rotation = Quaternion.Euler(0, 0, 0);
+    private Vector3 rotatedDirection = new Vector3(0, 0, 0);
+
     private List<Vector3> pointsAlongLine = new List<Vector3>(); // To store arc points
     public float travelSpeed = 1.0f; // Speed of object movement along the arc
 
     private bool isMoving = false;
-    private bool isAdjustingLength = false;
+    private bool isAdjusting_Right = false;
+    private bool isAdjusting_Left = false;
 
     public InputActionReference moveAlongArcAction; // Reference to an Input Action for movement
     public InputActionReference setRayLengthRollAction; // Reference to an Input Action for setting the ray length
     public InputActionReference toggleArcVisibilityAction; // Reference to an Input Action for toggling the arc visibility
+    public InputActionReference setRayRotation_Left;
 
     private GameObject objectToMove; // The object that will be assigned based on the RayCast hit
 
@@ -47,10 +57,15 @@ public class RayCastVisible : MonoBehaviour
     private float lastPositionY = 0f; // Initialize with the starting Y position of the controller
     private float positionOffset = 0f; // Current position offset
 
+    private float left_lastPositionX = 0f;
+    private float left_positionOffset = 0f;
+
     void Start()
     {
         lastRotationZ = transform.rotation.eulerAngles.z;
         lastPositionY = transform.position.y;
+
+        rotatedDirection = rotation * transform.forward;
 
         // Get the LineRenderer component from the GameObject
         lineRenderer = GetComponent<LineRenderer>();
@@ -73,8 +88,8 @@ public class RayCastVisible : MonoBehaviour
         moveAlongArcAction.action.performed += OnMoveAlongArcPerformed;
 
         setRayLengthRollAction.action.Enable();
-        setRayLengthRollAction.action.started += context => isAdjustingLength = true; // Start adjusting length
-        setRayLengthRollAction.action.canceled += context => isAdjustingLength = false; // Stop adjusting length
+        setRayLengthRollAction.action.started += context => isAdjusting_Right = true; // Start adjusting length
+        setRayLengthRollAction.action.canceled += context => isAdjusting_Right = false; // Stop adjusting length
         setRayLengthRollAction.action.performed += context =>
         {
             lastRotationZ = transform.rotation.eulerAngles.z; // Reset the last rotation
@@ -87,17 +102,32 @@ public class RayCastVisible : MonoBehaviour
             isArcVisible = !isArcVisible;
             lineRenderer.enabled = isArcVisible;
         };
+
+        setRayRotation_Left.action.Enable();
+        setRayRotation_Left.action.started += context => isAdjusting_Left = true; // Start adjusting length
+        setRayRotation_Left.action.canceled += context => isAdjusting_Left = false; // Stop adjusting length
+        setRayRotation_Left.action.performed += context =>
+        {
+            left_lastPositionX = leftController.transform.position.x;
+};
     }
 
     void Update()
     {
+        rotatedDirection = rotation * transform.forward;
+
         DrawRayCast();
 
-        if (isArcVisible && !isMoving && isAdjustingLength)
+        if (isArcVisible && !isMoving && isAdjusting_Right)
         {
             AdjustRayLength();
             AdjustSineAmplitude();
         }
+        else if (isArcVisible && !isMoving && isAdjusting_Left)
+        {
+            AdjustArcRotation_Left(leftController);
+        }
+
         if (isArcVisible && !isMoving)
         {
             bool isHitObject = RaycastHitObject() && 0 < CheckPointsWithinObject(); // Checks if the move can be started
@@ -109,6 +139,7 @@ public class RayCastVisible : MonoBehaviour
     {
         lastRotationZ = transform.rotation.eulerAngles.z;
         lastPositionY = transform.position.y;
+        left_lastPositionX = leftController.transform.position.x;
     }
 
     ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC START /////////////////////////////////////////
@@ -172,6 +203,25 @@ public class RayCastVisible : MonoBehaviour
         return positionDifference;
     }
 
+    void AdjustArcRotation_Left(GameObject controller)
+    {
+        left_positionOffset = ParsePositionOffset_Left(controller.transform.position.x);
+
+        if (left_positionOffset != 0)
+        {
+            Debug.Log(left_positionOffset);
+            rotation = new Quaternion(rotation.x, rotation.y + arcRotationOffsetSensitivity * left_positionOffset, rotation.z, rotation.w);
+            sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
+        }
+    }
+
+    float ParsePositionOffset_Left(float currentPositionX)
+    {
+        float positionDifference = currentPositionX - left_lastPositionX;
+        left_lastPositionX = currentPositionX;
+        return positionDifference;
+    }
+
     ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC END /////////////////////////////////////////
 
     void DrawRayCast()
@@ -182,8 +232,8 @@ public class RayCastVisible : MonoBehaviour
         // Define the start point of the RayCast as the position of the castingObject
         startPoint = transform.position;
 
-        // Define the end point of the RayCast
-        endPoint = startPoint + transform.forward * rayLength;
+        // Calculate the endPoint using the rotated direction
+        Vector3 endPoint = startPoint + rotatedDirection * rayLength;
 
         // Set the positions in the LineRenderer to make the RayCast visible
         lineRenderer.SetPosition(0, startPoint);
@@ -198,6 +248,9 @@ public class RayCastVisible : MonoBehaviour
         pointsAlongLine.Clear(); // Clear previous points
         lineRenderer.positionCount = arcSegments + 1; // Set the correct number of points
 
+        // Define the rotation offset
+        Quaternion arcRotation = Quaternion.Euler(0, rotation.eulerAngles.y, 0);
+
         // Loop through each segment to calculate the sine wave points
         for (int i = 0; i <= arcSegments; i++)
         {
@@ -207,6 +260,9 @@ public class RayCastVisible : MonoBehaviour
             // Apply the sine wave offset along the Y axis
             float arcOffset = Mathf.Sin(Mathf.PI * t * sineFrequency) * sineAmplitude;
             Vector3 arcPoint = pointAlongLine + Vector3.up * arcOffset; // Apply sine wave to Y
+
+            // Apply rotation to the arc point
+            arcPoint = arcRotation * arcPoint;
 
             // Transform the point to world space from local space
             arcPoint = transform.TransformPoint(arcPoint);
@@ -219,7 +275,7 @@ public class RayCastVisible : MonoBehaviour
 
     bool RaycastHitObject()
     {
-        RaycastHit[] hits = Physics.RaycastAll(startPoint, transform.forward, rayLength);
+        RaycastHit[] hits = Physics.RaycastAll(startPoint, rotatedDirection, rayLength);
         if (hits.Length > 0)
         {
             float maxDistance = 0;
@@ -250,7 +306,7 @@ public class RayCastVisible : MonoBehaviour
     {
         Debug.Log("Move Along Arc action performed"); // Debugging check
         // Trigger movement only if not already moving and an object is hit by RayCast
-        if (isArcVisible && !isMoving && !isAdjustingLength && RaycastHitObject())
+        if (isArcVisible && !isMoving && !isAdjusting_Right && RaycastHitObject())
         {
             int pointsInsideObject = CheckPointsWithinObject();
             Debug.Log("Number of points inside the object: " + pointsInsideObject);
