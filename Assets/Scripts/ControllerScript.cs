@@ -162,7 +162,6 @@ public class RayCastVisible : MonoBehaviour
         rotationOffset = ParseRotationOffset(transform.rotation.eulerAngles.z);
         if (rotationOffset != 0)
         {
-            Debug.Log(rotationOffset);
             rayLength += rotationSensitivity * rotationOffset;
             rayLength = Mathf.Clamp(rayLength, minRayLength, maxRayLength);
         }
@@ -198,7 +197,6 @@ public class RayCastVisible : MonoBehaviour
         // Adjust the sine amplitude based on the position offset
         if (positionOffset != 0)
         {
-            Debug.Log(positionOffset);
             sineAmplitude += positionSensitivity * positionOffset;
             sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
@@ -244,7 +242,6 @@ public class RayCastVisible : MonoBehaviour
         // Adjust the sine amplitude based on the position offset
         if (left_positionOffsetY != 0)
         {
-            // Debug.Log(left_positionOffsetY);
             sineAmplitude += positionSensitivity * left_positionOffsetY;
             sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
@@ -264,7 +261,6 @@ public class RayCastVisible : MonoBehaviour
 
         if (left_positionOffsetZ != 0)
         {
-            Debug.Log(left_positionOffsetZ);
             rayLength += positionSensitivity_Left * left_positionOffsetZ;
             rayLength = Mathf.Clamp(rayLength, minRayLength, maxRayLength);
         }
