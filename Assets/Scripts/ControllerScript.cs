@@ -45,11 +45,13 @@ public class RayCastVisible : MonoBehaviour
     private bool isMoving = false;
     private bool isAdjusting_Right = false;
     private bool isAdjusting_Left = false;
+    private bool isHolding = false;
 
     public InputActionReference moveAlongArcAction; // Reference to an Input Action for movement
     public InputActionReference setRayLengthRollAction; // Reference to an Input Action for setting the ray length
     public InputActionReference toggleArcVisibilityAction; // Reference to an Input Action for toggling the arc visibility
     public InputActionReference setRayRotation_Left;
+    public InputActionReference holdObjectAction;
 
     private GameObject objectToMove; // The object that will be assigned based on the RayCast hit
 
@@ -66,6 +68,8 @@ public class RayCastVisible : MonoBehaviour
     private float left_positionOffsetX = 0f;
     private float left_positionOffsetY = 0f;
     private float left_positionOffsetZ = 0f;
+
+    private Transform originalParent;
 
     void Start()
     {
@@ -119,6 +123,10 @@ public class RayCastVisible : MonoBehaviour
             left_lastPositionY = leftController.transform.position.y;
             left_lastPositionZ = leftController.transform.position.z;
         };
+
+        holdObjectAction.action.Enable();
+        holdObjectAction.action.started += AnchorObject;
+        holdObjectAction.action.canceled += ReleaseAnchor;
     }
 
     void Update()
@@ -153,6 +161,37 @@ public class RayCastVisible : MonoBehaviour
         left_lastPositionX = leftController.transform.position.x;
         left_lastPositionY = leftController.transform.position.y;
         left_lastPositionZ = leftController.transform.position.z;
+    }
+
+    void AnchorObject(InputAction.CallbackContext context)
+    {
+        // TODO: Add dynamic position calculation for the project
+        bool isHitObject = RaycastHitObject() && 0 < CheckPointsWithinObject();
+        if (isHitObject)
+        {
+            originalParent = objectToMove.transform.parent;
+            objectToMove.transform.SetParent(transform);
+            Rigidbody temp_rb = objectToMove.GetComponent<Rigidbody>();
+            if (temp_rb != null)
+            {
+                temp_rb.isKinematic = true; // Make object static while grabbed
+            }
+        }
+    }
+
+    void ReleaseAnchor(InputAction.CallbackContext context)
+    {
+        if (objectToMove != null)
+        {
+            Rigidbody temp_rb = objectToMove.GetComponent<Rigidbody>();
+            if (temp_rb != null)
+            {
+                temp_rb.isKinematic = false; // Restore physics
+            }
+
+            objectToMove.transform.SetParent(originalParent); // Restore parent
+            objectToMove = null;
+        }
     }
 
     ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC START /////////////////////////////////////////
@@ -293,7 +332,7 @@ public class RayCastVisible : MonoBehaviour
         startPoint = transform.position;
 
         // Calculate the endPoint using the rotated direction
-        Vector3 endPoint = startPoint + rotatedDirection * rayLength;
+        endPoint = startPoint + rotatedDirection * rayLength;
 
         // Set the positions in the LineRenderer to make the RayCast visible
         lineRenderer.SetPosition(0, startPoint);
