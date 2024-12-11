@@ -32,6 +32,8 @@ public class RayCastVisible : MonoBehaviour
     public float rotationSensitivity = 0.1f; // How much the length changes with rotation
     public float positionSensitivity = 0.1f; // Sensitivity factor for adjusting amplitude
 
+    public float positionSensitivity_Left = 1f; // Sensitivity factor for adjusting amplitude
+
     public float arcRotationOffsetSensitivity = 0.1f; // Sensitivity factor for adjusting amplitude
 
     public Quaternion rotation = Quaternion.Euler(0, 0, 0);
@@ -134,7 +136,7 @@ public class RayCastVisible : MonoBehaviour
         {
             AdjustArcRotation_Left(leftController);
             AdjustSineAmplitude_Left(leftController);
-            // AdjustRayLength_Left(leftController);
+            AdjustRayLength_Left(leftController);
         }
 
         if (isArcVisible && !isMoving)
@@ -257,22 +259,28 @@ public class RayCastVisible : MonoBehaviour
 
     void AdjustRayLength_Left(GameObject controller)
     {
-        left_positionOffsetZ = ParsePositionZ_Left(controller.transform.rotation.z);
+
+        left_positionOffsetZ = ParsePositionZ_Left(controller.transform.position.z);
 
         if (left_positionOffsetZ != 0)
         {
             Debug.Log(left_positionOffsetZ);
-            rayLength += positionSensitivity * 10 * left_positionOffsetZ;
+            rayLength += positionSensitivity_Left * left_positionOffsetZ;
             rayLength = Mathf.Clamp(rayLength, minRayLength, maxRayLength);
         }
     }
 
     float ParsePositionZ_Left(float currentPositionZ)
     {
+        // Calculate the difference in Z position
         float positionDifference = currentPositionZ - left_lastPositionZ;
+
+        // Update the last known position
         left_lastPositionZ = currentPositionZ;
+
         return positionDifference;
     }
+
 
     ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC END /////////////////////////////////////////
 
@@ -446,6 +454,7 @@ public class RayCastVisible : MonoBehaviour
         moveAlongArcAction.action.performed += OnMoveAlongArcPerformed;
         setRayLengthRollAction.action.Enable();
         toggleArcVisibilityAction.action.Enable();
+        setRayRotation_Left.action.Enable();
     }
 
     private void OnDisable()
@@ -454,5 +463,6 @@ public class RayCastVisible : MonoBehaviour
         moveAlongArcAction.action.performed -= OnMoveAlongArcPerformed;
         setRayLengthRollAction.action.Disable();
         toggleArcVisibilityAction.action.Disable();
+        setRayRotation_Left.action.Disable();
     }
 }
