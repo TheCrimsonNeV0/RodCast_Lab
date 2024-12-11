@@ -134,7 +134,7 @@ public class RayCastVisible : MonoBehaviour
         {
             AdjustArcRotation_Left(leftController);
             AdjustSineAmplitude_Left(leftController);
-            AdjustRayLength_Left(leftController);
+            // AdjustRayLength_Left(leftController);
         }
 
         if (isArcVisible && !isMoving)
@@ -220,8 +220,8 @@ public class RayCastVisible : MonoBehaviour
 
         if (left_positionOffsetX != 0)
         {
-            // Debug.Log(left_positionOffsetX);
-            rotation = new Quaternion(rotation.x, rotation.y + arcRotationOffsetSensitivity * left_positionOffsetX, rotation.z, rotation.w);
+            float rotationChange = arcRotationOffsetSensitivity * left_positionOffsetX;
+            rotation = new Quaternion(rotation.x, rotation.y + rotationChange, rotation.z, rotation.w);
             sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
     }
@@ -232,6 +232,7 @@ public class RayCastVisible : MonoBehaviour
         left_lastPositionX = currentPositionX;
         return positionDifference;
     }
+
 
     void AdjustSineAmplitude_Left(GameObject controller)
     {
@@ -334,17 +335,17 @@ public class RayCastVisible : MonoBehaviour
 
             foreach (var hit in hits)
             {
-                if (hit.collider.CompareTag(NonInteractableMaterial))
-                {
-                    return false;
-                }
-
                 float distance = Vector3.Distance(startPoint, hit.point);
                 if (distance > maxDistance)
                 {
                     maxDistance = distance;
                     farthestHit = hit;
                 }
+            }
+
+            if (farthestHit.collider.CompareTag(NonInteractableMaterial))
+            {
+                return false;
             }
 
             objectToMove = farthestHit.collider.gameObject; // Get the farthest object
