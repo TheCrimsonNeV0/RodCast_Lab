@@ -32,6 +32,8 @@ public class RayCastVisible : MonoBehaviour
     public float rotationSensitivity = 0.1f; // How much the length changes with rotation
     public float positionSensitivity = 0.1f; // Sensitivity factor for adjusting amplitude
 
+    public float positionSensitivity_Left = 1f; // Sensitivity factor for adjusting amplitude
+
     public float arcRotationOffsetSensitivity = 0.1f; // Sensitivity factor for adjusting amplitude
 
     public Quaternion rotation = Quaternion.Euler(0, 0, 0);
@@ -134,6 +136,7 @@ public class RayCastVisible : MonoBehaviour
         {
             AdjustArcRotation_Left(leftController);
             AdjustSineAmplitude_Left(leftController);
+            AdjustRayLength_Left(leftController);
         }
 
         if (isArcVisible && !isMoving)
@@ -219,8 +222,8 @@ public class RayCastVisible : MonoBehaviour
 
         if (left_positionOffsetX != 0)
         {
-            Debug.Log(left_positionOffsetX);
-            rotation = new Quaternion(rotation.x, rotation.y + arcRotationOffsetSensitivity * left_positionOffsetX, rotation.z, rotation.w);
+            float rotationChange = arcRotationOffsetSensitivity * left_positionOffsetX;
+            rotation = new Quaternion(rotation.x, rotation.y + rotationChange, rotation.z, rotation.w);
             sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
     }
@@ -232,6 +235,7 @@ public class RayCastVisible : MonoBehaviour
         return positionDifference;
     }
 
+
     void AdjustSineAmplitude_Left(GameObject controller)
     {
         // Calculate the difference in the Y position
@@ -240,7 +244,7 @@ public class RayCastVisible : MonoBehaviour
         // Adjust the sine amplitude based on the position offset
         if (left_positionOffsetY != 0)
         {
-            Debug.Log(left_positionOffsetY);
+            // Debug.Log(left_positionOffsetY);
             sineAmplitude += positionSensitivity * left_positionOffsetY;
             sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
@@ -248,15 +252,35 @@ public class RayCastVisible : MonoBehaviour
 
     float ParsePositionY_Left(float currentPositionY)
     {
-        // Calculate the difference in position
         float positionDifference = currentPositionY - left_lastPositionY;
-
-        // Update lastPositionY for the next frame
         left_lastPositionY = currentPositionY;
-
-        // Return the position offset (positive for upward, negative for downward)
         return positionDifference;
     }
+
+    void AdjustRayLength_Left(GameObject controller)
+    {
+
+        left_positionOffsetZ = ParsePositionZ_Left(controller.transform.position.z);
+
+        if (left_positionOffsetZ != 0)
+        {
+            Debug.Log(left_positionOffsetZ);
+            rayLength += positionSensitivity_Left * left_positionOffsetZ;
+            rayLength = Mathf.Clamp(rayLength, minRayLength, maxRayLength);
+        }
+    }
+
+    float ParsePositionZ_Left(float currentPositionZ)
+    {
+        // Calculate the difference in Z position
+        float positionDifference = currentPositionZ - left_lastPositionZ;
+
+        // Update the last known position
+        left_lastPositionZ = currentPositionZ;
+
+        return positionDifference;
+    }
+
 
     ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC END /////////////////////////////////////////
 
@@ -319,17 +343,17 @@ public class RayCastVisible : MonoBehaviour
 
             foreach (var hit in hits)
             {
-                if (hit.collider.CompareTag(NonInteractableMaterial))
-                {
-                    return false;
-                }
-
                 float distance = Vector3.Distance(startPoint, hit.point);
                 if (distance > maxDistance)
                 {
                     maxDistance = distance;
                     farthestHit = hit;
                 }
+            }
+
+            if (farthestHit.collider.CompareTag(NonInteractableMaterial))
+            {
+                return false;
             }
 
             objectToMove = farthestHit.collider.gameObject; // Get the farthest object
@@ -430,6 +454,7 @@ public class RayCastVisible : MonoBehaviour
         moveAlongArcAction.action.performed += OnMoveAlongArcPerformed;
         setRayLengthRollAction.action.Enable();
         toggleArcVisibilityAction.action.Enable();
+        setRayRotation_Left.action.Enable();
     }
 
     private void OnDisable()
@@ -438,5 +463,6 @@ public class RayCastVisible : MonoBehaviour
         moveAlongArcAction.action.performed -= OnMoveAlongArcPerformed;
         setRayLengthRollAction.action.Disable();
         toggleArcVisibilityAction.action.Disable();
+        setRayRotation_Left.action.Disable();
     }
 }
