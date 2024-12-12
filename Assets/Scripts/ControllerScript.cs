@@ -153,7 +153,7 @@ public class RayCastVisible : MonoBehaviour
 
         DrawRayCast();
 
-        // TODO: Test if the logic works
+        // TODO: Store left hand anchor value in a different variable and do not check RayCast to start the coroutine if left hand anchor is not null
         if (isArcVisible && !isMoving)
         {
             if (!isHoldingInHand && heldObject != null)
@@ -413,10 +413,10 @@ public class RayCastVisible : MonoBehaviour
                 reversedPoints.Reverse();
 
                 // Calculate the number of points in the first half
-                int quarterCount = reversedPoints.Count / 2;
+                int thresholdCount = reversedPoints.Count / 2;
 
-                // Loop through the first quarter of the reversed points
-                for (int i = 0; i < quarterCount; i++)
+                // Loop through the desired number of the reversed points
+                for (int i = 0; i < thresholdCount; i++)
                 {
                     if (objectCollider.bounds.Contains(reversedPoints[i]))
                     {
