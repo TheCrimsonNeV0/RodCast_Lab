@@ -125,8 +125,8 @@ public class RayCastVisible : MonoBehaviour
         };
 
         holdObjectAction.action.Enable();
-        holdObjectAction.action.started += AnchorObject;
-        holdObjectAction.action.canceled += ReleaseAnchor;
+        holdObjectAction.action.started += context => isHolding = true;
+        holdObjectAction.action.canceled += context => isHolding = false;
     }
 
     void Update()
@@ -135,16 +135,24 @@ public class RayCastVisible : MonoBehaviour
 
         DrawRayCast();
 
-        if (isArcVisible && !isMoving && isAdjusting_Right)
+        if (isArcVisible && !isMoving)
         {
-            AdjustRayLength();
-            AdjustSineAmplitude();
-        }
-        else if (isArcVisible && !isMoving && isAdjusting_Left)
-        {
-            AdjustArcRotation_Left(leftController);
-            AdjustSineAmplitude_Left(leftController);
-            AdjustRayLength_Left(leftController);
+            if (isHolding && objectToMove != null)
+            {
+                objectToMove.transform.position = endPoint;
+            }
+
+            if (isAdjusting_Right)
+            {
+                AdjustRayLength();
+                AdjustSineAmplitude();
+            }
+            else if (isAdjusting_Left)
+            {
+                AdjustArcRotation_Left(leftController);
+                AdjustSineAmplitude_Left(leftController);
+                AdjustRayLength_Left(leftController);
+            }
         }
 
         if (isArcVisible && !isMoving)
@@ -398,6 +406,7 @@ public class RayCastVisible : MonoBehaviour
             objectToMove = farthestHit.collider.gameObject; // Get the farthest object
             return true;
         }
+        objectToMove = null;
         return false;
     }
 
