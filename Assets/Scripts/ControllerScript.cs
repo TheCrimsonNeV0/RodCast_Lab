@@ -254,7 +254,6 @@ public class RayCastVisible : MonoBehaviour
         {
             float rotationChange = arcRotationOffsetSensitivity * left_positionOffsetX;
             rotation = new Quaternion(rotation.x, rotation.y + rotationChange, rotation.z, rotation.w);
-            sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
     }
 
@@ -313,8 +312,18 @@ public class RayCastVisible : MonoBehaviour
         // Define the start point of the RayCast as the position of the castingObject
         startPoint = transform.position;
 
-        // Calculate the endPoint using the rotated direction
-        endPoint = startPoint + rotatedDirection * rayLength;
+        // If the arc has points, set the endpoint to the last point of the sine wave
+        if (pointsAlongLine.Count > 0)
+        {
+            endPoint = pointsAlongLine[pointsAlongLine.Count - 1]; // Use the last point in the arc
+        }
+        else
+        {
+            // Fallback in case no arc points are available
+            endPoint = startPoint + (rotatedDirection * rayLength);
+        }
+
+        Debug.DrawLine(startPoint, endPoint, Color.red);
 
         // Set the positions in the LineRenderer to make the RayCast visible
         lineRenderer.SetPosition(0, startPoint);
@@ -336,7 +345,7 @@ public class RayCastVisible : MonoBehaviour
         for (int i = 0; i <= arcSegments; i++)
         {
             float t = i / (float)arcSegments; // Normalized value between 0 and 1 for interpolation
-            Vector3 pointAlongLine = Vector3.Lerp(Vector3.zero, Vector3.forward * rayLength, t); // Interpolated point along the Z axis
+            Vector3 pointAlongLine = Vector3.Lerp(Vector3.zero, rotatedDirection * rayLength, t); // Interpolated point along the Z axis
 
             // Apply the sine wave offset along the Y axis
             float arcOffset = Mathf.Sin(Mathf.PI * t * sineFrequency) * sineAmplitude;
@@ -356,7 +365,11 @@ public class RayCastVisible : MonoBehaviour
 
     bool RaycastHitObject()
     {
-        RaycastHit[] hits = Physics.RaycastAll(startPoint, rotatedDirection, rayLength);
+        // Calculate the direction from the startPoint to the endPoint
+        Vector3 rayDirection = endPoint - startPoint;
+
+        // Perform the raycast using the direction and length of the ray
+        RaycastHit[] hits = Physics.RaycastAll(startPoint, rayDirection.normalized, rayDirection.magnitude);
         if (hits.Length > 0)
         {
             float maxDistance = 0;
