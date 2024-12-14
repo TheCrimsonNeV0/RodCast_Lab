@@ -79,6 +79,10 @@ public class RayCastVisible : MonoBehaviour
         lastRotationZ = transform.rotation.eulerAngles.z;
         lastPositionY = transform.position.y;
 
+        left_lastPositionX = leftController.transform.position.x;
+        left_lastPositionY = leftController.transform.position.y;
+        left_lastPositionZ = leftController.transform.position.z;
+
         rotatedDirection = rotation * transform.forward;
 
         // Get the LineRenderer component from the GameObject
