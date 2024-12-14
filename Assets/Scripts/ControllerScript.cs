@@ -345,7 +345,7 @@ public class RayCastVisible : MonoBehaviour
         for (int i = 0; i <= arcSegments; i++)
         {
             float t = i / (float)arcSegments; // Normalized value between 0 and 1 for interpolation
-            Vector3 pointAlongLine = Vector3.Lerp(Vector3.zero, rotatedDirection * rayLength, t); // Interpolated point along the Z axis
+            Vector3 pointAlongLine = Vector3.Lerp(Vector3.zero, Vector3.forward * rayLength, t); // Interpolated point along the Z axis
 
             // Apply the sine wave offset along the Y axis
             float arcOffset = Mathf.Sin(Mathf.PI * t * sineFrequency) * sineAmplitude;
