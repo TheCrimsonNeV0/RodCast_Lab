@@ -53,6 +53,7 @@ public class RayCastVisible : MonoBehaviour
     public InputActionReference toggleArcVisibilityAction; // Reference to an Input Action for toggling the arc visibility
     public InputActionReference setRayRotation_Left;
     public InputActionReference holdObjectAction;
+    public InputActionReference setSineFrequencyAction;
 
     private GameObject objectToMove; // The object that will be assigned based on the RayCast hit
     private GameObject heldObject;
@@ -149,6 +150,12 @@ public class RayCastVisible : MonoBehaviour
                 objectToMove.GetComponent<Rigidbody>().isKinematic = false;
             }
         };
+
+        setSineFrequencyAction.action.Enable();
+        setSineFrequencyAction.action.started += context =>
+        {
+            sineFrequency = (sineFrequency == 2) ? 1 : 2; // Toggles the sine frequency
+        };
     }
 
     void Update()
@@ -157,7 +164,6 @@ public class RayCastVisible : MonoBehaviour
 
         DrawRayCast();
 
-        // TODO: Store left hand anchor value in a different variable and do not check RayCast to start the coroutine if left hand anchor is not null
         if (isArcVisible && !isMoving)
         {
             if (!isHoldingInHand && heldObject != null)
@@ -450,8 +456,7 @@ public class RayCastVisible : MonoBehaviour
     {
         isMoving = true;
 
-        // Disable the LineRenderer when starting the movement
-        lineRenderer.enabled = false;
+        lineRenderer.enabled = false; // Disable the LineRenderer when starting the movement
 
         // Disable gravity if the object has a Rigidbody
         Rigidbody rb = objectToMove.GetComponent<Rigidbody>();
@@ -522,6 +527,7 @@ public class RayCastVisible : MonoBehaviour
         setRayLengthRollAction.action.Enable();
         toggleArcVisibilityAction.action.Enable();
         setRayRotation_Left.action.Enable();
+        setSineFrequencyAction.action.Enable();
     }
 
     private void OnDisable()
@@ -531,5 +537,6 @@ public class RayCastVisible : MonoBehaviour
         setRayLengthRollAction.action.Disable();
         toggleArcVisibilityAction.action.Disable();
         setRayRotation_Left.action.Disable();
+        setSineFrequencyAction.action.Disable();
     }
 }
