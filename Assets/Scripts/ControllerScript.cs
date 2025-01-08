@@ -75,6 +75,10 @@ public class RayCastVisible : MonoBehaviour
     private Transform originalParent;
     private Transform originalParentForHeld;
 
+    private Vector3 adjustedForward;
+    private Vector3 adjustedUp;
+    private Vector3 adjustedRight;
+
     void Start()
     {
         lastRotationZ = transform.rotation.eulerAngles.z;
@@ -125,7 +129,13 @@ public class RayCastVisible : MonoBehaviour
         };
 
         setRayRotation_Left.action.Enable();
-        setRayRotation_Left.action.started += context => isAdjusting_Left = true; // Start adjusting length
+        setRayRotation_Left.action.started += context =>
+        {
+            isAdjusting_Left = true; // Start adjusting length
+            adjustedForward = leftController.transform.forward;
+            adjustedUp = leftController.transform.up;
+            adjustedRight = leftController.transform.right;
+        };
         setRayRotation_Left.action.canceled += context => isAdjusting_Left = false; // Stop adjusting length
         setRayRotation_Left.action.performed += context =>
         {
@@ -211,7 +221,6 @@ public class RayCastVisible : MonoBehaviour
         rotationOffset = ParseRotationOffset(transform.rotation.eulerAngles.z);
         if (rotationOffset != 0)
         {
-            Debug.Log(rotationOffset);
             rayLength += rotationSensitivity * rotationOffset;
             rayLength = Mathf.Clamp(rayLength, minRayLength, maxRayLength);
         }
@@ -274,7 +283,6 @@ public class RayCastVisible : MonoBehaviour
         return positionDifference;
     }
 
-
     void AdjustSineAmplitude_Left(GameObject controller)
     {
         left_positionOffsetY = ParsePositionY_Left(controller.transform.position.y);
@@ -298,7 +306,6 @@ public class RayCastVisible : MonoBehaviour
 
         if (left_positionOffsetZ != 0)
         {
-            Debug.Log(left_positionOffsetZ);
             rayLength += positionSensitivity_Left * left_positionOffsetZ;
             rayLength = Mathf.Clamp(rayLength, minRayLength, maxRayLength);
         }
