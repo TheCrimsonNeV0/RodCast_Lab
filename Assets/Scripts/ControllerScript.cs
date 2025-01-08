@@ -267,7 +267,7 @@ public class RayCastVisible : MonoBehaviour
 
     void AdjustArcRotation_Left(GameObject controller)
     {
-        left_positionOffsetX = ParsePositionX_Left(controller.transform.position.x);
+        left_positionOffsetX = ParsePositionX_Left(controller.transform.position);
 
         if (left_positionOffsetX != 0)
         {
@@ -276,16 +276,16 @@ public class RayCastVisible : MonoBehaviour
         }
     }
 
-    float ParsePositionX_Left(float currentPositionX)
+    float ParsePositionX_Left(Vector3 currentPosition)
     {
-        float positionDifference = currentPositionX - left_lastPositionX;
-        left_lastPositionX = currentPositionX;
-        return positionDifference;
+        Vector3 positionDifference = currentPosition - new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
+        left_lastPositionX = currentPosition.x;
+        return Vector3.Dot(positionDifference, adjustedRight.normalized);
     }
 
     void AdjustSineAmplitude_Left(GameObject controller)
     {
-        left_positionOffsetY = ParsePositionY_Left(controller.transform.position.y);
+        left_positionOffsetY = ParsePositionY_Left(controller.transform.position);
         if (left_positionOffsetY != 0)
         {
             sineAmplitude += positionSensitivity * left_positionOffsetY;
@@ -293,16 +293,16 @@ public class RayCastVisible : MonoBehaviour
         }
     }
 
-    float ParsePositionY_Left(float currentPositionY)
+    float ParsePositionY_Left(Vector3 currentPosition)
     {
-        float positionDifference = currentPositionY - left_lastPositionY;
-        left_lastPositionY = currentPositionY;
-        return positionDifference;
+        Vector3 positionDifference = currentPosition - new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
+        left_lastPositionY = currentPosition.y;
+        return Vector3.Dot(positionDifference, adjustedUp.normalized);
     }
 
     void AdjustRayLength_Left(GameObject controller)
     {
-        left_positionOffsetZ = ParsePositionZ_Left(controller.transform.position.z);
+        left_positionOffsetZ = ParsePositionZ_Left(controller.transform.position);
 
         if (left_positionOffsetZ != 0)
         {
@@ -311,11 +311,11 @@ public class RayCastVisible : MonoBehaviour
         }
     }
 
-    float ParsePositionZ_Left(float currentPositionZ)
+    float ParsePositionZ_Left(Vector3 currentPosition)
     {
-        float positionDifference = currentPositionZ - left_lastPositionZ;
-        left_lastPositionZ = currentPositionZ;
-        return positionDifference;
+        Vector3 positionDifference = currentPosition - new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
+        left_lastPositionZ = currentPosition.z;
+        return Vector3.Dot(positionDifference, adjustedForward.normalized);
     }
 
 
