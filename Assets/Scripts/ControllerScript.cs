@@ -78,6 +78,7 @@ public class RayCastVisible : MonoBehaviour
     private Vector3 adjustedForward;
     private Vector3 adjustedUp;
     private Vector3 adjustedRight;
+    private Vector3 adjustedOrigin;
 
     void Start()
     {
@@ -135,13 +136,17 @@ public class RayCastVisible : MonoBehaviour
             adjustedForward = leftController.transform.forward;
             adjustedUp = leftController.transform.up;
             adjustedRight = leftController.transform.right;
+            adjustedOrigin = leftController.transform.position;
         };
         setRayRotation_Left.action.canceled += context => isAdjusting_Left = false; // Stop adjusting length
         setRayRotation_Left.action.performed += context =>
         {
-            left_lastPositionX = leftController.transform.position.x;
-            left_lastPositionY = leftController.transform.position.y;
-            left_lastPositionZ = leftController.transform.position.z;
+            Vector3 currentControllerPosition = leftController.transform.position;
+            Vector3 currentRelativePosition = CalculateRelativePosition(currentControllerPosition);
+
+            left_lastPositionX = currentRelativePosition.x;
+            left_lastPositionY = currentRelativePosition.y;
+            left_lastPositionZ = currentRelativePosition.z;
         };
 
         holdObjectAction.action.Enable();
@@ -278,9 +283,13 @@ public class RayCastVisible : MonoBehaviour
 
     float ParsePositionX_Left(Vector3 currentPosition)
     {
-        Vector3 positionDifference = currentPosition - new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
-        left_lastPositionX = currentPosition.x;
-        return Vector3.Dot(positionDifference, adjustedRight.normalized);
+        Vector3 currentRelativePosition = CalculateRelativePosition(currentPosition);
+        Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
+
+        Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
+        Debug.Log(currentRelativePosition + " " + positionDifference);
+        left_lastPositionX = currentRelativePosition.x;
+        return positionDifference.x;
     }
 
     void AdjustSineAmplitude_Left(GameObject controller)
@@ -295,9 +304,13 @@ public class RayCastVisible : MonoBehaviour
 
     float ParsePositionY_Left(Vector3 currentPosition)
     {
-        Vector3 positionDifference = currentPosition - new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
-        left_lastPositionY = currentPosition.y;
-        return Vector3.Dot(positionDifference, adjustedUp.normalized);
+        Vector3 currentRelativePosition = CalculateRelativePosition(currentPosition);
+        Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
+
+        Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
+        Debug.Log(currentRelativePosition + " " + positionDifference);
+        left_lastPositionY = currentRelativePosition.y;
+        return positionDifference.y;
     }
 
     void AdjustRayLength_Left(GameObject controller)
@@ -313,9 +326,32 @@ public class RayCastVisible : MonoBehaviour
 
     float ParsePositionZ_Left(Vector3 currentPosition)
     {
-        Vector3 positionDifference = currentPosition - new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
-        left_lastPositionZ = currentPosition.z;
-        return Vector3.Dot(positionDifference, adjustedForward.normalized);
+        Vector3 currentRelativePosition = CalculateRelativePosition(currentPosition);
+        Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
+
+        Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
+        Debug.Log(currentRelativePosition + " " + positionDifference);
+        left_lastPositionZ = currentRelativePosition.z;
+        return positionDifference.z;
+    }
+
+    Vector3 CalculateRelativePosition(Vector3 position)
+    {
+        // Ensure the provided vectors are normalized
+        Vector3 forward = adjustedForward.normalized;
+        Vector3 right = adjustedRight.normalized;
+        Vector3 up = adjustedUp.normalized;
+
+        // Calculate the position difference relative to the reference point
+        Vector3 positionDifference = position - adjustedOrigin;
+
+        // Project the position difference onto the custom axes
+        float relativeForward = Vector3.Dot(positionDifference, forward);
+        float relativeRight = Vector3.Dot(positionDifference, right);
+        float relativeUp = Vector3.Dot(positionDifference, up);
+
+        // Return the recalculated position in the custom coordinate system
+        return new Vector3(relativeRight, relativeUp, relativeForward);
     }
 
 
