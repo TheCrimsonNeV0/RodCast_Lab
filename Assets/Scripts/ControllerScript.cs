@@ -80,6 +80,10 @@ public class RayCastVisible : MonoBehaviour
     private Vector3 adjustedRight;
     private Vector3 adjustedOrigin;
 
+    public float dashLineWidth = 0.02f;  // Width of the line
+    public Material lineMaterialDashed;
+    private LineRenderer lineRendererDashed;
+
     void Start()
     {
         lastRotationZ = transform.rotation.eulerAngles.z;
@@ -171,6 +175,8 @@ public class RayCastVisible : MonoBehaviour
         {
             sineFrequency = (sineFrequency == 2) ? 1 : 2; // Toggles the sine frequency
         };
+
+        CreateDashedLineRenderer();
     }
 
     void Update()
@@ -178,6 +184,7 @@ public class RayCastVisible : MonoBehaviour
         rotatedDirection = rotation * transform.forward;
 
         DrawRayCast();
+        DrawDashedLine();
 
         if (isArcVisible && !isMoving)
         {
@@ -208,6 +215,32 @@ public class RayCastVisible : MonoBehaviour
             bool isHitObject = RaycastHitObject() && 0 < CheckPointsWithinObject(); // Checks if the move can be started
             DrawArc(isHitObject);
         }
+    }
+
+    void CreateDashedLineRenderer()
+    {
+        // Create a new GameObject for the dashed line
+        GameObject dashedLine = new GameObject("DashedLine");
+
+        dashedLine.transform.SetParent(transform); // Optional: make it a child of the current GameObject
+        dashedLine.transform.localPosition = Vector3.zero;
+
+        // Add a LineRenderer component
+        lineRendererDashed = dashedLine.AddComponent<LineRenderer>();
+
+        // Configure LineRenderer
+        lineRendererDashed.material = lineMaterialDashed;
+        lineRendererDashed.startWidth = dashLineWidth;
+        lineRendererDashed.endWidth = dashLineWidth;
+        lineRendererDashed.useWorldSpace = true; // Ensure positions are in world space
+        lineRendererDashed.positionCount = 0; // Start with no points
+    }
+
+    void DrawDashedLine()
+    {
+        lineRendererDashed.positionCount = 2;
+        lineRendererDashed.SetPosition(0, startPoint);
+        lineRendererDashed.SetPosition(1, endPoint);
     }
 
     void ResetRayLengthVariables(InputAction.CallbackContext context)
