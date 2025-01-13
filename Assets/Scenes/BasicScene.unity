@@ -519,6 +519,8 @@ MonoBehaviour:
   setRayRotation_Left: {fileID: -15472980402651157, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   holdObjectAction: {fileID: 1900851542733328038, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   setSineFrequencyAction: {fileID: 7802530931362024064, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
+  dashLineWidth: 0.02
+  lineMaterialDashed: {fileID: 2100000, guid: 9837b0bc5737dcf4ea92f439b0ff635c, type: 2}
 --- !u!1001 &441087506
 PrefabInstance:
   m_ObjectHideFlags: 0
