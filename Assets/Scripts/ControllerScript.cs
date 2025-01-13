@@ -45,19 +45,24 @@ public class RayCastVisible : MonoBehaviour
     private bool isMoving = false;
     private bool isAdjusting_Right = false;
     private bool isAdjusting_Left = false;
+    private bool isHolding = false;
+    private bool isHoldingInHand = false;
 
     public InputActionReference moveAlongArcAction; // Reference to an Input Action for movement
     public InputActionReference setRayLengthRollAction; // Reference to an Input Action for setting the ray length
     public InputActionReference toggleArcVisibilityAction; // Reference to an Input Action for toggling the arc visibility
     public InputActionReference setRayRotation_Left;
+    public InputActionReference holdObjectAction;
+    public InputActionReference setSineFrequencyAction;
 
     private GameObject objectToMove; // The object that will be assigned based on the RayCast hit
+    private GameObject heldObject;
 
     // Temporary variables
     private float lastRotationZ = 0f;
-    private float rotationOffset = 0f; // Current rotation offset
-    private float lastPositionY = 0f; // Initialize with the starting Y position of the controller
-    private float positionOffset = 0f; // Current position offset
+    private float rotationOffset = 0f;
+    private float lastPositionY = 0f;
+    private float positionOffset = 0f;
 
     private float left_lastPositionX = 0f;
     private float left_lastPositionY = 0f;
@@ -67,10 +72,22 @@ public class RayCastVisible : MonoBehaviour
     private float left_positionOffsetY = 0f;
     private float left_positionOffsetZ = 0f;
 
+    private Transform originalParent;
+    private Transform originalParentForHeld;
+
+    private Vector3 adjustedForward;
+    private Vector3 adjustedUp;
+    private Vector3 adjustedRight;
+    private Vector3 adjustedOrigin;
+
     void Start()
     {
         lastRotationZ = transform.rotation.eulerAngles.z;
         lastPositionY = transform.position.y;
+
+        left_lastPositionX = leftController.transform.position.x;
+        left_lastPositionY = leftController.transform.position.y;
+        left_lastPositionZ = leftController.transform.position.z;
 
         rotatedDirection = rotation * transform.forward;
 
@@ -92,6 +109,8 @@ public class RayCastVisible : MonoBehaviour
 
         // Enable the Input Action and bind the method to the performed event
         moveAlongArcAction.action.Enable();
+        moveAlongArcAction.action.started += context => isHoldingInHand = true;
+        moveAlongArcAction.action.canceled += context => isHoldingInHand = false;
         moveAlongArcAction.action.performed += OnMoveAlongArcPerformed;
 
         setRayLengthRollAction.action.Enable();
@@ -111,13 +130,46 @@ public class RayCastVisible : MonoBehaviour
         };
 
         setRayRotation_Left.action.Enable();
-        setRayRotation_Left.action.started += context => isAdjusting_Left = true; // Start adjusting length
+        setRayRotation_Left.action.started += context =>
+        {
+            isAdjusting_Left = true; // Start adjusting length
+            adjustedForward = leftController.transform.forward;
+            adjustedUp = leftController.transform.up;
+            adjustedRight = leftController.transform.right;
+            adjustedOrigin = leftController.transform.position;
+        };
         setRayRotation_Left.action.canceled += context => isAdjusting_Left = false; // Stop adjusting length
         setRayRotation_Left.action.performed += context =>
         {
-            left_lastPositionX = leftController.transform.position.x;
-            left_lastPositionY = leftController.transform.position.y;
-            left_lastPositionZ = leftController.transform.position.z;
+            Vector3 currentControllerPosition = leftController.transform.position;
+            Vector3 currentRelativePosition = CalculateRelativePosition(currentControllerPosition);
+
+            left_lastPositionX = currentRelativePosition.x;
+            left_lastPositionY = currentRelativePosition.y;
+            left_lastPositionZ = currentRelativePosition.z;
+        };
+
+        holdObjectAction.action.Enable();
+        holdObjectAction.action.started += context =>
+        {
+            isHolding = true;
+            if (objectToMove != null)
+            {
+                objectToMove.GetComponent<Rigidbody>().isKinematic = true;
+            }
+        };
+        holdObjectAction.action.canceled += context => {
+            isHolding = false;
+            if (objectToMove != null)
+            {
+                objectToMove.GetComponent<Rigidbody>().isKinematic = false;
+            }
+        };
+
+        setSineFrequencyAction.action.Enable();
+        setSineFrequencyAction.action.started += context =>
+        {
+            sineFrequency = (sineFrequency == 2) ? 1 : 2; // Toggles the sine frequency
         };
     }
 
@@ -127,16 +179,28 @@ public class RayCastVisible : MonoBehaviour
 
         DrawRayCast();
 
-        if (isArcVisible && !isMoving && isAdjusting_Right)
+        if (isArcVisible && !isMoving)
         {
-            AdjustRayLength();
-            AdjustSineAmplitude();
-        }
-        else if (isArcVisible && !isMoving && isAdjusting_Left)
-        {
-            AdjustArcRotation_Left(leftController);
-            AdjustSineAmplitude_Left(leftController);
-            AdjustRayLength_Left(leftController);
+            if (!isHoldingInHand && heldObject != null)
+            {
+                ReleaseAnchor();
+            }
+            else if (isHolding && !isHoldingInHand && objectToMove != null)
+            {
+                objectToMove.transform.position = pointsAlongLine[pointsAlongLine.Count - 1];
+            }
+
+            if (isAdjusting_Right)
+            {
+                AdjustRayLength();
+                AdjustSineAmplitude();
+            }
+            if (isAdjusting_Left)
+            {
+                AdjustArcRotation_Left(leftController);
+                AdjustSineAmplitude_Left(leftController);
+                AdjustRayLength_Left(leftController);
+            }
         }
 
         if (isArcVisible && !isMoving)
@@ -162,7 +226,6 @@ public class RayCastVisible : MonoBehaviour
         rotationOffset = ParseRotationOffset(transform.rotation.eulerAngles.z);
         if (rotationOffset != 0)
         {
-            Debug.Log(rotationOffset);
             rayLength += rotationSensitivity * rotationOffset;
             rayLength = Mathf.Clamp(rayLength, minRayLength, maxRayLength);
         }
@@ -170,7 +233,6 @@ public class RayCastVisible : MonoBehaviour
 
     float ParseRotationOffset(float currentRotationZ)
     {
-        // Calculate the difference in rotation
         float angleDifference = currentRotationZ - lastRotationZ;
 
         // Detect crossovers at 0 or 360 degrees
@@ -183,7 +245,6 @@ public class RayCastVisible : MonoBehaviour
             angleDifference += 360;
         }
 
-        // Update lastRotationY for the next frame
         lastRotationZ = currentRotationZ;
 
         // Return the offset (positive for clockwise, negative for counterclockwise)
@@ -192,13 +253,11 @@ public class RayCastVisible : MonoBehaviour
 
     void AdjustSineAmplitude()
     {
-        // Calculate the difference in the Y position
         positionOffset = ParsePositionOffset(transform.position.y);
 
         // Adjust the sine amplitude based on the position offset
         if (positionOffset != 0)
         {
-            Debug.Log(positionOffset);
             sineAmplitude += positionSensitivity * positionOffset;
             sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
@@ -206,79 +265,93 @@ public class RayCastVisible : MonoBehaviour
 
     float ParsePositionOffset(float currentPositionY)
     {
-        // Calculate the difference in position
         float positionDifference = currentPositionY - lastPositionY;
-
-        // Update lastPositionY for the next frame
         lastPositionY = currentPositionY;
-
-        // Return the position offset (positive for upward, negative for downward)
         return positionDifference;
     }
 
     void AdjustArcRotation_Left(GameObject controller)
     {
-        left_positionOffsetX = ParsePositionX_Left(controller.transform.position.x);
+        left_positionOffsetX = ParsePositionX_Left(controller.transform.position);
 
         if (left_positionOffsetX != 0)
         {
             float rotationChange = arcRotationOffsetSensitivity * left_positionOffsetX;
             rotation = new Quaternion(rotation.x, rotation.y + rotationChange, rotation.z, rotation.w);
-            sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
     }
 
-    float ParsePositionX_Left(float currentPositionX)
+    float ParsePositionX_Left(Vector3 currentPosition)
     {
-        float positionDifference = currentPositionX - left_lastPositionX;
-        left_lastPositionX = currentPositionX;
-        return positionDifference;
-    }
+        Vector3 currentRelativePosition = CalculateRelativePosition(currentPosition);
+        Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
 
+        Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
+        Debug.Log(currentRelativePosition + " " + positionDifference);
+        left_lastPositionX = currentRelativePosition.x;
+        return positionDifference.x;
+    }
 
     void AdjustSineAmplitude_Left(GameObject controller)
     {
-        // Calculate the difference in the Y position
-        left_positionOffsetY = ParsePositionY_Left(controller.transform.position.y);
-
-        // Adjust the sine amplitude based on the position offset
+        left_positionOffsetY = ParsePositionY_Left(controller.transform.position);
         if (left_positionOffsetY != 0)
         {
-            // Debug.Log(left_positionOffsetY);
             sineAmplitude += positionSensitivity * left_positionOffsetY;
             sineAmplitude = Mathf.Clamp(sineAmplitude, minSineAmplitude, maxSineAmplitude);
         }
     }
 
-    float ParsePositionY_Left(float currentPositionY)
+    float ParsePositionY_Left(Vector3 currentPosition)
     {
-        float positionDifference = currentPositionY - left_lastPositionY;
-        left_lastPositionY = currentPositionY;
-        return positionDifference;
+        Vector3 currentRelativePosition = CalculateRelativePosition(currentPosition);
+        Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
+
+        Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
+        Debug.Log(currentRelativePosition + " " + positionDifference);
+        left_lastPositionY = currentRelativePosition.y;
+        return positionDifference.y;
     }
 
     void AdjustRayLength_Left(GameObject controller)
     {
-
-        left_positionOffsetZ = ParsePositionZ_Left(controller.transform.position.z);
+        left_positionOffsetZ = ParsePositionZ_Left(controller.transform.position);
 
         if (left_positionOffsetZ != 0)
         {
-            Debug.Log(left_positionOffsetZ);
             rayLength += positionSensitivity_Left * left_positionOffsetZ;
             rayLength = Mathf.Clamp(rayLength, minRayLength, maxRayLength);
         }
     }
 
-    float ParsePositionZ_Left(float currentPositionZ)
+    float ParsePositionZ_Left(Vector3 currentPosition)
     {
-        // Calculate the difference in Z position
-        float positionDifference = currentPositionZ - left_lastPositionZ;
+        Vector3 currentRelativePosition = CalculateRelativePosition(currentPosition);
+        Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
 
-        // Update the last known position
-        left_lastPositionZ = currentPositionZ;
+        Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
+        Debug.Log(currentRelativePosition + " " + positionDifference);
+        left_lastPositionZ = currentRelativePosition.z;
+        return positionDifference.z;
+    }
 
-        return positionDifference;
+    Vector3 CalculateRelativePosition(Vector3 position)
+    {
+        // Ensure the provided vectors are normalized
+        Vector3 forward = adjustedForward.normalized;
+        Vector3 right = adjustedRight.normalized;
+        Vector3 up = adjustedUp.normalized;
+
+        // Calculate the position difference relative to the reference point
+        Vector3 positionDifference = position - adjustedOrigin;
+
+        // Project the position difference onto the custom axes
+        float relativeForward = Vector3.Dot(positionDifference, forward);
+        float relativeRight = Vector3.Dot(positionDifference, right);
+        float relativeUp = Vector3.Dot(positionDifference, up);
+
+        // Return the recalculated position in the custom coordinate system
+        return new Vector3(relativeRight, relativeUp, relativeForward);
     }
 
 
@@ -292,8 +365,18 @@ public class RayCastVisible : MonoBehaviour
         // Define the start point of the RayCast as the position of the castingObject
         startPoint = transform.position;
 
-        // Calculate the endPoint using the rotated direction
-        Vector3 endPoint = startPoint + rotatedDirection * rayLength;
+        // If the arc has points, set the endpoint to the last point of the sine wave
+        if (pointsAlongLine.Count > 0)
+        {
+            endPoint = pointsAlongLine[pointsAlongLine.Count - 1]; // Use the last point in the arc
+        }
+        else
+        {
+            // Fallback in case no arc points are available
+            endPoint = startPoint + (rotatedDirection * rayLength);
+        }
+
+        Debug.DrawLine(startPoint, endPoint, Color.red);
 
         // Set the positions in the LineRenderer to make the RayCast visible
         lineRenderer.SetPosition(0, startPoint);
@@ -335,7 +418,11 @@ public class RayCastVisible : MonoBehaviour
 
     bool RaycastHitObject()
     {
-        RaycastHit[] hits = Physics.RaycastAll(startPoint, rotatedDirection, rayLength);
+        // Calculate the direction from the startPoint to the endPoint
+        Vector3 rayDirection = endPoint - startPoint;
+
+        // Perform the raycast using the direction and length of the ray
+        RaycastHit[] hits = Physics.RaycastAll(startPoint, rayDirection.normalized, rayDirection.magnitude);
         if (hits.Length > 0)
         {
             float maxDistance = 0;
@@ -359,6 +446,7 @@ public class RayCastVisible : MonoBehaviour
             objectToMove = farthestHit.collider.gameObject; // Get the farthest object
             return true;
         }
+        if (!isHolding && !isHoldingInHand) objectToMove = null;
         return false;
     }
 
@@ -390,11 +478,11 @@ public class RayCastVisible : MonoBehaviour
                 List<Vector3> reversedPoints = new List<Vector3>(pointsAlongLine);
                 reversedPoints.Reverse();
 
-                // Calculate the number of points in the first quarter
-                int quarterCount = reversedPoints.Count / 4;
+                // Calculate the number of points in the first half
+                int thresholdCount = reversedPoints.Count / 2;
 
-                // Loop through the first quarter of the reversed points
-                for (int i = 0; i < quarterCount; i++)
+                // Loop through the desired number of the reversed points
+                for (int i = 0; i < thresholdCount; i++)
                 {
                     if (objectCollider.bounds.Contains(reversedPoints[i]))
                     {
@@ -411,8 +499,7 @@ public class RayCastVisible : MonoBehaviour
     {
         isMoving = true;
 
-        // Disable the LineRenderer when starting the movement
-        lineRenderer.enabled = false;
+        lineRenderer.enabled = false; // Disable the LineRenderer when starting the movement
 
         // Disable gravity if the object has a Rigidbody
         Rigidbody rb = objectToMove.GetComponent<Rigidbody>();
@@ -436,16 +523,44 @@ public class RayCastVisible : MonoBehaviour
             }
         }
 
-        // Re-enable gravity and LineRenderer after movement
         if (rb != null)
         {
             rb.useGravity = true;
             rb.isKinematic = false;
         }
 
+        if (isHoldingInHand) AnchorObject();
+
         lineRenderer.enabled = true; // Re-enable the LineRenderer
 
         isMoving = false;
+    }
+
+    private void AnchorObject()
+    {
+        heldObject = objectToMove;
+        originalParentForHeld = heldObject.transform.parent;
+        heldObject.transform.SetParent(transform);
+        Rigidbody temp_rb = heldObject.GetComponent<Rigidbody>();
+        if (temp_rb != null)
+        {
+            temp_rb.isKinematic = true; // Make object static while grabbed
+        }
+    }
+
+    private void ReleaseAnchor()
+    {
+        if (heldObject != null)
+        {
+            Rigidbody temp_rb = heldObject.GetComponent<Rigidbody>();
+            if (temp_rb != null)
+            {
+                temp_rb.isKinematic = false; // Restore physics
+            }
+
+            heldObject.transform.SetParent(originalParentForHeld); // Restore parent
+            heldObject = null;
+        }
     }
 
     private void OnEnable()
@@ -455,6 +570,7 @@ public class RayCastVisible : MonoBehaviour
         setRayLengthRollAction.action.Enable();
         toggleArcVisibilityAction.action.Enable();
         setRayRotation_Left.action.Enable();
+        setSineFrequencyAction.action.Enable();
     }
 
     private void OnDisable()
@@ -464,5 +580,6 @@ public class RayCastVisible : MonoBehaviour
         setRayLengthRollAction.action.Disable();
         toggleArcVisibilityAction.action.Disable();
         setRayRotation_Left.action.Disable();
+        setSineFrequencyAction.action.Disable();
     }
 }
