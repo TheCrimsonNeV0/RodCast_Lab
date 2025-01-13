@@ -131,6 +131,7 @@ public class RayCastVisible : MonoBehaviour
         {
             isArcVisible = !isArcVisible;
             lineRenderer.enabled = isArcVisible;
+            lineRendererDashed.enabled = isArcVisible;
         };
 
         setRayRotation_Left.action.Enable();
@@ -184,7 +185,6 @@ public class RayCastVisible : MonoBehaviour
         rotatedDirection = rotation * transform.forward;
 
         DrawRayCast();
-        DrawDashedLine();
 
         if (isArcVisible && !isMoving)
         {
@@ -214,6 +214,7 @@ public class RayCastVisible : MonoBehaviour
         {
             bool isHitObject = RaycastHitObject() && 0 < CheckPointsWithinObject(); // Checks if the move can be started
             DrawArc(isHitObject);
+            DrawDashedLine();
         }
     }
 
@@ -533,6 +534,7 @@ public class RayCastVisible : MonoBehaviour
         isMoving = true;
 
         lineRenderer.enabled = false; // Disable the LineRenderer when starting the movement
+        lineRendererDashed.enabled = false;
 
         // Disable gravity if the object has a Rigidbody
         Rigidbody rb = objectToMove.GetComponent<Rigidbody>();
@@ -565,6 +567,7 @@ public class RayCastVisible : MonoBehaviour
         if (isHoldingInHand) AnchorObject();
 
         lineRenderer.enabled = true; // Re-enable the LineRenderer
+        lineRendererDashed.enabled = true; // Re-enable the LineRenderer
 
         isMoving = false;
     }
