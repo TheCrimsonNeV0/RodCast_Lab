@@ -84,6 +84,9 @@ public class RayCastVisible : MonoBehaviour
     public Material lineMaterialDashed;
     private LineRenderer lineRendererDashed;
 
+    public GameObject endPointIndicatorPrefab;
+    private GameObject endPointIndicator;
+
     void Start()
     {
         lastRotationZ = transform.rotation.eulerAngles.z;
@@ -178,6 +181,7 @@ public class RayCastVisible : MonoBehaviour
         };
 
         CreateDashedLineRenderer();
+        endPointIndicator = Instantiate(endPointIndicatorPrefab);
     }
 
     void Update()
@@ -215,6 +219,8 @@ public class RayCastVisible : MonoBehaviour
             bool isHitObject = RaycastHitObject() && 0 < CheckPointsWithinObject(); // Checks if the move can be started
             DrawArc(isHitObject);
             DrawDashedLine();
+            endPointIndicator.transform.position = new Vector3(endPoint.x, endPoint.y, endPoint.z); // Check if this logic always works
+            // TODO: Implement this logic as a part of RodCast
         }
     }
 
