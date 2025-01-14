@@ -241,7 +241,7 @@ public class RayCastVisible : MonoBehaviour
     {
         lineRendererDashed.positionCount = 2;
         lineRendererDashed.SetPosition(0, startPoint);
-        lineRendererDashed.SetPosition(1, endPoint);
+        lineRendererDashed.SetPosition(1, pointsAlongLine[pointsAlongLine.Count - 1]);
     }
 
     void ResetRayLengthVariables(InputAction.CallbackContext context)
