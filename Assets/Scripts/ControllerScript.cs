@@ -137,6 +137,7 @@ public class RayCastVisible : MonoBehaviour
             isArcVisible = !isArcVisible;
             lineRenderer.enabled = isArcVisible;
             lineRendererDashed.enabled = isArcVisible;
+            endPointIndicator.SetActive(isArcVisible);
         };
 
         setRayRotation_Left.action.Enable();
@@ -435,6 +436,8 @@ public class RayCastVisible : MonoBehaviour
     {
         // Set the material based on the isRaycasting parameter
         lineRenderer.material = isRaycasting ? lineMaterial : lineMaterialNoHit;
+
+        endPointIndicator.SetActive(!isRaycasting); // Disable end point indicator if there is raycast hit
 
         pointsAlongLine.Clear(); // Clear previous points
         lineRenderer.positionCount = arcSegments + 1; // Set the correct number of points

@@ -22,6 +22,7 @@ public class EndPointIndicatorScript : MonoBehaviour
     void Update()
     {
         SetPositionFloorIndicator();
+        floorIndicator.SetActive((transform.position.y >= 0));
     }
 
     void SetPositionFloorIndicator()
@@ -36,5 +37,15 @@ public class EndPointIndicatorScript : MonoBehaviour
             newPosition.z = transform.position.z;
             floorIndicator.transform.position = newPosition;
         }
+    }
+
+    private void OnDisable()
+    {
+        floorIndicator.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        floorIndicator.SetActive(true);
     }
 }

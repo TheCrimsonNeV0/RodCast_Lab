@@ -672,7 +672,7 @@ GameObject:
   - component: {fileID: 1249617919}
   - component: {fileID: 1249617918}
   - component: {fileID: 1249617922}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Plane
   m_TagString: RodCastNotInteractable
   m_Icon: {fileID: 0}
