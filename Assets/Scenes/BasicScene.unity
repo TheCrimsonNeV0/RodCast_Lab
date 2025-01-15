@@ -522,6 +522,9 @@ MonoBehaviour:
   dashLineWidth: 0.02
   lineMaterialDashed: {fileID: 2100000, guid: 9837b0bc5737dcf4ea92f439b0ff635c, type: 2}
   endPointIndicatorPrefab: {fileID: 2517493472415147670, guid: af26650ef987fb04dbd20193af0bd38d, type: 3}
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1001 &441087506
 PrefabInstance:
   m_ObjectHideFlags: 0

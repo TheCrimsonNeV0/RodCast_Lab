@@ -12,13 +12,20 @@ public class EndPointIndicatorScript : MonoBehaviour
     void Start()
     {
         floorIndicator = Instantiate(floorIndicatorPrefab, transform.position, Quaternion.identity);
+        // floorIndicator.transform.SetParent(transform);
         floorIndicator.layer = LayerMask.NameToLayer("IgnoreRaycastLayer");
+
+        SetPositionFloorIndicator();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Send a ray downward from the current object's position
+        SetPositionFloorIndicator();
+    }
+
+    void SetPositionFloorIndicator()
+    {
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, rayDistance, ~ignoreLayer))
         {

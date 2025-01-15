@@ -87,6 +87,8 @@ public class RayCastVisible : MonoBehaviour
     public GameObject endPointIndicatorPrefab;
     private GameObject endPointIndicator;
 
+    public LayerMask ignoreLayer;
+
     void Start()
     {
         lastRotationZ = transform.rotation.eulerAngles.z;
@@ -181,7 +183,7 @@ public class RayCastVisible : MonoBehaviour
         };
 
         CreateDashedLineRenderer();
-        endPointIndicator = Instantiate(endPointIndicatorPrefab);
+        CreateEndpointIndicator();
     }
 
     void Update()
@@ -248,6 +250,12 @@ public class RayCastVisible : MonoBehaviour
         lineRendererDashed.positionCount = 2;
         lineRendererDashed.SetPosition(0, startPoint);
         lineRendererDashed.SetPosition(1, pointsAlongLine[pointsAlongLine.Count - 1]);
+    }
+
+    void CreateEndpointIndicator()
+    {
+        endPointIndicator = Instantiate(endPointIndicatorPrefab);
+        endPointIndicator.transform.SetParent(transform);
     }
 
     void ResetRayLengthVariables(InputAction.CallbackContext context)
@@ -462,7 +470,7 @@ public class RayCastVisible : MonoBehaviour
         Vector3 rayDirection = endPoint - startPoint;
 
         // Perform the raycast using the direction and length of the ray
-        RaycastHit[] hits = Physics.RaycastAll(startPoint, rayDirection.normalized, rayDirection.magnitude);
+        RaycastHit[] hits = Physics.RaycastAll(startPoint, rayDirection.normalized, rayDirection.magnitude, ~ignoreLayer);
         if (hits.Length > 0)
         {
             float maxDistance = 0;
