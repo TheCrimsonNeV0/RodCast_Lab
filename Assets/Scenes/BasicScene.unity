@@ -521,6 +521,10 @@ MonoBehaviour:
   setSineFrequencyAction: {fileID: 7802530931362024064, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   dashLineWidth: 0.02
   lineMaterialDashed: {fileID: 2100000, guid: 9837b0bc5737dcf4ea92f439b0ff635c, type: 2}
+  endPointIndicatorPrefab: {fileID: 2517493472415147670, guid: af26650ef987fb04dbd20193af0bd38d, type: 3}
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1001 &441087506
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -668,7 +672,7 @@ GameObject:
   - component: {fileID: 1249617919}
   - component: {fileID: 1249617918}
   - component: {fileID: 1249617922}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Plane
   m_TagString: RodCastNotInteractable
   m_Icon: {fileID: 0}

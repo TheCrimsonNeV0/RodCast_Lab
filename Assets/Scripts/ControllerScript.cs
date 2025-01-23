@@ -84,6 +84,11 @@ public class RayCastVisible : MonoBehaviour
     public Material lineMaterialDashed;
     private LineRenderer lineRendererDashed;
 
+    public GameObject endPointIndicatorPrefab;
+    private GameObject endPointIndicator;
+
+    public LayerMask ignoreLayer;
+
     void Start()
     {
         lastRotationZ = transform.rotation.eulerAngles.z;
@@ -132,6 +137,7 @@ public class RayCastVisible : MonoBehaviour
             isArcVisible = !isArcVisible;
             lineRenderer.enabled = isArcVisible;
             lineRendererDashed.enabled = isArcVisible;
+            endPointIndicator.SetActive(isArcVisible);
         };
 
         setRayRotation_Left.action.Enable();
@@ -178,6 +184,7 @@ public class RayCastVisible : MonoBehaviour
         };
 
         CreateDashedLineRenderer();
+        CreateEndpointIndicator();
     }
 
     void Update()
@@ -215,6 +222,8 @@ public class RayCastVisible : MonoBehaviour
             bool isHitObject = RaycastHitObject() && 0 < CheckPointsWithinObject(); // Checks if the move can be started
             DrawArc(isHitObject);
             DrawDashedLine();
+            endPointIndicator.transform.position = new Vector3(endPoint.x, endPoint.y, endPoint.z); // Check if this logic always works
+            // TODO: Implement this logic as a part of RodCast
         }
     }
 
@@ -242,6 +251,12 @@ public class RayCastVisible : MonoBehaviour
         lineRendererDashed.positionCount = 2;
         lineRendererDashed.SetPosition(0, startPoint);
         lineRendererDashed.SetPosition(1, pointsAlongLine[pointsAlongLine.Count - 1]);
+    }
+
+    void CreateEndpointIndicator()
+    {
+        endPointIndicator = Instantiate(endPointIndicatorPrefab);
+        endPointIndicator.transform.SetParent(transform);
     }
 
     void ResetRayLengthVariables(InputAction.CallbackContext context)
@@ -422,6 +437,8 @@ public class RayCastVisible : MonoBehaviour
         // Set the material based on the isRaycasting parameter
         lineRenderer.material = isRaycasting ? lineMaterial : lineMaterialNoHit;
 
+        endPointIndicator.SetActive(!isRaycasting); // Disable end point indicator if there is raycast hit
+
         pointsAlongLine.Clear(); // Clear previous points
         lineRenderer.positionCount = arcSegments + 1; // Set the correct number of points
 
@@ -456,7 +473,7 @@ public class RayCastVisible : MonoBehaviour
         Vector3 rayDirection = endPoint - startPoint;
 
         // Perform the raycast using the direction and length of the ray
-        RaycastHit[] hits = Physics.RaycastAll(startPoint, rayDirection.normalized, rayDirection.magnitude);
+        RaycastHit[] hits = Physics.RaycastAll(startPoint, rayDirection.normalized, rayDirection.magnitude, ~ignoreLayer);
         if (hits.Length > 0)
         {
             float maxDistance = 0;
