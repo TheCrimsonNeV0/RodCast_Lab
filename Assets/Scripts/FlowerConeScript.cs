@@ -5,11 +5,17 @@ using UnityEngine.InputSystem;
 public class FlowerConeScript : MonoBehaviour
 {
     public InputActionReference holdObjectAction;
+    public InputActionReference setRayLengthRollAction;
 
-    public GameObject conePrefab; // Assign your cone prefab in the inspector
+    public GameObject conePrefab;
     public float rayLength = 10.0f;
-    public Vector3 startPoint;  // The peak (pointy end) of the cone
-    public Vector3 endPoint;    // The center of the cone's base
+    
+    private Vector3 startPoint; // The peak (pointy end) of the cone
+    private Vector3 endPoint; // The center of the cone's base
+
+    public float minRayLength = 1f; // Minimum length of the ray
+    public float maxRayLength = 10f; // Maximum length of the ray
+    public float rotationSensitivity = 0.1f;
 
     private GameObject coneInstance;
     private Transform coneTip;
@@ -21,9 +27,16 @@ public class FlowerConeScript : MonoBehaviour
     // Temporary Variables
     private bool isHolding;
 
+    private bool isAdjusting_Right;
+    private float lastRotationZ = 0f;
+    private float lastPositionY = 0f;
+    private float rotationOffset = 0f;
+
     // Start is called before the first frame update
     void Start()
     {
+        // Actions Initialization Start
+
         holdObjectAction.action.Enable();
         holdObjectAction.action.started += context =>
         {
@@ -49,6 +62,17 @@ public class FlowerConeScript : MonoBehaviour
             }
         };
 
+        setRayLengthRollAction.action.Enable();
+        setRayLengthRollAction.action.started += context => isAdjusting_Right = true; // Start adjusting length
+        setRayLengthRollAction.action.canceled += context => isAdjusting_Right = false; // Stop adjusting length
+        setRayLengthRollAction.action.performed += context =>
+        {
+            lastRotationZ = transform.rotation.eulerAngles.z; // Reset the last rotation
+            lastPositionY = transform.position.y; // Reset the last position
+        };
+
+        // Actions Initialization End
+
         if (conePrefab != null)
         {
             coneInstance = Instantiate(conePrefab, transform);
@@ -71,6 +95,10 @@ public class FlowerConeScript : MonoBehaviour
         if (isHolding)
         {
             objectToMove.transform.position = coneBottomOrb.transform.position;
+        }
+        if (isAdjusting_Right)
+        {
+            AdjustRayLength();
         }
     }
 
@@ -138,4 +166,39 @@ public class FlowerConeScript : MonoBehaviour
         objectToMove = nearestObject;
         return nearestObject;
     }
+
+    ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC START /////////////////////////////////////////
+
+
+    void AdjustRayLength()
+    {
+        rotationOffset = ParseRotationOffset(transform.rotation.eulerAngles.z);
+        if (rotationOffset != 0)
+        {
+            rayLength += rotationSensitivity * rotationOffset;
+            rayLength = Mathf.Clamp(rayLength, minRayLength, maxRayLength);
+        }
+    }
+
+    float ParseRotationOffset(float currentRotationZ)
+    {
+        float angleDifference = currentRotationZ - lastRotationZ;
+
+        // Detect crossovers at 0 or 360 degrees
+        if (angleDifference > 180) // Crossed 360 to 0 counterclockwise
+        {
+            angleDifference -= 360;
+        }
+        else if (angleDifference < -180) // Crossed 0 to 360 clockwise
+        {
+            angleDifference += 360;
+        }
+
+        lastRotationZ = currentRotationZ;
+
+        // Return the offset (positive for clockwise, negative for counterclockwise)
+        return -1 * angleDifference; // Negative for rotation correction
+    }
+
+    ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC END /////////////////////////////////////////
 }
