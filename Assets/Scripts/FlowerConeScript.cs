@@ -16,18 +16,37 @@ public class FlowerConeScript : MonoBehaviour
     private Transform coneBottomOrb;
 
     private List<GameObject> collidingObjects = new List<GameObject>();
+    private GameObject objectToMove;
 
     // Temporary Variables
-    private bool isHoldingObject;
+    private bool isHolding;
 
     // Start is called before the first frame update
     void Start()
     {
-        holdObjectAction.action.started += context => isHoldingObject = true;
-        holdObjectAction.action.canceled += context => isHoldingObject = false;
+        holdObjectAction.action.Enable();
+        holdObjectAction.action.started += context =>
+        {
+            isHolding = true;
+            if (objectToMove != null)
+            {
+                objectToMove.GetComponent<Rigidbody>().isKinematic = true;
+            }
+        };
+        holdObjectAction.action.canceled += context => {
+            isHolding = false;
+            if (objectToMove != null)
+            {
+                objectToMove.GetComponent<Rigidbody>().isKinematic = false;
+            }
+        };
         holdObjectAction.action.performed += context =>
         {
-            OnButtonClick();
+            GameObject nearest = GetNearestObject();
+            if (nearest != null)
+            {
+                Debug.Log($"Nearest object to the sphere is: {nearest.name}");
+            }
         };
 
         if (conePrefab != null)
@@ -49,9 +68,9 @@ public class FlowerConeScript : MonoBehaviour
         UpdateRayCast();
         AlignCone();
 
-        if (isHoldingObject)
+        if (isHolding)
         {
-            // TODO: Hold the object on the center of the orb
+            objectToMove.transform.position = coneBottomOrb.transform.position;
         }
     }
 
@@ -116,15 +135,7 @@ public class FlowerConeScript : MonoBehaviour
         }
 
         Debug.Log($"Nearest Object: {nearestObject.name}");
+        objectToMove = nearestObject;
         return nearestObject;
-    }
-
-    public void OnButtonClick()
-    {
-        GameObject nearest = GetNearestObject();
-        if (nearest != null)
-        {
-            Debug.Log($"Nearest object to the sphere is: {nearest.name}");
-        }
     }
 }
