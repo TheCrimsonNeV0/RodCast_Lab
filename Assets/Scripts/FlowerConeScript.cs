@@ -148,18 +148,55 @@ public class FlowerConeScript : MonoBehaviour
         endPoint = startPoint + transform.forward * rayLength;
     }
 
+    private Vector3 lastScale; // Store last known scale to compare changes
     void AlignCone()
     {
+        // Calculate the new scale
+        Vector3 newScale = coneInstance.transform.localScale;
+        newScale.y = rayLength;
+
+        // Check if the scale has changed
+        if (newScale == lastScale)
+        {
+            return; // Exit early if there is no change
+        }
+
+        // Update the last scale record
+        lastScale = newScale;
+
+        // Store original child scales
+        List<Transform> children = new List<Transform>();
+        Dictionary<Transform, Vector3> originalChildScales = new Dictionary<Transform, Vector3>();
+
+        foreach (Transform child in coneInstance.transform)
+        {
+            children.Add(child);
+            originalChildScales[child] = child.localScale;
+        }
+
         // Calculate the offset from the cone's tip (child) to the cone's pivot
         Vector3 tipOffset = coneTip.position - coneInstance.transform.position;
 
         // Reposition the cone so that the tip aligns with startPoint
         coneInstance.transform.position = startPoint - tipOffset;
 
-        var scale = coneInstance.transform.localScale;
-        scale.y = rayLength;
-        coneInstance.transform.localScale = scale;
+        // Apply the new scale
+        coneInstance.transform.localScale = newScale;
+
+        // Restore child scales
+        foreach (var child in children)
+        {
+            Vector3 inverseScale = new Vector3(
+                child.localScale.x / newScale.x,
+                child.localScale.y / newScale.y,
+                child.localScale.z / newScale.z
+            );
+
+            child.localScale = inverseScale;
+        }
     }
+
+
 
     // Called by the child component
     public void AddCollidingObject(GameObject obj)
