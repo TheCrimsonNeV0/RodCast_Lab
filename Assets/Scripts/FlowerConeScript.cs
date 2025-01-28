@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +17,8 @@ public class FlowerConeScript : MonoBehaviour
     public float minRayLength = 1f; // Minimum length of the ray
     public float maxRayLength = 10f; // Maximum length of the ray
     public float rotationSensitivity = 0.1f;
+
+    public string outlineScriptName = "Outline";
 
     private GameObject coneInstance;
     private Transform coneTip;
@@ -52,6 +55,7 @@ public class FlowerConeScript : MonoBehaviour
             {
                 objectToMove.GetComponent<Rigidbody>().isKinematic = false;
             }
+            objectToMove = null; // Clear objectToHold
         };
         holdObjectAction.action.performed += context =>
         {
@@ -91,6 +95,35 @@ public class FlowerConeScript : MonoBehaviour
         // Update startPoint and endPoint based on the transform
         UpdateRayCast();
         AlignCone();
+
+        // TODO: Cycle highlighting through objects with a button click
+        GameObject tempObjectToMove = GetNearestObject();
+
+        // Highlighting object logic
+        if (tempObjectToMove != null)
+        {
+            if (tempObjectToMove != objectToMove)
+            {
+                if (objectToMove != null)
+                {
+                    SetHighlightObjectToMove(objectToMove, false);
+                }
+                objectToMove = tempObjectToMove;
+                SetHighlightObjectToMove(objectToMove, true);
+            }
+            else
+            {
+                SetHighlightObjectToMove(objectToMove, true);
+            }
+        }
+        else
+        {
+            if (objectToMove != null)
+            {
+                SetHighlightObjectToMove(objectToMove, false);
+                objectToMove = null;
+            }
+        }
 
         if (isHolding)
         {
@@ -148,23 +181,34 @@ public class FlowerConeScript : MonoBehaviour
             return null;
         }
 
-        GameObject nearestObject = null;
-        float nearestDistance = Mathf.Infinity;
         Vector3 sphereCenter = transform.position;
 
-        foreach (GameObject obj in collidingObjects)
+        // Sort the list by distance using List.Sort
+        collidingObjects.Sort((a, b) =>
         {
-            float distance = Vector3.Distance(sphereCenter, obj.transform.position);
-            if (distance < nearestDistance)
-            {
-                nearestDistance = distance;
-                nearestObject = obj;
-            }
+            float distanceA = Vector3.Distance(sphereCenter, a.transform.position);
+            float distanceB = Vector3.Distance(sphereCenter, b.transform.position);
+            return distanceA.CompareTo(distanceB); // Sort in ascending order
+        });
+
+        // The closest object is now the first one in the sorted list
+        GameObject nearestObject = collidingObjects[0];
+
+        if (objectToMove != null)
+        {
+            Debug.Log($"Nearest Object: {nearestObject.name}");
         }
 
-        Debug.Log($"Nearest Object: {nearestObject.name}");
-        objectToMove = nearestObject;
         return nearestObject;
+    }
+
+    public void SetHighlightObjectToMove(GameObject objectToChange, bool isHighlighted)
+    {
+        MonoBehaviour targetScript = (MonoBehaviour) objectToChange.GetComponent("Outline");
+        if (targetScript != null)
+        {
+            targetScript.enabled = isHighlighted;
+        }
     }
 
     ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC START /////////////////////////////////////////
