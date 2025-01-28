@@ -611,8 +611,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 757310a65bf41d04fb83d2c2ac309732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdObjectAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
+  holdObjectAction: {fileID: 7844728918808831619, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   setRayLengthRollAction: {fileID: 5984737789167544495, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
+  incrementObjectIndexAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   conePrefab: {fileID: 7792075864175685395, guid: 30b5af8cc5ba83e4ea572ca4a1ecb038, type: 3}
   rayLength: 1
   minRayLength: 1

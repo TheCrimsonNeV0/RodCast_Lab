@@ -7,6 +7,7 @@ public class FlowerConeScript : MonoBehaviour
 {
     public InputActionReference holdObjectAction;
     public InputActionReference setRayLengthRollAction;
+    public InputActionReference incrementObjectIndexAction;
 
     public GameObject conePrefab;
     public float rayLength = 10.0f;
@@ -35,6 +36,8 @@ public class FlowerConeScript : MonoBehaviour
     private float lastPositionY = 0f;
     private float rotationOffset = 0f;
 
+    private int indexCounter = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,14 +60,6 @@ public class FlowerConeScript : MonoBehaviour
             }
             objectToMove = null; // Clear objectToHold
         };
-        holdObjectAction.action.performed += context =>
-        {
-            GameObject nearest = GetNearestObject();
-            if (nearest != null)
-            {
-                Debug.Log($"Nearest object to the sphere is: {nearest.name}");
-            }
-        };
 
         setRayLengthRollAction.action.Enable();
         setRayLengthRollAction.action.started += context => isAdjusting_Right = true; // Start adjusting length
@@ -73,6 +68,12 @@ public class FlowerConeScript : MonoBehaviour
         {
             lastRotationZ = transform.rotation.eulerAngles.z; // Reset the last rotation
             lastPositionY = transform.position.y; // Reset the last position
+        };
+
+        incrementObjectIndexAction.action.Enable();
+        incrementObjectIndexAction.action.performed += context =>
+        {
+            indexCounter += 1;
         };
 
         // Actions Initialization End
@@ -95,9 +96,14 @@ public class FlowerConeScript : MonoBehaviour
         // Update startPoint and endPoint based on the transform
         UpdateRayCast();
         AlignCone();
+        GetNearestObject();
 
         // TODO: Cycle highlighting through objects with a button click
-        GameObject tempObjectToMove = GetNearestObject();
+        GameObject tempObjectToMove = null;
+        if (collidingObjects.Count > 0)
+        {
+            tempObjectToMove = collidingObjects[indexCounter % collidingObjects.Count];
+        }
 
         // Highlighting object logic
         if (tempObjectToMove != null)
@@ -162,6 +168,14 @@ public class FlowerConeScript : MonoBehaviour
         {
             collidingObjects.Add(obj);
         }
+        Vector3 sphereCenter = coneBottomOrb.transform.position;
+        collidingObjects.Sort((a, b) =>
+        {
+            float distanceA = Vector3.Distance(sphereCenter, a.transform.position);
+            float distanceB = Vector3.Distance(sphereCenter, b.transform.position);
+            return distanceA.CompareTo(distanceB); // Sort in ascending order
+        });
+        indexCounter = 0;
     }
 
     // Called by the child component
@@ -171,33 +185,35 @@ public class FlowerConeScript : MonoBehaviour
         {
             collidingObjects.Remove(obj);
         }
-    }
-
-    public GameObject GetNearestObject()
-    {
-        if (collidingObjects.Count == 0)
-        {
-            Debug.Log("No objects are colliding with the sphere.");
-            return null;
-        }
-
-        Vector3 sphereCenter = transform.position;
-
-        // Sort the list by distance using List.Sort
+        Vector3 sphereCenter = coneBottomOrb.transform.position;
         collidingObjects.Sort((a, b) =>
         {
             float distanceA = Vector3.Distance(sphereCenter, a.transform.position);
             float distanceB = Vector3.Distance(sphereCenter, b.transform.position);
             return distanceA.CompareTo(distanceB); // Sort in ascending order
         });
+        indexCounter = 0;
+    }
+
+    public GameObject GetNearestObject()
+    {
+        if (collidingObjects.Count == 0)
+        {
+            return null;
+        }
+
+        Vector3 sphereCenter = coneBottomOrb.transform.position;
+
+        // Sort the list by distance using List.Sort
+        /* collidingObjects.Sort((a, b) =>
+        {
+            float distanceA = Vector3.Distance(sphereCenter, a.transform.position);
+            float distanceB = Vector3.Distance(sphereCenter, b.transform.position);
+            return distanceA.CompareTo(distanceB); // Sort in ascending order
+        }); */
 
         // The closest object is now the first one in the sorted list
         GameObject nearestObject = collidingObjects[0];
-
-        if (objectToMove != null)
-        {
-            Debug.Log($"Nearest Object: {nearestObject.name}");
-        }
 
         return nearestObject;
     }
