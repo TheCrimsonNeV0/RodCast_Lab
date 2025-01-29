@@ -37,6 +37,7 @@ public class FlowerConeScript : MonoBehaviour
     private float rotationOffset = 0f;
 
     private int indexCounter = 0;
+    private GameObject closestObject;
 
     // Start is called before the first frame update
     void Start()
@@ -96,9 +97,8 @@ public class FlowerConeScript : MonoBehaviour
         // Update startPoint and endPoint based on the transform
         UpdateRayCast();
         AlignCone();
-        GetNearestObject();
+        closestObject = GetNearestObject();
 
-        // TODO: Cycle highlighting through objects with a button click
         GameObject tempObjectToMove = null;
         if (collidingObjects.Count > 0)
         {
@@ -212,7 +212,10 @@ public class FlowerConeScript : MonoBehaviour
             float distanceB = Vector3.Distance(sphereCenter, b.transform.position);
             return distanceA.CompareTo(distanceB); // Sort in ascending order
         });
-        indexCounter = 0;
+        if (collidingObjects[0] != closestObject)
+        {
+            indexCounter = 0;
+        }
     }
 
     // Called by the child component
@@ -229,7 +232,10 @@ public class FlowerConeScript : MonoBehaviour
             float distanceB = Vector3.Distance(sphereCenter, b.transform.position);
             return distanceA.CompareTo(distanceB); // Sort in ascending order
         });
-        indexCounter = 0;
+        if (collidingObjects[0] != closestObject)
+        {
+            indexCounter = 0;
+        }
     }
 
     public GameObject GetNearestObject()
