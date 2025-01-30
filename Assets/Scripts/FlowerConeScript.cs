@@ -51,6 +51,7 @@ public class FlowerConeScript : MonoBehaviour
             if (objectToMove != null)
             {
                 objectToMove.GetComponent<Rigidbody>().isKinematic = true;
+                objectToMove.transform.SetParent(coneBottomOrb.transform);
             }
         };
         holdObjectAction.action.canceled += context => {
@@ -58,6 +59,7 @@ public class FlowerConeScript : MonoBehaviour
             if (objectToMove != null)
             {
                 objectToMove.GetComponent<Rigidbody>().isKinematic = false;
+                objectToMove.transform.SetParent(null);
             }
             objectToMove = null; // Clear objectToHold
         };
@@ -131,10 +133,6 @@ public class FlowerConeScript : MonoBehaviour
             }
         }
 
-        if (isHolding)
-        {
-            objectToMove.transform.position = coneBottomOrb.transform.position;
-        }
         if (isAdjusting_Right)
         {
             AdjustRayLength();
