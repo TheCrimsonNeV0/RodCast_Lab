@@ -99,37 +99,41 @@ public class FlowerConeScript : MonoBehaviour
         // Update startPoint and endPoint based on the transform
         UpdateRayCast();
         AlignCone();
-        closestObject = GetNearestObject();
-
-        GameObject tempObjectToMove = null;
-        if (collidingObjects.Count > 0)
+        
+        if (!(isHolding && objectToMove != null))
         {
-            tempObjectToMove = collidingObjects[indexCounter % collidingObjects.Count];
-        }
+            closestObject = GetNearestObject();
 
-        // Highlighting object logic
-        if (tempObjectToMove != null)
-        {
-            if (tempObjectToMove != objectToMove)
+            GameObject tempObjectToMove = null;
+            if (collidingObjects.Count > 0)
+            {
+                tempObjectToMove = collidingObjects[indexCounter % collidingObjects.Count];
+            }
+
+            // Highlighting object logic
+            if (tempObjectToMove != null)
+            {
+                if (tempObjectToMove != objectToMove)
+                {
+                    if (objectToMove != null)
+                    {
+                        SetHighlightObjectToMove(objectToMove, false);
+                    }
+                    objectToMove = tempObjectToMove;
+                    SetHighlightObjectToMove(objectToMove, true);
+                }
+                else
+                {
+                    SetHighlightObjectToMove(objectToMove, true);
+                }
+            }
+            else
             {
                 if (objectToMove != null)
                 {
                     SetHighlightObjectToMove(objectToMove, false);
+                    objectToMove = null;
                 }
-                objectToMove = tempObjectToMove;
-                SetHighlightObjectToMove(objectToMove, true);
-            }
-            else
-            {
-                SetHighlightObjectToMove(objectToMove, true);
-            }
-        }
-        else
-        {
-            if (objectToMove != null)
-            {
-                SetHighlightObjectToMove(objectToMove, false);
-                objectToMove = null;
             }
         }
 
