@@ -162,14 +162,12 @@ public class FlowerConeScript : MonoBehaviour
         // Update the last scale record
         lastScale = newScale;
 
-        // Store original child scales
-        List<Transform> children = new List<Transform>();
-        Dictionary<Transform, Vector3> originalChildScales = new Dictionary<Transform, Vector3>();
+        // Store original child world scales
+        Dictionary<Transform, Vector3> originalChildWorldScales = new Dictionary<Transform, Vector3>();
 
         foreach (Transform child in coneInstance.transform)
         {
-            children.Add(child);
-            originalChildScales[child] = child.localScale;
+            originalChildWorldScales[child] = child.lossyScale; // Store world scale before scaling the parent
         }
 
         // Calculate the offset from the cone's tip (child) to the cone's pivot
@@ -178,23 +176,24 @@ public class FlowerConeScript : MonoBehaviour
         // Reposition the cone so that the tip aligns with startPoint
         coneInstance.transform.position = startPoint - tipOffset;
 
-        // Apply the new scale
+        // Apply the new scale to the parent
         coneInstance.transform.localScale = newScale;
 
-        // Restore child scales
-        foreach (var child in children)
+        // Restore child scales to maintain original world scales
+        foreach (var kvp in originalChildWorldScales)
         {
-            Vector3 inverseScale = new Vector3(
-                child.localScale.x / newScale.x,
-                child.localScale.y / newScale.y,
-                child.localScale.z / newScale.z
-            );
+            Transform child = kvp.Key;
+            Vector3 originalWorldScale = kvp.Value;
 
-            child.localScale = inverseScale;
+            // Compute new local scale so that world scale remains unchanged
+            Vector3 newParentLossyScale = coneInstance.transform.lossyScale;
+            child.localScale = new Vector3(
+                originalWorldScale.x / newParentLossyScale.x,
+                originalWorldScale.y / newParentLossyScale.y,
+                originalWorldScale.z / newParentLossyScale.z
+            );
         }
     }
-
-
 
     // Called by the child component
     public void AddCollidingObject(GameObject obj)
