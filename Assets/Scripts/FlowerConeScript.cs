@@ -174,14 +174,12 @@ public class FlowerConeScript : MonoBehaviour
             originalChildWorldScales[child] = child.lossyScale; // Store world scale before scaling the parent
         }
 
-        // Calculate the offset from the cone's tip (child) to the cone's pivot
-        Vector3 tipOffset = coneTip.position - coneInstance.transform.position;
-
-        // Reposition the cone so that the tip aligns with startPoint
-        coneInstance.transform.position = startPoint - tipOffset;
-
-        // Apply the new scale to the parent
+        // Apply the new scale to the cone
         coneInstance.transform.localScale = newScale;
+
+        // Move the cone so the tip aligns with startPoint after scaling
+        Vector3 tipOffset = coneTip.position - coneInstance.transform.position;
+        coneInstance.transform.position += (startPoint - coneTip.position);
 
         // Restore child scales to maintain original world scales
         foreach (var kvp in originalChildWorldScales)
