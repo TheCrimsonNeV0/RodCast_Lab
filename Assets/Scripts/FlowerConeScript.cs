@@ -232,9 +232,12 @@ public class FlowerConeScript : MonoBehaviour
             float distanceB = Vector3.Distance(sphereCenter, b.transform.position);
             return distanceA.CompareTo(distanceB); // Sort in ascending order
         });
-        if (collidingObjects[0] != closestObject)
+        if (collidingObjects.Count > 0)
         {
-            indexCounter = 0;
+            if (collidingObjects[0] != closestObject)
+            {
+                indexCounter = 0;
+            }
         }
     }
 
