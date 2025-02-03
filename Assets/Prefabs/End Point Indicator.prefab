@@ -119,10 +119,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floorIndicatorPrefab: {fileID: 565164653663458538, guid: 0039a0878fdf62c4098e80e4016a7ed5, type: 3}
+  scaleFactor: 1
+  isResizingFromParent: 0
   rayDistance: 50
-  floorLayer:
-    serializedVersion: 2
-    m_Bits: 128
   ignoreLayer:
     serializedVersion: 2
     m_Bits: 64

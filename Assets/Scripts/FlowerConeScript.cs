@@ -99,7 +99,9 @@ public class FlowerConeScript : MonoBehaviour
         // Update startPoint and endPoint based on the transform
         UpdateRayCast();
         AlignCone();
-        
+
+        // TODO: Toggle visibility of end point indicator based on if object to move is null
+
         if (!(isHolding && objectToMove != null))
         {
             closestObject = GetNearestObject();
@@ -155,7 +157,9 @@ public class FlowerConeScript : MonoBehaviour
     {
         // Calculate the new scale
         Vector3 newScale = coneInstance.transform.localScale;
+        newScale.x = rayLength;
         newScale.y = rayLength;
+        newScale.z = rayLength;
 
         // Check if the scale has changed
         if (newScale == lastScale)
@@ -166,13 +170,16 @@ public class FlowerConeScript : MonoBehaviour
         // Update the last scale record
         lastScale = newScale;
 
+        // TODO: Make sure to keep the scale of objectToMove
+
         // Store original child world scales
-        Dictionary<Transform, Vector3> originalChildWorldScales = new Dictionary<Transform, Vector3>();
+
+        /*Dictionary<Transform, Vector3> originalChildWorldScales = new Dictionary<Transform, Vector3>();
 
         foreach (Transform child in coneInstance.transform)
         {
             originalChildWorldScales[child] = child.lossyScale; // Store world scale before scaling the parent
-        }
+        }*/
 
         // Apply the new scale to the cone
         coneInstance.transform.localScale = newScale;
@@ -182,7 +189,7 @@ public class FlowerConeScript : MonoBehaviour
         coneInstance.transform.position += (startPoint - coneTip.position);
 
         // Restore child scales to maintain original world scales
-        foreach (var kvp in originalChildWorldScales)
+        /*foreach (var kvp in originalChildWorldScales)
         {
             Transform child = kvp.Key;
             Vector3 originalWorldScale = kvp.Value;
@@ -194,7 +201,7 @@ public class FlowerConeScript : MonoBehaviour
                 originalWorldScale.y / newParentLossyScale.y,
                 originalWorldScale.z / newParentLossyScale.z
             );
-        }
+        }*/
     }
 
     // Called by the child component
