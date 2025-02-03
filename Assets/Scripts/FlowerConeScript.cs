@@ -306,4 +306,20 @@ public class FlowerConeScript : MonoBehaviour
     }
 
     ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC END /////////////////////////////////////////
+
+    private void OnEnable()
+    {
+        holdObjectAction.action.Enable();
+        setRayLengthRollAction.action.Enable();
+        incrementObjectIndexAction.action.Enable();
+    }
+
+    private void OnDisable()
+    {
+        holdObjectAction.action.Disable();
+        setRayLengthRollAction.action.Disable();
+        incrementObjectIndexAction.action.Disable();
+    }
 }
+
+
