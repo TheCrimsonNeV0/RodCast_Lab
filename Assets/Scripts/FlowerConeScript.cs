@@ -25,6 +25,8 @@ public class FlowerConeScript : MonoBehaviour
     private Transform coneTip;
     private Transform coneBottomOrb;
 
+    private Transform endPointIndicator;
+
     private List<GameObject> collidingObjects = new List<GameObject>();
     private GameObject objectToMove;
 
@@ -86,6 +88,7 @@ public class FlowerConeScript : MonoBehaviour
             coneInstance = Instantiate(conePrefab, transform);
             coneTip = coneInstance.transform.Find("Top Orb");
             coneBottomOrb = coneInstance.transform.Find("Bottom Orb");
+            endPointIndicator = coneInstance.transform.Find("End Point Indicator");
         }
         else
         {
@@ -137,6 +140,15 @@ public class FlowerConeScript : MonoBehaviour
                     objectToMove = null;
                 }
             }
+
+            if (objectToMove != null)
+            {
+                endPointIndicator.gameObject.SetActive(false);
+            }
+            else
+            {
+                endPointIndicator.gameObject.SetActive(true);
+            }
         }
 
         if (isAdjusting_Right)
@@ -155,31 +167,25 @@ public class FlowerConeScript : MonoBehaviour
     private Vector3 lastScale; // Store last known scale to compare changes
     void AlignCone()
     {
-        // Calculate the new scale
         Vector3 newScale = coneInstance.transform.localScale;
         newScale.x = rayLength;
         newScale.y = rayLength;
         newScale.z = rayLength;
 
-        // Check if the scale has changed
         if (newScale == lastScale)
         {
-            return; // Exit early if there is no change
+            return;
         }
 
-        // Update the last scale record
         lastScale = newScale;
 
-        // TODO: Make sure to keep the scale of objectToMove
+        Vector3 originalWorldScale = Vector3.one;
 
-        // Store original child world scales
-
-        /*Dictionary<Transform, Vector3> originalChildWorldScales = new Dictionary<Transform, Vector3>();
-
-        foreach (Transform child in coneInstance.transform)
+        // Only store the world scale if we are holding an object
+        if (isHolding && objectToMove != null)
         {
-            originalChildWorldScales[child] = child.lossyScale; // Store world scale before scaling the parent
-        }*/
+            originalWorldScale = objectToMove.transform.lossyScale;
+        }
 
         // Apply the new scale to the cone
         coneInstance.transform.localScale = newScale;
@@ -188,20 +194,16 @@ public class FlowerConeScript : MonoBehaviour
         Vector3 tipOffset = coneTip.position - coneInstance.transform.position;
         coneInstance.transform.position += (startPoint - coneTip.position);
 
-        // Restore child scales to maintain original world scales
-        /*foreach (var kvp in originalChildWorldScales)
+        // Restore objectToMove's scale only if it's valid
+        if (isHolding && objectToMove != null)
         {
-            Transform child = kvp.Key;
-            Vector3 originalWorldScale = kvp.Value;
-
-            // Compute new local scale so that world scale remains unchanged
-            Vector3 newParentLossyScale = coneInstance.transform.lossyScale;
-            child.localScale = new Vector3(
+            Vector3 newParentLossyScale = objectToMove.transform.parent.lossyScale;
+            objectToMove.transform.localScale = new Vector3(
                 originalWorldScale.x / newParentLossyScale.x,
                 originalWorldScale.y / newParentLossyScale.y,
                 originalWorldScale.z / newParentLossyScale.z
             );
-        }*/
+        }
     }
 
     // Called by the child component
