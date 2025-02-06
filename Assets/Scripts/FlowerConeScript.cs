@@ -62,6 +62,7 @@ public class FlowerConeScript : MonoBehaviour
             {
                 objectToMove.GetComponent<Rigidbody>().isKinematic = false;
                 objectToMove.transform.SetParent(null);
+                SetHighlightObjectToMove(objectToMove, false); // Unhighlight the object on release
             }
             objectToMove = null; // Clear objectToHold
         };
