@@ -6,13 +6,18 @@ public class EndPointIndicatorScript : MonoBehaviour
 {
     public GameObject floorIndicatorPrefab; // Reference to the floor indicator object
     private GameObject floorIndicator; // Reference to the floor indicator object
+    public GameObject referenceObject; // Can be null if the floor indicator is not going to be resized
+    public float scaleFactor = 1.0f;
+    public bool isResizingFromParent = true;
     public float rayDistance = 50f;  // Maximum distance the ray can travel
     public LayerMask ignoreLayer;
 
     void Start()
     {
         floorIndicator = Instantiate(floorIndicatorPrefab, transform.position, Quaternion.identity);
-        // floorIndicator.transform.SetParent(transform);
+
+        Vector3 currentScale = floorIndicator.transform.localScale;
+        floorIndicator.transform.localScale = new Vector3(currentScale.x * scaleFactor, currentScale.y, currentScale.z * scaleFactor);
         floorIndicator.layer = LayerMask.NameToLayer("IgnoreRaycastLayer");
 
         SetPositionFloorIndicator();
@@ -22,6 +27,10 @@ public class EndPointIndicatorScript : MonoBehaviour
     void Update()
     {
         SetPositionFloorIndicator();
+        if (isResizingFromParent)
+        {
+            SetSizeFloorIndicator();
+        }
         floorIndicator.SetActive((transform.position.y >= 0));
     }
 
@@ -39,13 +48,35 @@ public class EndPointIndicatorScript : MonoBehaviour
         }
     }
 
+    void SetSizeFloorIndicator()
+    {
+        // Get the world size of the object using lossyScale
+        Vector3 worldSize = new Vector3(referenceObject.transform.lossyScale.x, referenceObject.transform.lossyScale.y, referenceObject.transform.lossyScale.z);
+
+        // Convert world size to local scale relative to reference object
+        Vector3 referenceScale = floorIndicator.transform.parent ? floorIndicator.transform.parent.lossyScale : Vector3.one;
+
+        floorIndicator.transform.localScale = new Vector3(
+            worldSize.x / referenceScale.x,
+            floorIndicator.transform.localScale.y,
+            worldSize.z / referenceScale.z
+        );
+    }
+
+
     private void OnDisable()
     {
-        floorIndicator.SetActive(false);
+        if (floorIndicator != null)
+        {
+            floorIndicator.SetActive(false);
+        }
     }
 
     private void OnEnable()
     {
-        floorIndicator.SetActive(true);
+        if (floorIndicator != null)
+        {
+            floorIndicator.SetActive(true);
+        }
     }
 }
