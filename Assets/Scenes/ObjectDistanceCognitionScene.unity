@@ -951,7 +951,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2572f5865ee03fd45ade5c0e19d43e01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGeneratingRandom: 1
+  isGeneratingRandom: 0
   xLowInterval: -5
   xHighInterval: 5
   yLowInterval: 5
@@ -960,8 +960,7 @@ MonoBehaviour:
   zHighInterval: 30
   objectPrefab: {fileID: 6146621306095161282, guid: 37e35025053a3ad44b4f49376e7db56b, type: 3}
   viewBlockerPrefab: {fileID: 1557505943042072745, guid: e43bb656950b4054a843ae4fe69f850d, type: 3}
-  positionsCsv: {fileID: 0}
-  csvFile: {fileID: 0}
+  positionsCsv: {fileID: 4900000, guid: 46f2ade23560ab0459491992847ee91e, type: 3}
 --- !u!4 &856296701
 Transform:
   m_ObjectHideFlags: 0
@@ -2442,6 +2441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81e2afb9d6fe84b42a11aa73b1108c7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedOption: 1
   leftController: {fileID: 647390466}
   rayLength: 5
   lineMaterial: {fileID: 2100000, guid: c1cece25cfa74e44fa6f7ad8630adc20, type: 2}
@@ -2467,6 +2467,7 @@ MonoBehaviour:
   setRayRotation_Left: {fileID: -15472980402651157, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   holdObjectAction: {fileID: 1900851542733328038, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   setSineFrequencyAction: {fileID: 7802530931362024064, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
+  calculateEstimateDistanceAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   dashLineWidth: 0.02
   lineMaterialDashed: {fileID: 2100000, guid: 9837b0bc5737dcf4ea92f439b0ff635c, type: 2}
   endPointIndicatorPrefab: {fileID: 2517493472415147670, guid: af26650ef987fb04dbd20193af0bd38d, type: 3}

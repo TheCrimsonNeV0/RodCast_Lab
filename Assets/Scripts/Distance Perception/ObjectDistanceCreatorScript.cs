@@ -29,9 +29,11 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
     private Vector2[] coordinates;
 
-    public TextAsset csvFile; // Assign in the Unity Inspector
-
     private GameObject viewBlockerInstance;
+
+    private int instanceCount = 0;
+
+    private bool isVisible = false;
 
     // Start is called before the first frame update
     void Start()
@@ -49,14 +51,28 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
         viewBlockerInstance.SetActive(false);
     }
 
+    void Update()
+    {
+        if (coordinates != null && isVisible)
+        {
+            if (GameObject.FindGameObjectsWithTag("DistanceObject").Length == 0 && instanceCount < coordinates.Length)
+            {
+                Instantiate(objectPrefab, new Vector3(coordinates[instanceCount].y, objectPrefab.transform.localScale.y / 2, coordinates[instanceCount].x), Quaternion.identity);
+                instanceCount++;
+            }
+        }
+    }
+
     public void ToggleBlockerVisibility()
     {
-        viewBlockerInstance.SetActive(!viewBlockerInstance.activeSelf);
+        isVisible = !isVisible;
+        viewBlockerInstance.SetActive(isVisible);
     }
 
     public void SetBlockerVisibility(bool value)
     {
-        viewBlockerInstance.SetActive(value);
+        isVisible = value;
+        viewBlockerInstance.SetActive(isVisible);
     }
 
     Vector2[] ReadCSV(TextAsset file)
@@ -64,19 +80,22 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
         string[] lines = file.text.Split('\n'); // Split file into lines
         List<Vector2> coordinates = new List<Vector2>(); // Store (x, z) coordinates
 
-        foreach (string line in lines)
+        for (int i = 1; i < lines.Length; i++) // Start from index 1 to skip header
         {
+            string line = lines[i].Trim();
             if (string.IsNullOrWhiteSpace(line)) continue; // Skip empty lines
 
             string[] values = line.Split(','); // Split each line by comma
 
-            if (values.Length == 2 && float.TryParse(values[0], out float x) && float.TryParse(values[1], out float z))
+            if (values.Length >= 2 &&
+                float.TryParse(values[0], out float x) &&
+                float.TryParse(values[1], out float z))
             {
                 coordinates.Add(new Vector2(x, z)); // Store as Vector2 (x, z)
             }
             else
             {
-                Debug.LogError("Invalid CSV format: " + line);
+                Debug.LogError($"Invalid CSV format at line {i + 1}: " + line);
             }
         }
         return coordinates.ToArray();
