@@ -227,6 +227,7 @@ public class RayCastVisible : MonoBehaviour
 
         CreateDashedLineRenderer();
         CreateEndpointIndicator();
+        lineRenderer.material = lineMaterialNoHit;
     }
 
     void Update()
@@ -378,7 +379,6 @@ public class RayCastVisible : MonoBehaviour
         Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
 
         Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
-        Debug.Log(currentRelativePosition + " " + positionDifference);
         left_lastPositionX = currentRelativePosition.x;
         return positionDifference.x;
     }
@@ -399,7 +399,6 @@ public class RayCastVisible : MonoBehaviour
         Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
 
         Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
-        Debug.Log(currentRelativePosition + " " + positionDifference);
         left_lastPositionY = currentRelativePosition.y;
         return positionDifference.y;
     }
@@ -421,7 +420,6 @@ public class RayCastVisible : MonoBehaviour
         Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
 
         Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
-        Debug.Log(currentRelativePosition + " " + positionDifference);
         left_lastPositionZ = currentRelativePosition.z;
         return positionDifference.z;
     }
@@ -477,7 +475,7 @@ public class RayCastVisible : MonoBehaviour
     void DrawArc(bool isRaycasting)
     {
         // Set the material based on the isRaycasting parameter
-        lineRenderer.material = isRaycasting ? lineMaterial : lineMaterialNoHit;
+        if (selectedOption == SelectionType.SelectionTechnique) lineRenderer.material = isRaycasting ? lineMaterial : lineMaterialNoHit;
 
         endPointIndicator.SetActive(!isRaycasting); // Disable end point indicator if there is raycast hit
 

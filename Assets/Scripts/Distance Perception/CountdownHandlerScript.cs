@@ -17,7 +17,6 @@ public class CountdownHandlerScript : MonoBehaviour
 
     public void OnButtonClickStart(GameObject targetObject)
     {
-        Debug.Log("Button click action performed");
         ExecuteFunction(targetObject, Command.DISPLAY_OBJECT);
         countdownValue = countdownValueStatic; // Reset countdown
         StartCoroutine(StartCountdown(targetObject));
@@ -27,14 +26,12 @@ public class CountdownHandlerScript : MonoBehaviour
     {
         while (countdownValue > 0)
         {
-            Debug.Log("Countdown Value: " + countdownValue);
             countdownText.text = countdownValue.ToString();
             yield return new WaitForSeconds(1f); // Wait for 1 second
             countdownValue--; // Reduce value by 1
         }
 
         countdownText.text = countdownValue.ToString();
-        Debug.Log("Countdown reached 0, executing function on target object...");
         ExecuteFunction(targetObject, Command.ACTIVATE_WALL);
     }
 

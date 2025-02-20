@@ -56,10 +56,10 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
     {
         if (coordinates != null && distanceObject_isVisible)
         {
-            if (GameObject.FindGameObjectsWithTag("DistanceObject").Length == 0 && instanceCount < coordinates.Length)
+            if (GameObject.FindGameObjectsWithTag("DistanceObject").Length == 0)
             {
                 SetBlockerVisibility(false);
-                Instantiate(objectPrefab, new Vector3(coordinates[instanceCount].y, objectPrefab.transform.localScale.y / 2, coordinates[instanceCount].x), Quaternion.identity);
+                Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].y, objectPrefab.transform.localScale.y / 2, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
                 instanceCount++;
             }
         }
