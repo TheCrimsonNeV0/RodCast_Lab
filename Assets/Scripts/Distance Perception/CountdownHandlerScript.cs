@@ -6,16 +6,20 @@ public class CountdownHandlerScript : MonoBehaviour
 {
     public enum Command
     {
-        ACTIVATE_WALL = 1
+        ACTIVATE_WALL = 1,
+        DISPLAY_OBJECT = 2
     }
 
-    public int countdownValue = 3;
+    public int countdownValueStatic = 10;
+    private int countdownValue;
+
     public TextMeshProUGUI countdownText;
 
     public void OnButtonClickStart(GameObject targetObject)
     {
         Debug.Log("Button click action performed");
-        countdownValue = 3; // Reset countdown
+        ExecuteFunction(targetObject, Command.DISPLAY_OBJECT);
+        countdownValue = countdownValueStatic; // Reset countdown
         StartCoroutine(StartCountdown(targetObject));
     }
 
@@ -45,6 +49,10 @@ public class CountdownHandlerScript : MonoBehaviour
                 if (command == Command.ACTIVATE_WALL) // Activate view blocker
                 {
                     targetScript.SetBlockerVisibility(true);
+                }
+                else if (command == Command.DISPLAY_OBJECT)
+                {
+                    targetScript.SetObjectVisibility(true);
                 }
             }
             else

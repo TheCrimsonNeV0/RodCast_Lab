@@ -34,6 +34,7 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
     private int instanceCount = 0;
 
     private bool isVisible = false;
+    private bool distanceObject_isVisible = false;
 
     // Start is called before the first frame update
     void Start()
@@ -53,10 +54,11 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
     void Update()
     {
-        if (coordinates != null && isVisible)
+        if (coordinates != null && distanceObject_isVisible)
         {
             if (GameObject.FindGameObjectsWithTag("DistanceObject").Length == 0 && instanceCount < coordinates.Length)
             {
+                SetBlockerVisibility(false);
                 Instantiate(objectPrefab, new Vector3(coordinates[instanceCount].y, objectPrefab.transform.localScale.y / 2, coordinates[instanceCount].x), Quaternion.identity);
                 instanceCount++;
             }
@@ -73,6 +75,16 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
     {
         isVisible = value;
         viewBlockerInstance.SetActive(isVisible);
+    }
+
+    public void ToggleObjectVisibility()
+    {
+        distanceObject_isVisible = !distanceObject_isVisible;
+    }
+
+    public void SetObjectVisibility(bool value)
+    {
+        distanceObject_isVisible = value;
     }
 
     Vector2[] ReadCSV(TextAsset file)
