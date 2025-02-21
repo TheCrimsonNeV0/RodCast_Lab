@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using static UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics.HapticsUtility;
 
-public class RayCastVisible : MonoBehaviour
+public class RodCastScript : MonoBehaviour
 {
     public enum SelectionType
     {
@@ -211,13 +211,7 @@ public class RayCastVisible : MonoBehaviour
             calculateEstimateDistanceAction.action.Enable();
             calculateEstimateDistanceAction.action.performed += context =>
             {
-                GameObject objectToCompare = GameObject.FindGameObjectsWithTag("DistanceObject")[0];
-                if (objectToCompare != null)
-                {
-                    float distance = Vector3.Distance(endPointIndicator.transform.position, objectToCompare.transform.position);
-                    Debug.Log(distance);
-                    Destroy(objectToCompare);
-                }
+                // Debug.Log(GetDistanceBetweenTargetObject());
             };
         }
 
@@ -653,6 +647,28 @@ public class RayCastVisible : MonoBehaviour
 
             heldObject.transform.SetParent(originalParentForHeld); // Restore parent
             heldObject = null;
+        }
+    }
+
+    public Vector3 GetEndPointPosition()
+    {
+        return endPointIndicator.transform.position;
+    }
+
+    public float GetDistanceBetweenTargetObject()
+    {
+        try
+        {
+            GameObject objectToCompare = GameObject.FindGameObjectsWithTag("DistanceObject")[0];
+            if (objectToCompare != null)
+            {
+                float distance = Vector3.Distance(endPointIndicator.transform.position, objectToCompare.transform.position);
+                return distance;
+            }
+            return -1;
+        } catch (System.Exception e)
+        {
+            return -1;
         }
     }
 
