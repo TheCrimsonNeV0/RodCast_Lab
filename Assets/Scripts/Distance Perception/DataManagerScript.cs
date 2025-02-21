@@ -35,9 +35,11 @@ public class DataManagerScript : MonoBehaviour
                 float distance = Vector3.Distance(endPointCoordinate, objectToCompare.transform.position);
                 Destroy(objectToCompare); // Destroy the Distance Object
 
+                string activeTechnique = GetActiveTechnique();
+
                 if (csvWriterScript != null)
                 {
-                    csvWriterScript.RecordData("RodCast", objectToCompare.transform.position, endPointCoordinate, distance);
+                    csvWriterScript.RecordData(activeTechnique, objectToCompare.transform.position, endPointCoordinate, distance);
                 }
             }
         };
@@ -46,6 +48,23 @@ public class DataManagerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    string GetActiveTechnique()
+    {
+        if (rodCastInteraction.activeSelf)
+        {
+            return "RodCast";
+        }
+        else if (flowerCone.activeSelf)
+        {
+            return "FlowerCone";
+
+        }
+        else
+        {
+            return "";
+        }
     }
 }
