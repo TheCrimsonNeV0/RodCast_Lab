@@ -34,7 +34,7 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
     private int instanceCount = 0;
 
     private bool isVisible = false;
-    private bool distanceObject_isVisible = false;
+    private bool distanceObject_isVisible = true;
 
     // Start is called before the first frame update
     void Start()

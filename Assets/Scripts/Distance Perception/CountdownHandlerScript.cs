@@ -17,7 +17,7 @@ public class CountdownHandlerScript : MonoBehaviour
 
     public void OnButtonClickStart(GameObject targetObject)
     {
-        ExecuteFunction(targetObject, Command.DISPLAY_OBJECT);
+        // ExecuteFunction(targetObject, Command.DISPLAY_OBJECT);
         countdownValue = countdownValueStatic; // Reset countdown
         StartCoroutine(StartCountdown(targetObject));
     }
