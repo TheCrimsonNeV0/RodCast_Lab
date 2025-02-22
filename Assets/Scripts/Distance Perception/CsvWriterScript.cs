@@ -22,14 +22,14 @@ public class CsvWriterScript : MonoBehaviour
     {
         if (!File.Exists(filePath))
         {
-            File.WriteAllText(filePath, "technique,object_x,object_y,object_z,clicked_x,clicked_y,clicked_z,distance\n"); // Headers for the CSV
+            File.WriteAllText(filePath, "technique,object_x,object_y,object_z,clicked_x,clicked_y,clicked_z,distance,is_success\n"); // Headers for the CSV
         }
     }
 
-    public void RecordData(string technique, Vector3 objectPosition, Vector3 clickedPosition, float distance) // Call from the Manager component
+    public void RecordData(string technique, Vector3 objectPosition, Vector3 clickedPosition, float distance, bool is_success) // Call from the Manager component
     {
         string newLine = $"{technique},{objectPosition.x},{objectPosition.y},{objectPosition.z}," +
-                         $"{clickedPosition.x},{clickedPosition.y},{clickedPosition.z},{distance}\n";
+                         $"{clickedPosition.x},{clickedPosition.y},{clickedPosition.z},{distance},{is_success}\n";
 
         File.AppendAllText(filePath, newLine);
     }

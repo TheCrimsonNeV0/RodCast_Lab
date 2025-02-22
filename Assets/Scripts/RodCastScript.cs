@@ -62,7 +62,7 @@ public class RodCastScript : MonoBehaviour
     public InputActionReference setRayRotation_Left;
     public InputActionReference holdObjectAction;
     public InputActionReference setSineFrequencyAction;
-    public InputActionReference calculateEstimateDistanceAction;
+    public InputActionReference getPositionAction;
 
     private GameObject objectToMove; // The object that will be assigned based on the RayCast hit
     private GameObject heldObject;
@@ -208,10 +208,10 @@ public class RodCastScript : MonoBehaviour
         
         else if (selectedOption == SelectionType.DistancePerception)
         {
-            calculateEstimateDistanceAction.action.Enable();
-            calculateEstimateDistanceAction.action.performed += context =>
+            getPositionAction.action.Enable();
+            getPositionAction.action.performed += context =>
             {
-                // Debug.Log(GetDistanceBetweenTargetObject());
+                Debug.Log(GetEndPointPosition());
             };
         }
 

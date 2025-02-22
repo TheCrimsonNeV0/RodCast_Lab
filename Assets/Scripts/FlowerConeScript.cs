@@ -5,9 +5,18 @@ using UnityEngine.InputSystem;
 
 public class FlowerConeScript : MonoBehaviour
 {
+    public enum SelectionType
+    {
+        SelectionTechnique,
+        DistancePerception
+    }
+
+    public SelectionType selectedOption;
+
     public InputActionReference holdObjectAction;
     public InputActionReference setRayLengthRollAction;
     public InputActionReference incrementObjectIndexAction;
+    public InputActionReference getCenterPositionAction;
 
     public GameObject conePrefab;
     public float rayLength = 10.0f;
@@ -44,28 +53,9 @@ public class FlowerConeScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Actions Initialization Start
+        // START ACTION BINDING
 
-        holdObjectAction.action.Enable();
-        holdObjectAction.action.started += context =>
-        {
-            isHolding = true;
-            if (objectToMove != null)
-            {
-                objectToMove.GetComponent<Rigidbody>().isKinematic = true;
-                objectToMove.transform.SetParent(coneBottomOrb.transform);
-            }
-        };
-        holdObjectAction.action.canceled += context => {
-            isHolding = false;
-            if (objectToMove != null)
-            {
-                objectToMove.GetComponent<Rigidbody>().isKinematic = false;
-                objectToMove.transform.SetParent(null);
-                SetHighlightObjectToMove(objectToMove, false); // Unhighlight the object on release
-            }
-            objectToMove = null; // Clear objectToHold
-        };
+            // START CONE SETTING BINDING
 
         setRayLengthRollAction.action.Enable();
         setRayLengthRollAction.action.started += context => isAdjusting_Right = true; // Start adjusting length
@@ -76,13 +66,52 @@ public class FlowerConeScript : MonoBehaviour
             lastPositionY = transform.position.y; // Reset the last position
         };
 
-        incrementObjectIndexAction.action.Enable();
-        incrementObjectIndexAction.action.performed += context =>
-        {
-            indexCounter += 1;
-        };
+            // END CONE SETTING BINDING
 
-        // Actions Initialization End
+            // START OTHER ACTION BINDING
+
+        if (selectedOption == SelectionType.SelectionTechnique)
+        {
+            holdObjectAction.action.Enable();
+            holdObjectAction.action.started += context =>
+            {
+                isHolding = true;
+                if (objectToMove != null)
+                {
+                    objectToMove.GetComponent<Rigidbody>().isKinematic = true;
+                    objectToMove.transform.SetParent(coneBottomOrb.transform);
+                }
+            };
+            holdObjectAction.action.canceled += context => {
+                isHolding = false;
+                if (objectToMove != null)
+                {
+                    objectToMove.GetComponent<Rigidbody>().isKinematic = false;
+                    objectToMove.transform.SetParent(null);
+                    SetHighlightObjectToMove(objectToMove, false); // Unhighlight the object on release
+                }
+                objectToMove = null; // Clear objectToHold
+            };
+
+            incrementObjectIndexAction.action.Enable();
+            incrementObjectIndexAction.action.performed += context =>
+            {
+                indexCounter += 1;
+            };
+        }
+
+        else if (selectedOption == SelectionType.DistancePerception)
+        {
+            getCenterPositionAction.action.Enable();
+            getCenterPositionAction.action.performed += context =>
+            {
+                Debug.Log(coneBottomOrb.transform.position);
+            };
+        }
+
+            // END OTHER ACTION BINDING
+
+        // END ACTION BINDING
 
         if (conePrefab != null)
         {
@@ -275,11 +304,26 @@ public class FlowerConeScript : MonoBehaviour
 
     public void SetHighlightObjectToMove(GameObject objectToChange, bool isHighlighted)
     {
-        MonoBehaviour targetScript = (MonoBehaviour) objectToChange.GetComponent("Outline");
-        if (targetScript != null)
+        if (selectedOption == SelectionType.SelectionTechnique)
         {
-            targetScript.enabled = isHighlighted;
+            MonoBehaviour targetScript = (MonoBehaviour)objectToChange.GetComponent("Outline");
+            if (targetScript != null)
+            {
+                targetScript.enabled = isHighlighted;
+            }
         }
+    }
+
+    public Vector3 GetBottomOrbCenterPoint()
+    {
+        return coneBottomOrb.transform.position;
+    }
+
+    public float GetBottomOrbRadius()
+    {
+        SphereCollider sphereCollider = coneBottomOrb.GetComponent<SphereCollider>();
+        float radius = sphereCollider.radius * coneBottomOrb.transform.lossyScale.x; // x, y, z should all have the same scale
+        return radius;
     }
 
     ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC START /////////////////////////////////////////
@@ -317,7 +361,7 @@ public class FlowerConeScript : MonoBehaviour
 
     ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC END /////////////////////////////////////////
 
-    private void OnEnable()
+    /*private void OnEnable()
     {
         holdObjectAction.action.Enable();
         setRayLengthRollAction.action.Enable();
@@ -329,7 +373,7 @@ public class FlowerConeScript : MonoBehaviour
         holdObjectAction.action.Disable();
         setRayLengthRollAction.action.Disable();
         incrementObjectIndexAction.action.Disable();
-    }
+    }*/
 }
 
 
