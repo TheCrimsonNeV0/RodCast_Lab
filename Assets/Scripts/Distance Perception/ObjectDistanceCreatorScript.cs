@@ -4,8 +4,23 @@ using UnityEngine;
 using TMPro;
 using static UnityEngine.Rendering.DebugUI;
 
+public class TechniqueData
+{
+    public string technique;
+    public float x;
+    public float z;
+
+    public TechniqueData(string technique, float x, float z)
+    {
+        this.technique = technique;
+        this.x = x;
+        this.z = z;
+    }
+}
+
 public class ObjectDistanceCreatorScript : MonoBehaviour
 {
+    /*
     public bool isGeneratingRandom = true;
 
     public float xLowInterval = 10;
@@ -16,18 +31,20 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
     public float zLowInterval = -5;
     public float zHighInterval = 5;
+    */
 
     public GameObject objectPrefab;
     public GameObject viewBlockerPrefab;
 
     public TextAsset positionsCsv;
+    public GameObject techniqueManager;
 
     private GameObject objectInstance;
     private float xCoordinate;
     private float yCoordinate;
     private float zCoordinate;
 
-    private Vector2[] coordinates;
+    private TechniqueData[] coordinates;
 
     private GameObject viewBlockerInstance;
 
@@ -36,17 +53,13 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
     private bool isVisible = false;
     private bool distanceObject_isVisible = true;
 
+    private TechniqueManagerScript techniqueManagerScript;
+
     // Start is called before the first frame update
     void Start()
     {
-        if (isGeneratingRandom)
-        {
-            GenerateObjectAtRandomLocation();
-        }
-        else
-        {
-            coordinates = ReadCSV(positionsCsv);
-        }
+        coordinates = ReadCSV(positionsCsv);
+        techniqueManagerScript = techniqueManager.GetComponent<TechniqueManagerScript>();
 
         viewBlockerInstance = Instantiate(viewBlockerPrefab);
         viewBlockerInstance.SetActive(false);
@@ -59,7 +72,8 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
             if (GameObject.FindGameObjectsWithTag("DistanceObject").Length == 0)
             {
                 SetBlockerVisibility(false);
-                Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].y, objectPrefab.transform.localScale.y / 2, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
+                techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
+                Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
                 instanceCount++;
             }
         }
@@ -87,10 +101,10 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
         distanceObject_isVisible = value;
     }
 
-    Vector2[] ReadCSV(TextAsset file)
+    TechniqueData[] ReadCSV(TextAsset file)
     {
         string[] lines = file.text.Split('\n'); // Split file into lines
-        List<Vector2> coordinates = new List<Vector2>(); // Store (x, z) coordinates
+        List<TechniqueData> dataList = new List<TechniqueData>(); // Store technique, x, z
 
         for (int i = 1; i < lines.Length; i++) // Start from index 1 to skip header
         {
@@ -99,20 +113,22 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
             string[] values = line.Split(','); // Split each line by comma
 
-            if (values.Length >= 2 &&
-                float.TryParse(values[0], out float x) &&
-                float.TryParse(values[1], out float z))
+            if (values.Length >= 3 &&
+                !string.IsNullOrWhiteSpace(values[0]) &&
+                float.TryParse(values[1], out float x) &&
+                float.TryParse(values[2], out float z))
             {
-                coordinates.Add(new Vector2(x, z)); // Store as Vector2 (x, z)
+                dataList.Add(new TechniqueData(values[0], x, z)); // Store in list
             }
             else
             {
                 Debug.LogError($"Invalid CSV format at line {i + 1}: " + line);
             }
         }
-        return coordinates.ToArray();
+        return dataList.ToArray();
     }
 
+    /*
     void GenerateObjectAtRandomLocation()
     {
         // Create objects and calculate offset distances in a loop
@@ -125,4 +141,5 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
         objectInstance = Instantiate(objectPrefab, objectInstancePosition, Quaternion.identity);
     }
+    */
 }
