@@ -4,8 +4,16 @@ using System.Collections.Generic;
 using System.Collections;
 using static UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics.HapticsUtility;
 
-public class RayCastVisible : MonoBehaviour
+public class RodCastScript : MonoBehaviour
 {
+    public enum SelectionType
+    {
+        SelectionTechnique,
+        DistancePerception
+    }
+
+    public SelectionType selectedOption;
+
     public GameObject leftController;
 
     public float rayLength = 5.0f; // Length of the RayCast
@@ -54,6 +62,7 @@ public class RayCastVisible : MonoBehaviour
     public InputActionReference setRayRotation_Left;
     public InputActionReference holdObjectAction;
     public InputActionReference setSineFrequencyAction;
+    public InputActionReference getPositionAction;
 
     private GameObject objectToMove; // The object that will be assigned based on the RayCast hit
     private GameObject heldObject;
@@ -117,10 +126,10 @@ public class RayCastVisible : MonoBehaviour
         lineRenderer.endWidth = 0.05f;
 
         // Enable the Input Action and bind the method to the performed event
-        moveAlongArcAction.action.Enable();
-        moveAlongArcAction.action.started += context => isHoldingInHand = true;
-        moveAlongArcAction.action.canceled += context => isHoldingInHand = false;
-        moveAlongArcAction.action.performed += OnMoveAlongArcPerformed;
+
+        // START ACTION BINDING
+
+            // START ARC SETTING BINDING
 
         setRayLengthRollAction.action.Enable();
         setRayLengthRollAction.action.started += context => isAdjusting_Right = true; // Start adjusting length
@@ -129,15 +138,6 @@ public class RayCastVisible : MonoBehaviour
         {
             lastRotationZ = transform.rotation.eulerAngles.z; // Reset the last rotation
             lastPositionY = transform.position.y; // Reset the last position
-        };
-
-        toggleArcVisibilityAction.action.Enable();
-        toggleArcVisibilityAction.action.performed += context =>
-        {
-            isArcVisible = !isArcVisible;
-            lineRenderer.enabled = isArcVisible;
-            lineRendererDashed.enabled = isArcVisible;
-            endPointIndicator.SetActive(isArcVisible);
         };
 
         setRayRotation_Left.action.Enable();
@@ -160,31 +160,68 @@ public class RayCastVisible : MonoBehaviour
             left_lastPositionZ = currentRelativePosition.z;
         };
 
-        holdObjectAction.action.Enable();
-        holdObjectAction.action.started += context =>
-        {
-            isHolding = true;
-            if (objectToMove != null)
-            {
-                objectToMove.GetComponent<Rigidbody>().isKinematic = true;
-            }
-        };
-        holdObjectAction.action.canceled += context => {
-            isHolding = false;
-            if (objectToMove != null)
-            {
-                objectToMove.GetComponent<Rigidbody>().isKinematic = false;
-            }
-        };
+            // END ARC SETTING BINDING
 
-        setSineFrequencyAction.action.Enable();
-        setSineFrequencyAction.action.started += context =>
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            // START OTHER ACTION BINDING
+
+        if (selectedOption == SelectionType.SelectionTechnique)
         {
-            sineFrequency = (sineFrequency == 2) ? 1 : 2; // Toggles the sine frequency
-        };
+            moveAlongArcAction.action.Enable();
+            moveAlongArcAction.action.started += context => isHoldingInHand = true;
+            moveAlongArcAction.action.canceled += context => isHoldingInHand = false;
+            moveAlongArcAction.action.performed += OnMoveAlongArcPerformed;
+
+            toggleArcVisibilityAction.action.Enable();
+            toggleArcVisibilityAction.action.performed += context =>
+            {
+                isArcVisible = !isArcVisible;
+                lineRenderer.enabled = isArcVisible;
+                lineRendererDashed.enabled = isArcVisible;
+                endPointIndicator.SetActive(isArcVisible);
+            };
+
+            holdObjectAction.action.Enable();
+            holdObjectAction.action.started += context =>
+            {
+                isHolding = true;
+                if (objectToMove != null)
+                {
+                    objectToMove.GetComponent<Rigidbody>().isKinematic = true;
+                }
+            };
+            holdObjectAction.action.canceled += context => {
+                isHolding = false;
+                if (objectToMove != null)
+                {
+                    objectToMove.GetComponent<Rigidbody>().isKinematic = false;
+                }
+            };
+
+            setSineFrequencyAction.action.Enable();
+            setSineFrequencyAction.action.started += context =>
+            {
+                sineFrequency = (sineFrequency == 2) ? 1 : 2; // Toggles the sine frequency
+            };
+        }
+        
+        else if (selectedOption == SelectionType.DistancePerception)
+        {
+            getPositionAction.action.Enable();
+            getPositionAction.action.performed += context =>
+            {
+                Debug.Log(GetEndPointPosition());
+            };
+        }
+
+            // END OTHER ACTION BINDING
+
+        // END ACTION BINDING
 
         CreateDashedLineRenderer();
         CreateEndpointIndicator();
+        lineRenderer.material = lineMaterialNoHit;
     }
 
     void Update()
@@ -336,7 +373,6 @@ public class RayCastVisible : MonoBehaviour
         Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
 
         Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
-        Debug.Log(currentRelativePosition + " " + positionDifference);
         left_lastPositionX = currentRelativePosition.x;
         return positionDifference.x;
     }
@@ -357,7 +393,6 @@ public class RayCastVisible : MonoBehaviour
         Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
 
         Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
-        Debug.Log(currentRelativePosition + " " + positionDifference);
         left_lastPositionY = currentRelativePosition.y;
         return positionDifference.y;
     }
@@ -379,7 +414,6 @@ public class RayCastVisible : MonoBehaviour
         Vector3 lastRelativePosition = new Vector3(left_lastPositionX, left_lastPositionY, left_lastPositionZ);
 
         Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
-        Debug.Log(currentRelativePosition + " " + positionDifference);
         left_lastPositionZ = currentRelativePosition.z;
         return positionDifference.z;
     }
@@ -435,7 +469,7 @@ public class RayCastVisible : MonoBehaviour
     void DrawArc(bool isRaycasting)
     {
         // Set the material based on the isRaycasting parameter
-        lineRenderer.material = isRaycasting ? lineMaterial : lineMaterialNoHit;
+        if (selectedOption == SelectionType.SelectionTechnique) lineRenderer.material = isRaycasting ? lineMaterial : lineMaterialNoHit;
 
         endPointIndicator.SetActive(!isRaycasting); // Disable end point indicator if there is raycast hit
 
@@ -616,7 +650,29 @@ public class RayCastVisible : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    public Vector3 GetEndPointPosition()
+    {
+        return endPointIndicator.transform.position;
+    }
+
+    public float GetDistanceBetweenTargetObject()
+    {
+        try
+        {
+            GameObject objectToCompare = GameObject.FindGameObjectsWithTag("DistanceObject")[0];
+            if (objectToCompare != null)
+            {
+                float distance = Vector3.Distance(endPointIndicator.transform.position, objectToCompare.transform.position);
+                return distance;
+            }
+            return -1;
+        } catch (System.Exception e)
+        {
+            return -1;
+        }
+    }
+
+    /*private void OnEnable()
     {
         moveAlongArcAction.action.Enable();
         moveAlongArcAction.action.performed += OnMoveAlongArcPerformed;
@@ -634,5 +690,5 @@ public class RayCastVisible : MonoBehaviour
         toggleArcVisibilityAction.action.Disable();
         setRayRotation_Left.action.Disable();
         setSineFrequencyAction.action.Disable();
-    }
+    }*/
 }
