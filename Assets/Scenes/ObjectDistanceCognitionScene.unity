@@ -922,7 +922,7 @@ MonoBehaviour:
   holdObjectAction: {fileID: 7844728918808831619, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   getPositionAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   minRayLength: 0.001
-  maxRayLength: 15
+  maxRayLength: 50
   rayLength: 0.1
   scalingFactor: 0
   handPrefab: {fileID: 5686134208185362930, guid: 7e29121507ed3194abb1a9065fcad1d1, type: 3}
@@ -2721,7 +2721,7 @@ MonoBehaviour:
   conePrefab: {fileID: 7792075864175685395, guid: 30b5af8cc5ba83e4ea572ca4a1ecb038, type: 3}
   rayLength: 1
   minRayLength: 1
-  maxRayLength: 25
+  maxRayLength: 50
   rotationSensitivity: 0.1
   outlineScriptName: Outline
 --- !u!1 &1904948034
@@ -3110,8 +3110,8 @@ MonoBehaviour:
   sineFrequency: 1
   sineAmplitude: 1
   minRayLength: 1
-  maxRayLength: 100
-  minSineAmplitude: 0.1
+  maxRayLength: 150
+  minSineAmplitude: 0.01
   maxSineAmplitude: 3
   rotationSensitivity: 0.2
   positionSensitivity: 3
