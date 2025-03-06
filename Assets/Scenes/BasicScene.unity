@@ -1187,10 +1187,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a5cc88dee4feb4e8cccb125fc734fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  headset: {fileID: 2088524866}
   setRayLengthAction: {fileID: 5984737789167544495, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
-  holdObjectAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
+  holdObjectAction: {fileID: 7844728918808831619, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   minRayLength: 0.001
-  maxRayLength: 100
+  maxRayLength: 15
   rayLength: 0.1
   scalingFactor: 0
   handPrefab: {fileID: 5686134208185362930, guid: 7e29121507ed3194abb1a9065fcad1d1, type: 3}
@@ -1489,7 +1490,7 @@ MonoBehaviour:
   getCenterPositionAction: {fileID: 0}
   conePrefab: {fileID: 7792075864175685395, guid: 30b5af8cc5ba83e4ea572ca4a1ecb038, type: 3}
   rayLength: 1
-  minRayLength: 1
+  minRayLength: 0.1
   maxRayLength: 10
   rotationSensitivity: 0.1
   outlineScriptName: Outline
@@ -2048,6 +2049,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2038372930}
   m_CullTransparentMesh: 1
+--- !u!1 &2088524866 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1767192433, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 441087506}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2092139007
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class GoGoHandScript : MonoBehaviour
 {
+    public GameObject headset;
+
     private Vector3 startPoint;
     private Vector3 endPoint;
 
@@ -49,7 +51,7 @@ public class GoGoHandScript : MonoBehaviour
             adjustedForward = transform.forward;
             adjustedUp = transform.up;
             adjustedRight = transform.right;
-            adjustedOrigin = transform.position;
+            adjustedOrigin = headset.transform.position;
 
         };
         setRayLengthAction.action.canceled += context => isAdjustingLength = false; // Stop adjusting length
@@ -85,12 +87,15 @@ public class GoGoHandScript : MonoBehaviour
 
         UpdateRayCast();
         handObject = Instantiate(handPrefab, endPoint, Quaternion.identity);
+        handObject.transform.SetParent(transform);
     }
 
     // Update is called once per frame
     void Update()
     {
         UpdateRayCast();
+        adjustedOrigin = headset.transform.position;
+
         if (handObject != null)
         {
             handObject.transform.position = endPoint;
@@ -101,7 +106,7 @@ public class GoGoHandScript : MonoBehaviour
         {
             AdjustRayLength(gameObject);
         }
-        else if (!(isHolding && objectToMove != null))
+        if (!(isHolding && objectToMove != null))
         {
             objectToMove = GetFirstCollidingObject();
         }
@@ -182,6 +187,7 @@ public class GoGoHandScript : MonoBehaviour
         return positionDifference.z;
     }
 
+    /*
     void OnDisable()
     {
         if (handObject != null)
@@ -197,4 +203,5 @@ public class GoGoHandScript : MonoBehaviour
             handObject.SetActive(true);
         }
     }
+    */
 }
