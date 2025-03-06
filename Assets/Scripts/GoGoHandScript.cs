@@ -5,6 +5,14 @@ using UnityEngine;
 
 public class GoGoHandScript : MonoBehaviour
 {
+    public enum SelectionType
+    {
+        SelectionTechnique,
+        DistancePerception
+    }
+
+    public SelectionType selectedOption;
+
     public GameObject headset;
 
     private Vector3 startPoint;
@@ -12,6 +20,7 @@ public class GoGoHandScript : MonoBehaviour
 
     public InputActionReference setRayLengthAction;
     public InputActionReference holdObjectAction;
+    public InputActionReference getPositionAction;
 
     public float minRayLength = 1f;
     public float maxRayLength = 10f;
@@ -65,25 +74,36 @@ public class GoGoHandScript : MonoBehaviour
             lastPositionZ = currentRelativePosition.z;
         };
 
-        holdObjectAction.action.Enable();
-        holdObjectAction.action.started += context =>
+        if (selectedOption == SelectionType.SelectionTechnique)
         {
-            isHolding = true;
-            if (objectToMove != null)
+            holdObjectAction.action.Enable();
+            holdObjectAction.action.started += context =>
             {
-                objectToMove.GetComponent<Rigidbody>().isKinematic = true;
-                objectToMove.transform.SetParent(handObject.transform);
-            }
-        };
-        holdObjectAction.action.canceled += context => {
-            isHolding = false;
-            if (objectToMove != null)
+                isHolding = true;
+                if (objectToMove != null)
+                {
+                    objectToMove.GetComponent<Rigidbody>().isKinematic = true;
+                    objectToMove.transform.SetParent(handObject.transform);
+                }
+            };
+            holdObjectAction.action.canceled += context => {
+                isHolding = false;
+                if (objectToMove != null)
+                {
+                    objectToMove.GetComponent<Rigidbody>().isKinematic = false;
+                    objectToMove.transform.SetParent(null);
+                }
+                objectToMove = null; // Clear objectToHold
+            };
+        }
+        else if (selectedOption == SelectionType.DistancePerception)
+        {
+            getPositionAction.action.Enable();
+            getPositionAction.action.performed += context =>
             {
-                objectToMove.GetComponent<Rigidbody>().isKinematic = false;
-                objectToMove.transform.SetParent(null);
-            }
-            objectToMove = null; // Clear objectToHold
-        };
+                Debug.Log(GetEndPointPosition());
+            };
+        }
 
         UpdateRayCast();
         handObject = Instantiate(handPrefab, endPoint, Quaternion.identity);
@@ -185,6 +205,11 @@ public class GoGoHandScript : MonoBehaviour
         Vector3 positionDifference = currentRelativePosition - lastRelativePosition;
         lastPositionZ = currentRelativePosition.z;
         return positionDifference.z;
+    }
+
+    public Vector3 GetEndPointPosition()
+    {
+        return handObject.transform.position;
     }
 
     /*
