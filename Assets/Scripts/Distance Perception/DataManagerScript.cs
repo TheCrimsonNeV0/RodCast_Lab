@@ -9,16 +9,19 @@ public class DataManagerScript : MonoBehaviour
     public InputActionReference getDistanceBetweenDistanceObjectAction;
     public GameObject rodCastInteraction;
     public GameObject flowerCone;
+    public GameObject goGoHand;
     public GameObject csvWriter;
 
     private RodCastScript rodCastScript;
     private FlowerConeScript flowerConeScript;
+    private GoGoHandScript goGoHandScript;
     private CsvWriterScript csvWriterScript;
 
     public enum Technique
     {
         RodCast,
-        FlowerCone
+        FlowerCone,
+        GoGoHand
     }
 
     // Start is called before the first frame update
@@ -31,6 +34,10 @@ public class DataManagerScript : MonoBehaviour
         if (flowerCone != null)
         {
             flowerConeScript = flowerCone.GetComponent<FlowerConeScript>();
+        }
+        if (goGoHand != null)
+        {
+            goGoHandScript = goGoHand.GetComponent<GoGoHandScript>();
         }
 
         if (csvWriter != null)
@@ -49,7 +56,7 @@ public class DataManagerScript : MonoBehaviour
                     Debug.Log("Distance Object Position: " + objectToCompare.transform.position);
                     Vector3 endPointCoordinate = rodCastScript.GetEndPointPosition();
                     float distance = Vector3.Distance(endPointCoordinate, objectToCompare.transform.position);
-                    bool isSuccess = IsSuccessRodCast(endPointCoordinate, objectToCompare);
+                    bool isSuccess = IsSuccess(endPointCoordinate, objectToCompare);
                     Destroy(objectToCompare); // Destroy the Distance Object
 
                     if (csvWriterScript != null)
@@ -76,6 +83,24 @@ public class DataManagerScript : MonoBehaviour
                     }
                 }
             }
+            else if (activeTechnique == Technique.GoGoHand)
+            {
+                if (goGoHandScript != null)
+                {
+                    GameObject objectToCompare = GameObject.FindGameObjectsWithTag("DistanceObject")[0];
+                    Debug.Log("Distance Object Position: " + objectToCompare.transform.position);
+                    Vector3 endPointCoordinate = goGoHandScript.GetEndPointPosition();
+                    float distance = Vector3.Distance(endPointCoordinate, objectToCompare.transform.position);
+                    bool isSuccess = IsSuccess(endPointCoordinate, objectToCompare);
+                    Destroy(objectToCompare); // Destroy the Distance Object
+
+                    if (csvWriterScript != null)
+                    {
+                        csvWriterScript.RecordData("GoGoHand", objectToCompare.transform.position, endPointCoordinate,
+                            distance, isSuccess);
+                    }
+                }
+            }
         };
     }
 
@@ -96,13 +121,17 @@ public class DataManagerScript : MonoBehaviour
             return Technique.FlowerCone;
 
         }
+        else if (goGoHand.activeSelf)
+        {
+            return Technique.GoGoHand;
+        }
         else
         {
             return null;
         }
     }
 
-    public bool IsSuccessRodCast(Vector3 point, GameObject obj)
+    public bool IsSuccess(Vector3 point, GameObject obj)
     {
         if (obj == null)
         {

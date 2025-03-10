@@ -379,7 +379,13 @@ MonoBehaviour:
   getDistanceBetweenDistanceObjectAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   rodCastInteraction: {fileID: 1961042923}
   flowerCone: {fileID: 1876896506}
+  goGoHand: {fileID: 686530506}
   csvWriter: {fileID: 1404205416}
+--- !u!1 &271705040 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1767192433, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 441087506}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &288700334
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,6 +432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rodCast: {fileID: 1961042923}
   flowerCone: {fileID: 1876896506}
+  goGoHand: {fileID: 686530506}
 --- !u!1 &299639867
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,6 +760,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1670256625, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1876896507}
+    - targetCorrespondingSourceObject: {fileID: 1670256625, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 686530507}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
 --- !u!1 &523186396
@@ -862,6 +872,61 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 202364687, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
   m_PrefabInstance: {fileID: 441087506}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &686530506
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 686530507}
+  - component: {fileID: 686530508}
+  m_Layer: 0
+  m_Name: Go-go Hand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &686530507
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686530506}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 313118137}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &686530508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686530506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a5cc88dee4feb4e8cccb125fc734fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedOption: 1
+  headset: {fileID: 271705040}
+  setRayLengthAction: {fileID: 5984737789167544495, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
+  holdObjectAction: {fileID: 7844728918808831619, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
+  getPositionAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
+  minRayLength: 0.001
+  maxRayLength: 50
+  rayLength: 0.1
+  scalingFactor: 0
+  handPrefab: {fileID: 5686134208185362930, guid: 7e29121507ed3194abb1a9065fcad1d1, type: 3}
+  positionSensitivity: 30
 --- !u!1 &742708740
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,6 +1230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rodcastInteraction: {fileID: 1961042923}
   flowerConeInteraction: {fileID: 1876896506}
+  goGoHandInteraction: {fileID: 0}
 --- !u!1 &850006628
 GameObject:
   m_ObjectHideFlags: 0
@@ -1327,7 +1393,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2572f5865ee03fd45ade5c0e19d43e01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGeneratingRandom: 0
   objectPrefab: {fileID: 6146621306095161282, guid: 37e35025053a3ad44b4f49376e7db56b, type: 3}
   viewBlockerPrefab: {fileID: 1557505943042072745, guid: e43bb656950b4054a843ae4fe69f850d, type: 3}
   positionsCsv: {fileID: 4900000, guid: 46f2ade23560ab0459491992847ee91e, type: 3}
@@ -1542,8 +1607,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1795954859}
   - {fileID: 1404205418}
+  - {fileID: 1795954859}
   - {fileID: 148492912}
   - {fileID: 288700335}
   - {fileID: 856296701}
@@ -2562,7 +2627,7 @@ Transform:
   m_GameObject: {fileID: 1690855652}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -5.600003, y: -2.9383607, z: -13.580002}
+  m_LocalPosition: {x: -5.600003, y: -3.91, z: -13.580002}
   m_LocalScale: {x: 6, y: 2, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2593,7 +2658,7 @@ Transform:
   m_GameObject: {fileID: 1795954858}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -7.72, y: 1.13, z: -8.94}
+  m_LocalPosition: {x: -7.25, y: 1.59, z: -8.5}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2656,7 +2721,7 @@ MonoBehaviour:
   conePrefab: {fileID: 7792075864175685395, guid: 30b5af8cc5ba83e4ea572ca4a1ecb038, type: 3}
   rayLength: 1
   minRayLength: 1
-  maxRayLength: 25
+  maxRayLength: 50
   rotationSensitivity: 0.1
   outlineScriptName: Outline
 --- !u!1 &1904948034
@@ -2917,7 +2982,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!120 &1961042924
 LineRenderer:
   serializedVersion: 2
@@ -3045,8 +3110,8 @@ MonoBehaviour:
   sineFrequency: 1
   sineAmplitude: 1
   minRayLength: 1
-  maxRayLength: 100
-  minSineAmplitude: 0.1
+  maxRayLength: 150
+  minSineAmplitude: 0.01
   maxSineAmplitude: 3
   rotationSensitivity: 0.2
   positionSensitivity: 3

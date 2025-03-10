@@ -44,6 +44,8 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
     private float yCoordinate;
     private float zCoordinate;
 
+    public float offsetHeight = 1;
+
     private TechniqueData[] coordinates;
 
     private GameObject viewBlockerInstance;
@@ -73,7 +75,7 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
             {
                 SetBlockerVisibility(false);
                 techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
-                Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
+                Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
                 instanceCount++;
             }
         }
