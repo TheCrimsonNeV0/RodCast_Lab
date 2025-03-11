@@ -43,4 +43,28 @@ public class TechniqueManagerScript : MonoBehaviour
         }
         return false;
     }
+
+    public void DeactivateAll()
+    {
+        rodCast.SetActive(false);
+        flowerCone.SetActive(false);
+        goGoHand.SetActive(false);
+    }
+
+    public bool IsActiveTechnique(string technique)
+    {
+        if (technique.Equals("RodCast"))
+        {
+            return rodCast.activeSelf;
+        }
+        else if (technique.Equals("FlowerCone"))
+        {
+            return flowerCone.activeSelf;
+        }
+        else if (technique.Equals("GoGoHand"))
+        {
+            return goGoHand.activeSelf;
+        }
+        return false;
+    }
 }

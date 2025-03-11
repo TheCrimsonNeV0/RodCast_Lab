@@ -57,6 +57,8 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
     private TechniqueManagerScript techniqueManagerScript;
 
+    private string techniqueToActivate = "";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,18 +67,33 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
         viewBlockerInstance = Instantiate(viewBlockerPrefab);
         viewBlockerInstance.SetActive(false);
+        techniqueManagerScript.DeactivateAll();
     }
 
     void Update()
     {
+        // TODO: Log time for intervals
+        // Time spent in playground, time spent in observation
+        // Time between blindfold and click
+
+        // TODO: Show the interaction technique during the countdown and let user make changes after the blindfold
+
         if (coordinates != null && distanceObject_isVisible)
         {
             if (GameObject.FindGameObjectsWithTag("DistanceObject").Length == 0)
             {
+                techniqueManagerScript.DeactivateAll();
                 SetBlockerVisibility(false);
-                techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
+                techniqueToActivate = coordinates[instanceCount % coordinates.Length].technique;
+                // techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
                 Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
                 instanceCount++;
+            }
+
+            if (viewBlockerInstance.activeSelf && !techniqueManagerScript.IsActiveTechnique(techniqueToActivate))
+            {
+                techniqueManagerScript.ActivateTechnique(techniqueToActivate);
+                techniqueToActivate = "";
             }
         }
     }
