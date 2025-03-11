@@ -923,7 +923,7 @@ MonoBehaviour:
   getPositionAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   minRayLength: 0.001
   maxRayLength: 50
-  rayLength: 0.1
+  rayLength_static: 0.1
   scalingFactor: 0
   handPrefab: {fileID: 5686134208185362930, guid: 7e29121507ed3194abb1a9065fcad1d1, type: 3}
   positionSensitivity: 30
@@ -1397,6 +1397,7 @@ MonoBehaviour:
   viewBlockerPrefab: {fileID: 1557505943042072745, guid: e43bb656950b4054a843ae4fe69f850d, type: 3}
   positionsCsv: {fileID: 4900000, guid: 46f2ade23560ab0459491992847ee91e, type: 3}
   techniqueManager: {fileID: 288700334}
+  offsetHeight: 1
 --- !u!4 &856296701
 Transform:
   m_ObjectHideFlags: 0
@@ -1969,7 +1970,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b98a233e74bd9044c97e867a939a3ac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvName: output.csv
+  csvName: UserTest_1.csv
 --- !u!4 &1404205418
 Transform:
   m_ObjectHideFlags: 0
@@ -2719,8 +2720,8 @@ MonoBehaviour:
   incrementObjectIndexAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   getCenterPositionAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   conePrefab: {fileID: 7792075864175685395, guid: 30b5af8cc5ba83e4ea572ca4a1ecb038, type: 3}
-  rayLength: 1
-  minRayLength: 1
+  rayLength_static: 1
+  minRayLength: 0.1
   maxRayLength: 50
   rotationSensitivity: 0.1
   outlineScriptName: Outline
@@ -3101,14 +3102,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedOption: 1
   leftController: {fileID: 647390466}
-  rayLength: 5
+  rayLength_static: 5
   lineMaterial: {fileID: 2100000, guid: c1cece25cfa74e44fa6f7ad8630adc20, type: 2}
   lineMaterialNoHit: {fileID: 2100000, guid: 9bf64b01f38787549bb35625d8324db5, type: 2}
   isArcVisible: 1
   NonInteractableMaterial: RodCastNotInteractable
   arcSegments: 20
   sineFrequency: 1
-  sineAmplitude: 1
+  sineAmplitude_static: 2
   minRayLength: 1
   maxRayLength: 150
   minSineAmplitude: 0.01
@@ -3117,7 +3118,7 @@ MonoBehaviour:
   positionSensitivity: 3
   positionSensitivity_Left: 15
   arcRotationOffsetSensitivity: 0.7
-  rotation: {x: 0, y: 0, z: 0, w: 1}
+  rotation_static: {x: 0, y: 0, z: 0, w: 1}
   travelSpeed: 5
   moveAlongArcAction: {fileID: 7844728918808831619, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   setRayLengthRollAction: {fileID: 5984737789167544495, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}

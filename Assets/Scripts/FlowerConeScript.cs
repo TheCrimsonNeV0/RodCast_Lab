@@ -19,7 +19,8 @@ public class FlowerConeScript : MonoBehaviour
     public InputActionReference getCenterPositionAction;
 
     public GameObject conePrefab;
-    public float rayLength = 10.0f;
+    public float rayLength_static = 10.0f;
+    private float rayLength = 10.0f;
     
     private Vector3 startPoint; // The peak (pointy end) of the cone
     private Vector3 endPoint; // The center of the cone's base
@@ -53,9 +54,11 @@ public class FlowerConeScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ResetVariables();
+
         // START ACTION BINDING
 
-            // START CONE SETTING BINDING
+        // START CONE SETTING BINDING
 
         setRayLengthRollAction.action.Enable();
         setRayLengthRollAction.action.started += context => isAdjusting_Right = true; // Start adjusting length
@@ -360,6 +363,11 @@ public class FlowerConeScript : MonoBehaviour
     }
 
     ////////////////////////////////// CONTROLLER POSITION AND ROTATION LOGIC END /////////////////////////////////////////
+
+    public void ResetVariables()
+    {
+        rayLength = rayLength_static;
+    }
 
     /*private void OnEnable()
     {

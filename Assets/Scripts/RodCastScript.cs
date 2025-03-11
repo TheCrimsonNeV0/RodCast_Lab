@@ -16,7 +16,8 @@ public class RodCastScript : MonoBehaviour
 
     public GameObject leftController;
 
-    public float rayLength = 5.0f; // Length of the RayCast
+    public float rayLength_static = 5.0f;
+    private float rayLength = 5.0f;
     private LineRenderer lineRenderer;
     public Material lineMaterial;
     public Material lineMaterialNoHit;
@@ -30,7 +31,9 @@ public class RodCastScript : MonoBehaviour
 
     public int arcSegments = 20; // Number of segments in the arc for smoothness
     public float sineFrequency = 1.0f; // Frequency coefficient for the sine wave
-    public float sineAmplitude = 2.0f; // Peak height of the sine wave
+
+    public float sineAmplitude_static = 2.0f;
+    private float sineAmplitude = 2.0f; // Peak height of the sine wave
 
     public float minRayLength = 1f; // Minimum length of the ray
     public float maxRayLength = 10f; // Maximum length of the ray
@@ -44,7 +47,8 @@ public class RodCastScript : MonoBehaviour
 
     public float arcRotationOffsetSensitivity = 0.1f; // Sensitivity factor for adjusting amplitude
 
-    public Quaternion rotation = Quaternion.Euler(0, 0, 0);
+    public Quaternion rotation_static = Quaternion.Euler(0, 0, 0);
+    private Quaternion rotation = Quaternion.Euler(0, 0, 0);
     private Vector3 rotatedDirection = new Vector3(0, 0, 0);
 
     private List<Vector3> pointsAlongLine = new List<Vector3>(); // To store arc points
@@ -100,6 +104,8 @@ public class RodCastScript : MonoBehaviour
 
     void Start()
     {
+        ResetVariables();
+
         lastRotationZ = transform.rotation.eulerAngles.z;
         lastPositionY = transform.position.y;
 
@@ -670,6 +676,13 @@ public class RodCastScript : MonoBehaviour
         {
             return -1;
         }
+    }
+
+    public void ResetVariables()
+    {
+        rayLength = rayLength_static;
+        sineAmplitude = sineAmplitude_static;
+        rotation = rotation_static;
     }
 
     /*private void OnEnable()
