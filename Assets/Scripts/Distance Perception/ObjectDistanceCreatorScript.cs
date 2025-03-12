@@ -33,6 +33,9 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
     public float zHighInterval = 5;
     */
 
+    public GameObject timeLoggerObject;
+    private TimeLoggerScript timeLogger;
+
     public GameObject objectPrefab;
     public GameObject viewBlockerPrefab;
 
@@ -59,9 +62,16 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
     private string techniqueToActivate = "";
 
+    private float lastObjectInstantiationTime;
+
     // Start is called before the first frame update
     void Start()
     {
+        if (timeLoggerObject != null)
+        {
+            timeLogger = timeLoggerObject.GetComponent<TimeLoggerScript>();
+        }
+
         coordinates = ReadCSV(positionsCsv);
         techniqueManagerScript = techniqueManager.GetComponent<TechniqueManagerScript>();
 
@@ -87,6 +97,10 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
                 techniqueToActivate = coordinates[instanceCount % coordinates.Length].technique;
                 // techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
                 Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
+                
+                lastObjectInstantiationTime = Time.time;
+                timeLogger.LogTargetObjectCreated(lastObjectInstantiationTime);
+
                 instanceCount++;
             }
 
@@ -145,6 +159,11 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
             }
         }
         return dataList.ToArray();
+    }
+
+    public float GetLastObjectInstantiationTime()
+    {
+        return lastObjectInstantiationTime;
     }
 
     /*

@@ -6,6 +6,9 @@ using System.Drawing;
 
 public class DataManagerScript : MonoBehaviour
 {
+    public GameObject timeLoggerObject;
+    private TimeLoggerScript timeLogger;
+
     public InputActionReference getDistanceBetweenDistanceObjectAction;
     public GameObject rodCastInteraction;
     public GameObject flowerCone;
@@ -17,6 +20,9 @@ public class DataManagerScript : MonoBehaviour
     private GoGoHandScript goGoHandScript;
     private CsvWriterScript csvWriterScript;
 
+    private string lastTechnique = "";
+    private float lastPositionClickTime = 0.0f;
+
     public enum Technique
     {
         RodCast,
@@ -27,6 +33,11 @@ public class DataManagerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (timeLoggerObject != null)
+        {
+            timeLogger = timeLoggerObject.GetComponent<TimeLoggerScript>();
+        }
+
         if (rodCastInteraction != null)
         {
             rodCastScript = rodCastInteraction.GetComponent<RodCastScript>();
@@ -52,6 +63,9 @@ public class DataManagerScript : MonoBehaviour
             {
                 if (rodCastScript != null)
                 {
+                    lastTechnique = "RodCast";
+                    lastPositionClickTime = Time.time;
+
                     GameObject objectToCompare = GameObject.FindGameObjectsWithTag("DistanceObject")[0];
                     Debug.Log("Distance Object Position: " + objectToCompare.transform.position);
                     Vector3 endPointCoordinate = rodCastScript.GetEndPointPosition();
@@ -64,12 +78,19 @@ public class DataManagerScript : MonoBehaviour
                         csvWriterScript.RecordData("RodCast", objectToCompare.transform.position, endPointCoordinate, 
                             distance, isSuccess);
                     }
+
+                    lastTechnique = "RodCast";
+                    lastPositionClickTime = Time.time;
+                    timeLogger.LogUserDistanceClick(lastPositionClickTime);
                 }
             }
             else if (activeTechnique == Technique.FlowerCone)
             {
                 if (flowerConeScript != null)
                 {
+                    lastTechnique = "FlowerCone";
+                    lastPositionClickTime = Time.time;
+
                     GameObject objectToCompare = GameObject.FindGameObjectsWithTag("DistanceObject")[0];
                     Debug.Log("Distance Object Position: " + objectToCompare.transform.position);
                     Vector3 endPointCoordinate = flowerConeScript.GetBottomOrbCenterPoint();
@@ -81,12 +102,19 @@ public class DataManagerScript : MonoBehaviour
                         csvWriterScript.RecordData("FlowerCone", objectToCompare.transform.position, endPointCoordinate,
                             distance, IsSuccessFlowerCone(objectToCompare.transform.position, endPointCoordinate, flowerConeScript.GetBottomOrbRadius()));
                     }
+
+                    lastTechnique = "FlowerCone";
+                    lastPositionClickTime = Time.time;
+                    timeLogger.LogUserDistanceClick(lastPositionClickTime);
                 }
             }
             else if (activeTechnique == Technique.GoGoHand)
             {
                 if (goGoHandScript != null)
                 {
+                    lastTechnique = "GoGoHand";
+                    lastPositionClickTime = Time.time;
+
                     GameObject objectToCompare = GameObject.FindGameObjectsWithTag("DistanceObject")[0];
                     Debug.Log("Distance Object Position: " + objectToCompare.transform.position);
                     Vector3 endPointCoordinate = goGoHandScript.GetEndPointPosition();
@@ -99,6 +127,10 @@ public class DataManagerScript : MonoBehaviour
                         csvWriterScript.RecordData("GoGoHand", objectToCompare.transform.position, endPointCoordinate,
                             distance, isSuccess);
                     }
+
+                    lastTechnique = "GoGoHand";
+                    lastPositionClickTime = Time.time;
+                    timeLogger.LogUserDistanceClick(lastPositionClickTime);
                 }
             }
         };
@@ -163,5 +195,15 @@ public class DataManagerScript : MonoBehaviour
     {
         float distanceSquared = (point - sphereCenter).sqrMagnitude;
         return distanceSquared <= radius * radius;
+    }
+
+    public string GetLastTechnique()
+    {
+        return lastTechnique;
+    }
+
+    public float GetLastPositionClickTime()
+    {
+        return lastPositionClickTime;
     }
 }
