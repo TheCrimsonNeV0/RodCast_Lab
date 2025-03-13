@@ -35,25 +35,25 @@ public class TimeLoggerScript : MonoBehaviour
 
     public void LogTargetObjectCreated(float time)
     {
-        string newLine = $"Target Object Created,{time}\n";
+        string newLine = $"target_created,{time}\n";
         File.AppendAllText(filePath, newLine);
     }
 
     public void LogStartButtonClicked(float time)
     {
-        string newLine = $"Start Button Clicked,{time}\n";
+        string newLine = $"start_clicked,{time}\n";
         File.AppendAllText(filePath, newLine);
     }
 
     public void LogCountdownCompleted(float time)
     {
-        string newLine = $"Countdown Completed,{time}\n";
+        string newLine = $"countdown_completed,{time}\n";
         File.AppendAllText(filePath, newLine);
     }
 
     public void LogUserDistanceClick(float time)
     {
-        string newLine = $"User Distance Estimation Action Performed,{time}\n";
+        string newLine = $"estimation_performed,{time}\n";
         File.AppendAllText(filePath, newLine);
     }
 }
