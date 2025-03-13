@@ -70,7 +70,7 @@ public class DataManagerScript : MonoBehaviour
                     Debug.Log("Distance Object Position: " + objectToCompare.transform.position);
                     Vector3 endPointCoordinate = rodCastScript.GetEndPointPosition();
                     float distance = Vector3.Distance(endPointCoordinate, objectToCompare.transform.position);
-                    bool isSuccess = IsSuccess(endPointCoordinate, objectToCompare);
+                    bool isSuccess = IsSuccessRodCast(endPointCoordinate, objectToCompare);
                     Destroy(objectToCompare); // Destroy the Distance Object
 
                     if (csvWriterScript != null)
@@ -117,14 +117,14 @@ public class DataManagerScript : MonoBehaviour
 
                     GameObject objectToCompare = GameObject.FindGameObjectsWithTag("DistanceObject")[0];
                     Debug.Log("Distance Object Position: " + objectToCompare.transform.position);
-                    Vector3 endPointCoordinate = goGoHandScript.GetEndPointPosition();
-                    float distance = Vector3.Distance(endPointCoordinate, objectToCompare.transform.position);
-                    bool isSuccess = IsSuccess(endPointCoordinate, objectToCompare);
+                    GameObject handObject = goGoHandScript.GetHandObject();
+                    float distance = Vector3.Distance(handObject.transform.position, objectToCompare.transform.position);
+                    bool isSuccess = IsSuccessGoGoHand(handObject, objectToCompare);
                     Destroy(objectToCompare); // Destroy the Distance Object
 
                     if (csvWriterScript != null)
                     {
-                        csvWriterScript.RecordData("GoGoHand", objectToCompare.transform.position, endPointCoordinate,
+                        csvWriterScript.RecordData("GoGoHand", objectToCompare.transform.position, handObject.transform.position,
                             distance, isSuccess);
                     }
 
@@ -163,7 +163,7 @@ public class DataManagerScript : MonoBehaviour
         }
     }
 
-    public bool IsSuccess(Vector3 point, GameObject obj)
+    public bool IsSuccessRodCast(Vector3 point, GameObject obj)
     {
         if (obj == null)
         {
@@ -195,6 +195,19 @@ public class DataManagerScript : MonoBehaviour
     {
         float distanceSquared = (point - sphereCenter).sqrMagnitude;
         return distanceSquared <= radius * radius;
+    }
+
+    public bool IsSuccessGoGoHand(GameObject hand, GameObject obj)
+    {
+        if (hand == null || obj == null) return false;
+
+        Collider handCollider = hand.GetComponent<Collider>();
+        Collider objCollider = obj.GetComponent<Collider>();
+
+        if (handCollider == null || objCollider == null) return false;
+
+        Debug.Log($"Go-go Hand Collision: {handCollider.bounds.Intersects(objCollider.bounds)}, {handCollider.bounds} | Obj Bounds {objCollider.bounds}");
+        return handCollider.bounds.Intersects(objCollider.bounds);
     }
 
     public string GetLastTechnique()

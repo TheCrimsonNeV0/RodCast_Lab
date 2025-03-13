@@ -104,7 +104,7 @@ public class GoGoHandScript : MonoBehaviour
             getPositionAction.action.Enable();
             getPositionAction.action.performed += context =>
             {
-                Debug.Log(GetEndPointPosition());
+                Debug.Log(handObject.transform.position);
             };
         }
 
@@ -210,9 +210,9 @@ public class GoGoHandScript : MonoBehaviour
         return positionDifference.z;
     }
 
-    public Vector3 GetEndPointPosition()
+    public GameObject GetHandObject()
     {
-        return handObject.transform.position;
+        return handObject;
     }
 
     public void ResetVariables()
