@@ -10,14 +10,31 @@ public class CountdownHandlerScript : MonoBehaviour
         DISPLAY_OBJECT = 2
     }
 
+    public GameObject timeLoggerObject;
+    private TimeLoggerScript timeLogger;
+
     public int countdownValueStatic = 10;
     private int countdownValue;
 
     public TextMeshProUGUI countdownText;
 
+    private float lastButtonClickTime;
+    private float lastCountdownCompletedTime;
+
+    void Start()
+    {
+        if (timeLoggerObject != null)
+        {
+            timeLogger = timeLoggerObject.GetComponent<TimeLoggerScript>();
+        }
+    }
+
     public void OnButtonClickStart(GameObject targetObject)
     {
         // ExecuteFunction(targetObject, Command.DISPLAY_OBJECT);
+        lastButtonClickTime = Time.time;
+        timeLogger.LogStartButtonClicked(lastButtonClickTime);
+
         countdownValue = countdownValueStatic; // Reset countdown
         StartCoroutine(StartCountdown(targetObject));
     }
@@ -30,6 +47,9 @@ public class CountdownHandlerScript : MonoBehaviour
             yield return new WaitForSeconds(1f); // Wait for 1 second
             countdownValue--; // Reduce value by 1
         }
+
+        lastCountdownCompletedTime = Time.time;
+        timeLogger.LogCountdownCompleted(lastCountdownCompletedTime);
 
         countdownText.text = countdownValue.ToString();
         ExecuteFunction(targetObject, Command.ACTIVATE_WALL);
@@ -61,5 +81,10 @@ public class CountdownHandlerScript : MonoBehaviour
         {
             Debug.LogError("Target object is NULL!");
         }
+    }
+
+    public float GetLastButtonClickTime()
+    {
+        return lastButtonClickTime;
     }
 }

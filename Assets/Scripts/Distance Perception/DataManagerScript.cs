@@ -6,6 +6,9 @@ using System.Drawing;
 
 public class DataManagerScript : MonoBehaviour
 {
+    public GameObject timeLoggerObject;
+    private TimeLoggerScript timeLogger;
+
     public InputActionReference getDistanceBetweenDistanceObjectAction;
     public GameObject rodCastInteraction;
     public GameObject flowerCone;
@@ -17,6 +20,9 @@ public class DataManagerScript : MonoBehaviour
     private GoGoHandScript goGoHandScript;
     private CsvWriterScript csvWriterScript;
 
+    private string lastTechnique = "";
+    private float lastPositionClickTime = 0.0f;
+
     public enum Technique
     {
         RodCast,
@@ -27,6 +33,11 @@ public class DataManagerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (timeLoggerObject != null)
+        {
+            timeLogger = timeLoggerObject.GetComponent<TimeLoggerScript>();
+        }
+
         if (rodCastInteraction != null)
         {
             rodCastScript = rodCastInteraction.GetComponent<RodCastScript>();
@@ -52,11 +63,14 @@ public class DataManagerScript : MonoBehaviour
             {
                 if (rodCastScript != null)
                 {
+                    lastTechnique = "RodCast";
+                    lastPositionClickTime = Time.time;
+
                     GameObject objectToCompare = GameObject.FindGameObjectsWithTag("DistanceObject")[0];
                     Debug.Log("Distance Object Position: " + objectToCompare.transform.position);
                     Vector3 endPointCoordinate = rodCastScript.GetEndPointPosition();
                     float distance = Vector3.Distance(endPointCoordinate, objectToCompare.transform.position);
-                    bool isSuccess = IsSuccess(endPointCoordinate, objectToCompare);
+                    bool isSuccess = IsSuccessRodCast(endPointCoordinate, objectToCompare);
                     Destroy(objectToCompare); // Destroy the Distance Object
 
                     if (csvWriterScript != null)
@@ -64,12 +78,19 @@ public class DataManagerScript : MonoBehaviour
                         csvWriterScript.RecordData("RodCast", objectToCompare.transform.position, endPointCoordinate, 
                             distance, isSuccess);
                     }
+
+                    lastTechnique = "RodCast";
+                    lastPositionClickTime = Time.time;
+                    timeLogger.LogUserDistanceClick(lastPositionClickTime);
                 }
             }
             else if (activeTechnique == Technique.FlowerCone)
             {
                 if (flowerConeScript != null)
                 {
+                    lastTechnique = "FlowerCone";
+                    lastPositionClickTime = Time.time;
+
                     GameObject objectToCompare = GameObject.FindGameObjectsWithTag("DistanceObject")[0];
                     Debug.Log("Distance Object Position: " + objectToCompare.transform.position);
                     Vector3 endPointCoordinate = flowerConeScript.GetBottomOrbCenterPoint();
@@ -81,24 +102,35 @@ public class DataManagerScript : MonoBehaviour
                         csvWriterScript.RecordData("FlowerCone", objectToCompare.transform.position, endPointCoordinate,
                             distance, IsSuccessFlowerCone(objectToCompare.transform.position, endPointCoordinate, flowerConeScript.GetBottomOrbRadius()));
                     }
+
+                    lastTechnique = "FlowerCone";
+                    lastPositionClickTime = Time.time;
+                    timeLogger.LogUserDistanceClick(lastPositionClickTime);
                 }
             }
             else if (activeTechnique == Technique.GoGoHand)
             {
                 if (goGoHandScript != null)
                 {
+                    lastTechnique = "GoGoHand";
+                    lastPositionClickTime = Time.time;
+
                     GameObject objectToCompare = GameObject.FindGameObjectsWithTag("DistanceObject")[0];
                     Debug.Log("Distance Object Position: " + objectToCompare.transform.position);
-                    Vector3 endPointCoordinate = goGoHandScript.GetEndPointPosition();
-                    float distance = Vector3.Distance(endPointCoordinate, objectToCompare.transform.position);
-                    bool isSuccess = IsSuccess(endPointCoordinate, objectToCompare);
+                    GameObject handObject = goGoHandScript.GetHandObject();
+                    float distance = Vector3.Distance(handObject.transform.position, objectToCompare.transform.position);
+                    bool isSuccess = IsSuccessGoGoHand(handObject, objectToCompare);
                     Destroy(objectToCompare); // Destroy the Distance Object
 
                     if (csvWriterScript != null)
                     {
-                        csvWriterScript.RecordData("GoGoHand", objectToCompare.transform.position, endPointCoordinate,
+                        csvWriterScript.RecordData("GoGoHand", objectToCompare.transform.position, handObject.transform.position,
                             distance, isSuccess);
                     }
+
+                    lastTechnique = "GoGoHand";
+                    lastPositionClickTime = Time.time;
+                    timeLogger.LogUserDistanceClick(lastPositionClickTime);
                 }
             }
         };
@@ -131,7 +163,7 @@ public class DataManagerScript : MonoBehaviour
         }
     }
 
-    public bool IsSuccess(Vector3 point, GameObject obj)
+    public bool IsSuccessRodCast(Vector3 point, GameObject obj)
     {
         if (obj == null)
         {
@@ -163,5 +195,28 @@ public class DataManagerScript : MonoBehaviour
     {
         float distanceSquared = (point - sphereCenter).sqrMagnitude;
         return distanceSquared <= radius * radius;
+    }
+
+    public bool IsSuccessGoGoHand(GameObject hand, GameObject obj)
+    {
+        if (hand == null || obj == null) return false;
+
+        Collider handCollider = hand.GetComponent<Collider>();
+        Collider objCollider = obj.GetComponent<Collider>();
+
+        if (handCollider == null || objCollider == null) return false;
+
+        Debug.Log($"Go-go Hand Collision: {handCollider.bounds.Intersects(objCollider.bounds)}, {handCollider.bounds} | Obj Bounds {objCollider.bounds}");
+        return handCollider.bounds.Intersects(objCollider.bounds);
+    }
+
+    public string GetLastTechnique()
+    {
+        return lastTechnique;
+    }
+
+    public float GetLastPositionClickTime()
+    {
+        return lastPositionClickTime;
     }
 }

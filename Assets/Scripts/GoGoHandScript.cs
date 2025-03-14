@@ -25,7 +25,8 @@ public class GoGoHandScript : MonoBehaviour
     public float minRayLength = 1f;
     public float maxRayLength = 10f;
 
-    public float rayLength = 5.0f;
+    public float rayLength_static = 5.0f;
+    private float rayLength = 5.0f;
 
     public float scalingFactor;
 
@@ -53,6 +54,8 @@ public class GoGoHandScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ResetVariables();
+
         setRayLengthAction.action.Enable();
         setRayLengthAction.action.started += context =>
         {
@@ -101,7 +104,7 @@ public class GoGoHandScript : MonoBehaviour
             getPositionAction.action.Enable();
             getPositionAction.action.performed += context =>
             {
-                Debug.Log(GetEndPointPosition());
+                Debug.Log(handObject.transform.position);
             };
         }
 
@@ -207,9 +210,14 @@ public class GoGoHandScript : MonoBehaviour
         return positionDifference.z;
     }
 
-    public Vector3 GetEndPointPosition()
+    public GameObject GetHandObject()
     {
-        return handObject.transform.position;
+        return handObject;
+    }
+
+    public void ResetVariables()
+    {
+        rayLength = rayLength_static;
     }
 
     /*
