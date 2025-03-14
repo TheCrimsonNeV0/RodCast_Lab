@@ -57,6 +57,7 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
     private bool isVisible = false;
     private bool distanceObject_isVisible = true;
+    private bool isObjectCreationActive = false;
 
     private TechniqueManagerScript techniqueManagerScript;
 
@@ -82,32 +83,29 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
     void Update()
     {
-        // TODO: Log time for intervals
-        // Time spent in playground, time spent in observation
-        // Time between blindfold and click
-
-        // TODO: Show the interaction technique during the countdown and let user make changes after the blindfold
-
-        if (coordinates != null && distanceObject_isVisible)
+        if (isObjectCreationActive)
         {
-            if (GameObject.FindGameObjectsWithTag("DistanceObject").Length == 0)
+            if (coordinates != null && distanceObject_isVisible)
             {
-                techniqueManagerScript.DeactivateAll();
-                SetBlockerVisibility(false);
-                techniqueToActivate = coordinates[instanceCount % coordinates.Length].technique;
-                // techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
-                Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
-                
-                lastObjectInstantiationTime = Time.time;
-                timeLogger.LogTargetObjectCreated(lastObjectInstantiationTime);
+                if (GameObject.FindGameObjectsWithTag("DistanceObject").Length == 0)
+                {
+                    techniqueManagerScript.DeactivateAll();
+                    SetBlockerVisibility(false);
+                    techniqueToActivate = coordinates[instanceCount % coordinates.Length].technique;
+                    // techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
+                    Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
 
-                instanceCount++;
-            }
+                    lastObjectInstantiationTime = Time.time;
+                    timeLogger.LogTargetObjectCreated(lastObjectInstantiationTime);
 
-            if (viewBlockerInstance.activeSelf && !techniqueManagerScript.IsActiveTechnique(techniqueToActivate))
-            {
-                techniqueManagerScript.ActivateTechnique(techniqueToActivate);
-                techniqueToActivate = "";
+                    instanceCount++;
+                }
+
+                if (viewBlockerInstance.activeSelf && !techniqueManagerScript.IsActiveTechnique(techniqueToActivate))
+                {
+                    techniqueManagerScript.ActivateTechnique(techniqueToActivate);
+                    techniqueToActivate = "";
+                }
             }
         }
     }
@@ -164,6 +162,21 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
     public float GetLastObjectInstantiationTime()
     {
         return lastObjectInstantiationTime;
+    }
+
+    public void StartObjectCreation()
+    {
+        isObjectCreationActive = true;
+    }
+
+    public void StopObjectCreation()
+    {
+        isObjectCreationActive = false;
+    }
+
+    public void ToggleObjectCreation()
+    {
+        isObjectCreationActive = !isObjectCreationActive;
     }
 
     /*
