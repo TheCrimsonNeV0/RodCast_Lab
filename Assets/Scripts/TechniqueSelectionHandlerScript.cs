@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TechniqueSelectionHandlerScript : MonoBehaviour
 {
@@ -27,5 +28,10 @@ public class TechniqueSelectionHandlerScript : MonoBehaviour
         rodcastInteraction.SetActive(false);
         flowerConeInteraction.SetActive(false);
         goGoHandInteraction.SetActive(true);
+    }
+
+    public void OnButtonClickStartTest()
+    {
+        SceneManager.LoadScene("ObjectDistanceCognitionScene");
     }
 }
