@@ -49,6 +49,8 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
     public float offsetHeight = 1;
 
+    public TextMeshProUGUI instanceCountText;
+
     private TechniqueData[] coordinates;
 
     private GameObject viewBlockerInstance;
@@ -99,6 +101,7 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
                     timeLogger.LogTargetObjectCreated(lastObjectInstantiationTime);
 
                     instanceCount++;
+                    instanceCountText.text = "" + instanceCount;
                 }
 
                 if (viewBlockerInstance.activeSelf && !techniqueManagerScript.IsActiveTechnique(techniqueToActivate))
