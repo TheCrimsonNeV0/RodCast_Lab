@@ -5,34 +5,19 @@ using TMPro;
 using static UnityEngine.Rendering.DebugUI;
 using RodCast_Lab.Data;
 
-public class ObjectDistanceCreatorScript : MonoBehaviour
+public class ObjectBatchCreatorScript : MonoBehaviour
 {
-    /*
-    public bool isGeneratingRandom = true;
-
-    public float xLowInterval = 10;
-    public float xHighInterval = 100;
-
-    public float yLowInterval = -5;
-    public float yHighInterval = 5;
-
-    public float zLowInterval = -5;
-    public float zHighInterval = 5;
-    */
-
-    public GameObject timeLoggerObject;
-    private TimeLoggerScript timeLogger;
+    public GameObject timeLoggerObject; // Might require editing
+    private TimeLoggerScript timeLogger; // Might require editing
 
     public GameObject objectPrefab;
-    public GameObject viewBlockerPrefab;
+    public GameObject areaHighlighterPrefab;
 
     public TextAsset positionsCsv;
     public GameObject techniqueManager;
 
     private GameObject objectInstance;
-    private float xCoordinate;
-    private float yCoordinate;
-    private float zCoordinate;
+    private GameObject areaHighlighterInstance;
 
     public float offsetHeight = 1;
 
@@ -40,12 +25,10 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
     private TechniqueData[] coordinates;
 
-    private GameObject viewBlockerInstance;
-
     private int instanceCount = 0;
 
     private bool isVisible = false;
-    private bool distanceObject_isVisible = true;
+    private bool batch_isVisible = true;
     private bool isObjectCreationActive = false;
 
     private TechniqueManagerScript techniqueManagerScript;
@@ -65,8 +48,8 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
         coordinates = ReadCSV(positionsCsv);
         techniqueManagerScript = techniqueManager.GetComponent<TechniqueManagerScript>();
 
-        viewBlockerInstance = Instantiate(viewBlockerPrefab);
-        viewBlockerInstance.SetActive(false);
+        areaHighlighterInstance = Instantiate(areaHighlighterPrefab);
+        areaHighlighterInstance.SetActive(false);
         techniqueManagerScript.DeactivateAll();
     }
 
@@ -74,12 +57,12 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
     {
         if (isObjectCreationActive)
         {
-            if (coordinates != null && distanceObject_isVisible)
+            if (coordinates != null && batch_isVisible)
             {
                 if (GameObject.FindGameObjectsWithTag("DistanceObject").Length == 0)
                 {
                     techniqueManagerScript.DeactivateAll();
-                    SetBlockerVisibility(false);
+                    SetAreaVisibility(false);
                     techniqueToActivate = coordinates[instanceCount % coordinates.Length].technique;
                     // techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
                     Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
@@ -91,35 +74,37 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
                     instanceCountText.text = "" + instanceCount;
                 }
 
+                /*
                 if (viewBlockerInstance.activeSelf && !techniqueManagerScript.IsActiveTechnique(techniqueToActivate))
                 {
                     techniqueManagerScript.ActivateTechnique(techniqueToActivate);
                     techniqueToActivate = "";
                 }
+                */
             }
         }
     }
 
-    public void ToggleBlockerVisibility()
+    public void ToggleAreaVisibility()
     {
         isVisible = !isVisible;
-        viewBlockerInstance.SetActive(isVisible);
+        areaHighlighterInstance.SetActive(isVisible);
     }
 
-    public void SetBlockerVisibility(bool value)
+    public void SetAreaVisibility(bool value)
     {
         isVisible = value;
-        viewBlockerInstance.SetActive(isVisible);
+        areaHighlighterInstance.SetActive(isVisible);
     }
 
     public void ToggleObjectVisibility()
     {
-        distanceObject_isVisible = !distanceObject_isVisible;
+        batch_isVisible = !batch_isVisible;
     }
 
     public void SetObjectVisibility(bool value)
     {
-        distanceObject_isVisible = value;
+        batch_isVisible = value;
     }
 
     TechniqueData[] ReadCSV(TextAsset file)
@@ -168,19 +153,4 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
     {
         isObjectCreationActive = !isObjectCreationActive;
     }
-
-    /*
-    void GenerateObjectAtRandomLocation()
-    {
-        // Create objects and calculate offset distances in a loop
-
-        xCoordinate = Random.Range(xLowInterval, xHighInterval);
-        yCoordinate = Random.Range(yLowInterval, yHighInterval);
-        zCoordinate = Random.Range(zLowInterval, zHighInterval);
-
-        Vector3 objectInstancePosition = new Vector3(xCoordinate, yCoordinate, zCoordinate);
-
-        objectInstance = Instantiate(objectPrefab, objectInstancePosition, Quaternion.identity);
-    }
-    */
 }
