@@ -46,11 +46,13 @@ public class ObjectBatchCreatorScript : MonoBehaviour
         }
 
         coordinates = ReadCSV(positionsCsv);
-        techniqueManagerScript = techniqueManager.GetComponent<TechniqueManagerScript>();
+        
+        // TODO: Make sure the Technique Manager behaves the same way here
+        // techniqueManagerScript = techniqueManager.GetComponent<TechniqueManagerScript>();
 
         areaHighlighterInstance = Instantiate(areaHighlighterPrefab);
         areaHighlighterInstance.SetActive(false);
-        techniqueManagerScript.DeactivateAll();
+        // techniqueManagerScript.DeactivateAll();
     }
 
     void Update()
@@ -59,6 +61,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
         {
             if (coordinates != null && batch_isVisible)
             {
+                // TODO: Add new tag 'DenseTargetObject' and implement the same logic as Distance Perception task
                 if (GameObject.FindGameObjectsWithTag("DistanceObject").Length == 0)
                 {
                     techniqueManagerScript.DeactivateAll();
@@ -74,6 +77,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                     instanceCountText.text = "" + instanceCount;
                 }
 
+                // TODO: Add new logic here to highlight area and spawn the batch back to back
                 /*
                 if (viewBlockerInstance.activeSelf && !techniqueManagerScript.IsActiveTechnique(techniqueToActivate))
                 {

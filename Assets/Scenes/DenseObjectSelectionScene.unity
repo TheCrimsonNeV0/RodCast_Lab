@@ -5683,6 +5683,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1596833447}
   - component: {fileID: 1596833446}
+  - component: {fileID: 1596833448}
   m_Layer: 0
   m_Name: Object Creator
   m_TagString: Untagged
@@ -5697,7 +5698,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596833445}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2572f5865ee03fd45ade5c0e19d43e01, type: 3}
   m_Name: 
@@ -5725,6 +5726,25 @@ Transform:
   - {fileID: 485112931}
   m_Father: {fileID: 2054896529}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1596833448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1596833445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd3f0d3ed9bef1468177ee2beeb87e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeLoggerObject: {fileID: 1456966152}
+  objectPrefab: {fileID: 6569125959003094467, guid: f18de867d15671d46b67326b18644592, type: 3}
+  areaHighlighterPrefab: {fileID: 1238555729981231504, guid: 3278b53bf04d1e74e95052f04e8dbb13, type: 3}
+  positionsCsv: {fileID: 4900000, guid: 46f2ade23560ab0459491992847ee91e, type: 3}
+  techniqueManager: {fileID: 0}
+  offsetHeight: 1
+  instanceCountText: {fileID: 0}
 --- !u!1 &1600503737
 GameObject:
   m_ObjectHideFlags: 0
