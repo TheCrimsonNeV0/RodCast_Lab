@@ -69,6 +69,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                     // Highlight should be on when no object exists
                     //SetAreaVisibility(true);
 
+                    // TODO: Make a sequential flow to enable the area highlight and dense object back after button click
                     areaHighlighterInstance.SetActive(true);
                     areaHighlighterInstance.transform.position = new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x);
                     areaHighlighterInstance.transform.rotation = Quaternion.identity;
