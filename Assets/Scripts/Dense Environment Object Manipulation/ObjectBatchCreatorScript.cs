@@ -29,7 +29,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
 
     private bool isVisible = false;
     private bool batch_isVisible = true;
-    private bool isObjectCreationActive = false;
+    private bool isObjectCreationActive = true;
 
     private TechniqueManagerScript techniqueManagerScript;
 
@@ -46,13 +46,12 @@ public class ObjectBatchCreatorScript : MonoBehaviour
         }
 
         coordinates = ReadCSV(positionsCsv);
-        
-        // TODO: Make sure the Technique Manager behaves the same way here
-        // techniqueManagerScript = techniqueManager.GetComponent<TechniqueManagerScript>();
+
+        techniqueManagerScript = techniqueManager.GetComponent<TechniqueManagerScript>();
 
         areaHighlighterInstance = Instantiate(areaHighlighterPrefab);
         areaHighlighterInstance.SetActive(false);
-        // techniqueManagerScript.DeactivateAll();
+        techniqueManagerScript.DeactivateAll();
     }
 
     void Update()
@@ -61,13 +60,27 @@ public class ObjectBatchCreatorScript : MonoBehaviour
         {
             if (coordinates != null && batch_isVisible)
             {
-                // TODO: Add new tag 'DenseTargetObject' and implement the same logic as Distance Perception task
-                if (GameObject.FindGameObjectsWithTag("DistanceObject").Length == 0)
+                // Add new tag 'DenseBatchTargetObject' and implement the same logic as Distance Perception task
+                if (GameObject.FindGameObjectsWithTag("DenseBatchTargetObject").Length == 0)
                 {
                     techniqueManagerScript.DeactivateAll();
-                    SetAreaVisibility(false);
-                    techniqueToActivate = coordinates[instanceCount % coordinates.Length].technique;
-                    // techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
+
+                    // Area tag: AreaHighlighter
+                    // Highlight should be on when no object exists
+                    //SetAreaVisibility(true);
+
+                    areaHighlighterInstance.SetActive(true);
+                    areaHighlighterInstance.transform.position = new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x);
+                    areaHighlighterInstance.transform.rotation = Quaternion.identity;
+                    //Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
+
+
+                    if (GameObject.FindGameObjectsWithTag("AreaHighlighter").Length > 0)
+                    {
+                        techniqueToActivate = coordinates[instanceCount % coordinates.Length].technique;
+                        techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
+                    }
+                    
                     Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
 
                     lastObjectInstantiationTime = Time.time;
