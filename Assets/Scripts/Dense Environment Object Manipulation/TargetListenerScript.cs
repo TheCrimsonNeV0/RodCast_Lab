@@ -30,7 +30,27 @@ public class TargetListenerScript : MonoBehaviour
     void HandleTargetStay()
     {
         Debug.Log("Target stayed on surface for 1 second.");
+        DestroyAllWithTag("DenseBatchTargetObject");
+        DestroyAllWithTag("DenseBatchDecoyObject");
+        currentTarget = null;
         // Add your response logic here
+    }
+
+    void DestroyAllWithTag(string tag)
+    {
+        GameObject[] objects = GameObject.FindGameObjectsWithTag(tag);
+        foreach (GameObject obj in objects)
+        {
+            Destroy(obj);
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (currentTarget != null)
+        {
+            currentTarget.OnTargetStay += HandleTargetStay;
+        }
     }
 
     void OnDisable()

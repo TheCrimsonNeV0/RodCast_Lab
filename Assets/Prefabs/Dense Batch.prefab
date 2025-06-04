@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2741655086071505592}
   m_Layer: 0
   m_Name: 2
-  m_TagString: DistanceObject
+  m_TagString: DenseBatchDecoyObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc26ccdaf5306574fbed2fd800bcb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorIndicatorPrefab: {fileID: 565164653663458538, guid: edb976a2ba646514f94df61fc6031ff1, type: 3}
+  floorIndicatorPrefab: {fileID: 565164653663458538, guid: ea7ba010f2ce1fa48bee1894e8007fa6, type: 3}
   referenceObject: {fileID: 531862344096349215}
   scaleFactor: 1
   isResizingFromParent: 1
@@ -190,7 +190,7 @@ GameObject:
   - component: {fileID: 4463910412431242377}
   m_Layer: 0
   m_Name: 7
-  m_TagString: DistanceObject
+  m_TagString: DenseBatchDecoyObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -317,7 +317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc26ccdaf5306574fbed2fd800bcb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorIndicatorPrefab: {fileID: 565164653663458538, guid: edb976a2ba646514f94df61fc6031ff1, type: 3}
+  floorIndicatorPrefab: {fileID: 565164653663458538, guid: ea7ba010f2ce1fa48bee1894e8007fa6, type: 3}
   referenceObject: {fileID: 674051535899066530}
   scaleFactor: 1
   isResizingFromParent: 1
@@ -363,7 +363,7 @@ GameObject:
   - component: {fileID: 7894702495994846987}
   m_Layer: 0
   m_Name: 1
-  m_TagString: DistanceObject
+  m_TagString: DenseBatchDecoyObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -490,7 +490,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc26ccdaf5306574fbed2fd800bcb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorIndicatorPrefab: {fileID: 565164653663458538, guid: edb976a2ba646514f94df61fc6031ff1, type: 3}
+  floorIndicatorPrefab: {fileID: 565164653663458538, guid: ea7ba010f2ce1fa48bee1894e8007fa6, type: 3}
   referenceObject: {fileID: 845383709233820216}
   scaleFactor: 1
   isResizingFromParent: 1
@@ -536,7 +536,7 @@ GameObject:
   - component: {fileID: 5176767727195383305}
   m_Layer: 0
   m_Name: 10
-  m_TagString: DistanceObject
+  m_TagString: DenseBatchDecoyObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -663,7 +663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc26ccdaf5306574fbed2fd800bcb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorIndicatorPrefab: {fileID: 565164653663458538, guid: edb976a2ba646514f94df61fc6031ff1, type: 3}
+  floorIndicatorPrefab: {fileID: 565164653663458538, guid: ea7ba010f2ce1fa48bee1894e8007fa6, type: 3}
   referenceObject: {fileID: 1196403028571980123}
   scaleFactor: 1
   isResizingFromParent: 1
@@ -709,7 +709,7 @@ GameObject:
   - component: {fileID: 4212133653964532406}
   m_Layer: 0
   m_Name: 6
-  m_TagString: DistanceObject
+  m_TagString: DenseBatchDecoyObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -836,7 +836,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc26ccdaf5306574fbed2fd800bcb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorIndicatorPrefab: {fileID: 565164653663458538, guid: edb976a2ba646514f94df61fc6031ff1, type: 3}
+  floorIndicatorPrefab: {fileID: 565164653663458538, guid: ea7ba010f2ce1fa48bee1894e8007fa6, type: 3}
   referenceObject: {fileID: 1939279216680438509}
   scaleFactor: 1
   isResizingFromParent: 1
@@ -882,7 +882,7 @@ GameObject:
   - component: {fileID: 3630524730449003590}
   m_Layer: 0
   m_Name: 3
-  m_TagString: DistanceObject
+  m_TagString: DenseBatchDecoyObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1009,7 +1009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc26ccdaf5306574fbed2fd800bcb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorIndicatorPrefab: {fileID: 565164653663458538, guid: edb976a2ba646514f94df61fc6031ff1, type: 3}
+  floorIndicatorPrefab: {fileID: 565164653663458538, guid: ea7ba010f2ce1fa48bee1894e8007fa6, type: 3}
   referenceObject: {fileID: 3353224040516802704}
   scaleFactor: 1
   isResizingFromParent: 1
@@ -1055,7 +1055,7 @@ GameObject:
   - component: {fileID: 8748863241150749896}
   m_Layer: 0
   m_Name: 8
-  m_TagString: DistanceObject
+  m_TagString: DenseBatchDecoyObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1182,7 +1182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc26ccdaf5306574fbed2fd800bcb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorIndicatorPrefab: {fileID: 565164653663458538, guid: edb976a2ba646514f94df61fc6031ff1, type: 3}
+  floorIndicatorPrefab: {fileID: 565164653663458538, guid: ea7ba010f2ce1fa48bee1894e8007fa6, type: 3}
   referenceObject: {fileID: 3885467116555252871}
   scaleFactor: 1
   isResizingFromParent: 1
@@ -1228,7 +1228,7 @@ GameObject:
   - component: {fileID: 4600947704422787901}
   m_Layer: 0
   m_Name: 4
-  m_TagString: DistanceObject
+  m_TagString: DenseBatchDecoyObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1355,7 +1355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc26ccdaf5306574fbed2fd800bcb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorIndicatorPrefab: {fileID: 565164653663458538, guid: edb976a2ba646514f94df61fc6031ff1, type: 3}
+  floorIndicatorPrefab: {fileID: 565164653663458538, guid: ea7ba010f2ce1fa48bee1894e8007fa6, type: 3}
   referenceObject: {fileID: 3976370049882242292}
   scaleFactor: 1
   isResizingFromParent: 1
@@ -1456,7 +1456,7 @@ GameObject:
   - component: {fileID: 8653665400138031204}
   m_Layer: 0
   m_Name: 5
-  m_TagString: DistanceObject
+  m_TagString: DenseBatchDecoyObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1583,7 +1583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc26ccdaf5306574fbed2fd800bcb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorIndicatorPrefab: {fileID: 565164653663458538, guid: edb976a2ba646514f94df61fc6031ff1, type: 3}
+  floorIndicatorPrefab: {fileID: 565164653663458538, guid: ea7ba010f2ce1fa48bee1894e8007fa6, type: 3}
   referenceObject: {fileID: 8028211173022949079}
   scaleFactor: 1
   isResizingFromParent: 1
@@ -1629,7 +1629,7 @@ GameObject:
   - component: {fileID: 6625122937246594279}
   m_Layer: 0
   m_Name: 9
-  m_TagString: DistanceObject
+  m_TagString: DenseBatchDecoyObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1756,7 +1756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc26ccdaf5306574fbed2fd800bcb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorIndicatorPrefab: {fileID: 565164653663458538, guid: edb976a2ba646514f94df61fc6031ff1, type: 3}
+  floorIndicatorPrefab: {fileID: 565164653663458538, guid: ea7ba010f2ce1fa48bee1894e8007fa6, type: 3}
   referenceObject: {fileID: 8065647467869472920}
   scaleFactor: 1
   isResizingFromParent: 1
@@ -1930,7 +1930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc26ccdaf5306574fbed2fd800bcb0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorIndicatorPrefab: {fileID: 565164653663458538, guid: edb976a2ba646514f94df61fc6031ff1, type: 3}
+  floorIndicatorPrefab: {fileID: 565164653663458538, guid: ea7ba010f2ce1fa48bee1894e8007fa6, type: 3}
   referenceObject: {fileID: 9126890034793432867}
   scaleFactor: 1
   isResizingFromParent: 1
