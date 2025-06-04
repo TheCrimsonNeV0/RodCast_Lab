@@ -306,6 +306,7 @@ Transform:
   - {fileID: 651161273}
   - {fileID: 677237747}
   - {fileID: 1456966154}
+  - {fileID: 389576986}
   - {fileID: 1596833447}
   - {fileID: 1190873752}
   - {fileID: 1420915276}
@@ -1438,6 +1439,50 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &389576985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 389576986}
+  - component: {fileID: 389576987}
+  m_Layer: 0
+  m_Name: Target Object Listener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &389576986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 389576985}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.04905963, y: 1.630297, z: 2.3254519}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 110625878}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &389576987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 389576985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3058e9cbff12aa43bc6976b92a23fec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &389811813
 GameObject:
   m_ObjectHideFlags: 0
@@ -2048,7 +2093,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a5cc88dee4feb4e8cccb125fc734fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedOption: 1
+  selectedOption: 0
   headset: {fileID: 271705040}
   setRayLengthAction: {fileID: 5984737789167544495, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   holdObjectAction: {fileID: 7844728918808831619, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
@@ -3923,7 +3968,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeLoggerObject: {fileID: 1456966152}
-  getDistanceBetweenDistanceObjectAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   rodCastInteraction: {fileID: 1961042923}
   flowerCone: {fileID: 1876896506}
   goGoHand: {fileID: 686530506}
@@ -4642,7 +4686,7 @@ GameObject:
   - component: {fileID: 1361950503}
   m_Layer: 0
   m_Name: Surface
-  m_TagString: Untagged
+  m_TagString: TargetSurface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6699,7 +6743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 757310a65bf41d04fb83d2c2ac309732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedOption: 1
+  selectedOption: 0
   holdObjectAction: {fileID: 7844728918808831619, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   setRayLengthRollAction: {fileID: 5984737789167544495, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
   incrementObjectIndexAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
@@ -7242,7 +7286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81e2afb9d6fe84b42a11aa73b1108c7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedOption: 1
+  selectedOption: 0
   leftController: {fileID: 647390466}
   rayLength_static: 5
   lineMaterial: {fileID: 2100000, guid: c1cece25cfa74e44fa6f7ad8630adc20, type: 2}

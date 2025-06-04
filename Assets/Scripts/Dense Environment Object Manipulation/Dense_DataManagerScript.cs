@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Drawing;
 
-public class DenseDataManagerScript : MonoBehaviour
+public class Dense_DataManagerScript : MonoBehaviour
 {
     public GameObject timeLoggerObject;
     private TimeLoggerScript timeLogger;
 
-    public InputActionReference getDistanceBetweenDistanceObjectAction;
     public GameObject rodCastInteraction;
     public GameObject flowerCone;
     public GameObject goGoHand;
@@ -61,6 +60,9 @@ public class DenseDataManagerScript : MonoBehaviour
          * Surface Tag: TargetSurface
         */
 
+
+        /*
+        // The event should trigger when the object stands on the target surface for 1000 consecutive milliseconds
         getDistanceBetweenDistanceObjectAction.action.Enable();
         getDistanceBetweenDistanceObjectAction.action.performed += context => {
             Technique? activeTechnique = GetActiveTechnique();
@@ -139,6 +141,7 @@ public class DenseDataManagerScript : MonoBehaviour
                 }
             }
         };
+        */
     }
 
     // Update is called once per frame

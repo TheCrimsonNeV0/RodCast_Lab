@@ -1800,6 +1800,7 @@ GameObject:
   - component: {fileID: 6060960550859982268}
   - component: {fileID: 2402648133263596284}
   - component: {fileID: 4281125961936307349}
+  - component: {fileID: 6026189002799843954}
   m_Layer: 0
   m_Name: Target
   m_TagString: DenseBatchTargetObject
@@ -1894,7 +1895,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
@@ -1958,3 +1959,15 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6026189002799843954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9126890034793432867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43dc329834867a34c99a8ce0d4fba337, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
