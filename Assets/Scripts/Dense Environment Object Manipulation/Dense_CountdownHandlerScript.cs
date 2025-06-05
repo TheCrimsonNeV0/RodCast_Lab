@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class Dense_CountdownHandlerScript : MonoBehaviour
 {
-    public enum Command
-    {
-        ACTIVATE_WALL = 1,
-        DISPLAY_OBJECT = 2
-    }
 
     public GameObject timeLoggerObject;
     private TimeLoggerScript timeLogger;
@@ -31,7 +26,6 @@ public class Dense_CountdownHandlerScript : MonoBehaviour
 
     public void OnButtonClickStart(GameObject targetObject)
     {
-        // ExecuteFunction(targetObject, Command.DISPLAY_OBJECT);
         lastButtonClickTime = Time.time;
         timeLogger.LogStartButtonClicked(lastButtonClickTime);
 
@@ -52,25 +46,19 @@ public class Dense_CountdownHandlerScript : MonoBehaviour
         timeLogger.LogCountdownCompleted(lastCountdownCompletedTime);
 
         countdownText.text = countdownValue.ToString();
-        ExecuteFunction(targetObject, Command.ACTIVATE_WALL);
+        ExecuteFunction(targetObject);
     }
 
-    void ExecuteFunction(GameObject targetObject, Command command)
+    // TODO: Find the area highlighter and destroy it after the timer ends. The object creator should create the area and batches sequentially
+    void ExecuteFunction(GameObject targetObject)
     {
         if (targetObject != null)
         {
             ObjectBatchCreatorScript targetScript = targetObject.GetComponent<ObjectBatchCreatorScript>();
-
             if (targetScript != null)
             {
-                if (command == Command.ACTIVATE_WALL) // Activate view blocker
-                {
-                    targetScript.SetAreaVisibility(true);
-                }
-                else if (command == Command.DISPLAY_OBJECT)
-                {
-                    targetScript.SetAreaVisibility(true);
-                }
+                targetScript.SetObjectVisibility(true);
+                targetScript.SetAreaVisibility(false);
             }
             else
             {

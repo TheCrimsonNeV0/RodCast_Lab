@@ -28,7 +28,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
     private int instanceCount = 0;
 
     private bool isVisible = false;
-    private bool batch_isVisible = true;
+    private bool batch_isVisible = false;
     private bool isObjectCreationActive = false;
 
     private TechniqueManagerScript techniqueManagerScript;
@@ -58,10 +58,10 @@ public class ObjectBatchCreatorScript : MonoBehaviour
     {
         if (isObjectCreationActive)
         {
-            if (coordinates != null && batch_isVisible)
+            if (coordinates != null)
             {
                 // Add new tag 'DenseBatchTargetObject' and implement the same logic as Distance Perception task
-                if (GameObject.FindGameObjectsWithTag("DenseBatchTargetObject").Length == 0)
+                if (GameObject.FindGameObjectsWithTag("AreaHighlighter").Length == 0 && GameObject.FindGameObjectsWithTag("DenseBatchTargetObject").Length == 0)
                 {
                     techniqueManagerScript.DeactivateAll();
 
@@ -82,7 +82,8 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                         techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
                     }
                     
-                    Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
+                    objectInstance = Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
+                    objectInstance.SetActive(false);
 
                     lastObjectInstantiationTime = Time.time;
                     timeLogger.LogTargetObjectCreated(lastObjectInstantiationTime);
@@ -91,10 +92,15 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                     instanceCountText.text = "" + instanceCount;
                 }
 
+                /*
                 else
                 {
-
+                    if (areaHighlighterInstance.activeSelf)
+                    {
+                        areaHighlighterInstance.SetActive(false);
+                    }
                 }
+                */
 
                 // TODO: Add new logic here to highlight area and spawn the batch back to back
                 /*
@@ -123,11 +129,13 @@ public class ObjectBatchCreatorScript : MonoBehaviour
     public void ToggleObjectVisibility()
     {
         batch_isVisible = !batch_isVisible;
+        objectInstance.SetActive(batch_isVisible);
     }
 
     public void SetObjectVisibility(bool value)
     {
         batch_isVisible = value;
+        objectInstance.SetActive(batch_isVisible);
     }
 
     TechniqueData[] ReadCSV(TextAsset file)
