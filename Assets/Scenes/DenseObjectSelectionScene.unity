@@ -132,6 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 66724480}
   - component: {fileID: 66724481}
+  - component: {fileID: 66724482}
   m_Layer: 0
   m_Name: EventHandler
   m_TagString: Untagged
@@ -161,7 +162,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 66724479}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15a5f3d054cb2884f995093b1a392a0d, type: 3}
   m_Name: 
@@ -169,6 +170,21 @@ MonoBehaviour:
   timeLoggerObject: {fileID: 1456966152}
   countdownValueStatic: 5
   countdownText: {fileID: 308838565}
+--- !u!114 &66724482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 66724479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4329100748a153468a1b75630fba4aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeLoggerObject: {fileID: 1456966152}
+  countdownValueStatic: 10
+  countdownText: {fileID: 386062067}
 --- !u!1 &77029557
 GameObject:
   m_ObjectHideFlags: 0
@@ -4414,8 +4430,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1600503739}
-        m_TargetAssemblyTypeName: ActivationPanelEventHandlerScript, Assembly-CSharp
+      - m_Target: {fileID: 1600503740}
+        m_TargetAssemblyTypeName: Dense_ActivationPanelEventHandlerScript, Assembly-CSharp
         m_MethodName: OnButtonClickReady
         m_Mode: 1
         m_Arguments:
@@ -5964,7 +5980,7 @@ GameObject:
   - component: {fileID: 1596833446}
   - component: {fileID: 1596833448}
   m_Layer: 0
-  m_Name: Object Creator
+  m_Name: Batch Creator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6034,6 +6050,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1600503738}
   - component: {fileID: 1600503739}
+  - component: {fileID: 1600503740}
   m_Layer: 0
   m_Name: EventHandler
   m_TagString: Untagged
@@ -6063,12 +6080,27 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1600503737}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70d54ae07afaa9e4f98c6f35b9b2fced, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   objectDistanceCreator: {fileID: 1596833445}
+  countdownValueStatic: 3
+  countdownText: {fileID: 386062067}
+--- !u!114 &1600503740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600503737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e453c25f596e75d4fa4d8fe813288293, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectBatchCreator: {fileID: 1596833445}
   countdownValueStatic: 3
   countdownText: {fileID: 386062067}
 --- !u!1 &1669014708

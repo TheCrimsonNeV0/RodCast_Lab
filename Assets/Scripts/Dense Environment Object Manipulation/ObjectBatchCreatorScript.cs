@@ -29,7 +29,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
 
     private bool isVisible = false;
     private bool batch_isVisible = true;
-    private bool isObjectCreationActive = true;
+    private bool isObjectCreationActive = false;
 
     private TechniqueManagerScript techniqueManagerScript;
 
@@ -89,6 +89,11 @@ public class ObjectBatchCreatorScript : MonoBehaviour
 
                     instanceCount++;
                     instanceCountText.text = "" + instanceCount;
+                }
+
+                else
+                {
+
                 }
 
                 // TODO: Add new logic here to highlight area and spawn the batch back to back
