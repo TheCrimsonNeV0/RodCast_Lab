@@ -2,7 +2,18 @@ using UnityEngine;
 
 public class TargetListenerScript : MonoBehaviour
 {
+    public GameObject timeLoggerObject;
+    private TimeLoggerScript timeLogger;
+
     private TargetObjectScript currentTarget;
+
+    void Start()
+    {
+        if (timeLoggerObject != null)
+        {
+            timeLogger = timeLoggerObject.GetComponent<TimeLoggerScript>();
+        }
+    }
 
     void Update()
     {
@@ -33,7 +44,9 @@ public class TargetListenerScript : MonoBehaviour
         DestroyAllWithTag("DenseBatchTargetObject");
         DestroyAllWithTag("DenseBatchDecoyObject");
         currentTarget = null;
-        // Add your response logic here
+
+        float taskCompletionTime = Time.time;
+        timeLogger.LogDenseObjectManipulationTaskCompleted(taskCompletionTime);
     }
 
     void DestroyAllWithTag(string tag)

@@ -1499,6 +1499,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3058e9cbff12aa43bc6976b92a23fec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeLoggerObject: {fileID: 1456966152}
 --- !u!1 &389811813
 GameObject:
   m_ObjectHideFlags: 0
@@ -3928,7 +3929,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1190873752}
-  - component: {fileID: 1190873753}
   - component: {fileID: 1190873754}
   m_Layer: 0
   m_Name: DataManager
@@ -3952,24 +3952,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 110625878}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1190873753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1190873751}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c2098d7ad8044c41a6121ec375bcabd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeLoggerObject: {fileID: 1456966152}
-  getDistanceBetweenDistanceObjectAction: {fileID: -6768800047600443955, guid: 67ae7b3f660119e45ae91c59d37e0a17, type: 3}
-  rodCastInteraction: {fileID: 1961042923}
-  flowerCone: {fileID: 1876896506}
-  goGoHand: {fileID: 686530506}
-  csvWriter: {fileID: 677237745}
 --- !u!114 &1190873754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5034,7 +5016,7 @@ GameObject:
   - component: {fileID: 1456966154}
   - component: {fileID: 1456966153}
   m_Layer: 0
-  m_Name: TimeLogger
+  m_Name: Dense_TimeLogger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5052,7 +5034,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90db9029b0202347a527bd162af48a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvName: TestUserName_times.csv
+  csvName: TestUserName_times_dense.csv
 --- !u!4 &1456966154
 Transform:
   m_ObjectHideFlags: 0

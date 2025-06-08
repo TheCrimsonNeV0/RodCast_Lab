@@ -49,7 +49,6 @@ public class Dense_CountdownHandlerScript : MonoBehaviour
         ExecuteFunction(targetObject);
     }
 
-    // TODO: Find the area highlighter and destroy it after the timer ends. The object creator should create the area and batches sequentially
     void ExecuteFunction(GameObject targetObject)
     {
         if (targetObject != null)

@@ -7,8 +7,8 @@ using RodCast_Lab.Data;
 
 public class ObjectBatchCreatorScript : MonoBehaviour
 {
-    public GameObject timeLoggerObject; // Might require editing
-    private TimeLoggerScript timeLogger; // Might require editing
+    public GameObject timeLoggerObject;
+    private TimeLoggerScript timeLogger;
 
     public GameObject objectPrefab;
     public GameObject areaHighlighterPrefab;
@@ -86,7 +86,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                     objectInstance.SetActive(false);
 
                     lastObjectInstantiationTime = Time.time;
-                    timeLogger.LogTargetObjectCreated(lastObjectInstantiationTime);
+                    timeLogger.LogAreaDisplayStarted(lastObjectInstantiationTime);
 
                     instanceCount++;
                     instanceCountText.text = "" + instanceCount;
