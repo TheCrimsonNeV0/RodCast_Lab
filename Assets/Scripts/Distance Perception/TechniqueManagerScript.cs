@@ -83,4 +83,21 @@ public class TechniqueManagerScript : MonoBehaviour
         }
         return false;
     }
+
+    public string GetActiveTechnique()
+    {
+        if (rodCast.activeSelf)
+        {
+            return "RodCast";
+        }
+        else if (flowerCone.activeSelf)
+        {
+            return "FlowerCone";
+        }
+        else if (goGoHand.activeSelf)
+        {
+            return "GoGoHand";
+        }
+        return null;
+    }
 }

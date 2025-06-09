@@ -2029,27 +2029,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 677237747}
-  - component: {fileID: 677237746}
+  - component: {fileID: 677237748}
   m_Layer: 0
-  m_Name: CSV Writer
+  m_Name: Dense_CSV Writer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &677237746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 677237745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b98a233e74bd9044c97e867a939a3ac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  csvName: TestUserName.csv
 --- !u!4 &677237747
 Transform:
   m_ObjectHideFlags: 0
@@ -2065,6 +2052,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 110625878}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &677237748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677237745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cef4d83bfe464145a81f88e8a8617b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  csvName: output_dense.csv
 --- !u!1 &686530506
 GameObject:
   m_ObjectHideFlags: 0
@@ -5825,34 +5825,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1596833447}
-  - component: {fileID: 1596833446}
   - component: {fileID: 1596833448}
   m_Layer: 0
   m_Name: Batch Creator
-  m_TagString: Untagged
+  m_TagString: ObjectBatchCreatorTag
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1596833446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1596833445}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2572f5865ee03fd45ade5c0e19d43e01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeLoggerObject: {fileID: 1456966152}
-  objectPrefab: {fileID: 6146621306095161282, guid: 37e35025053a3ad44b4f49376e7db56b, type: 3}
-  viewBlockerPrefab: {fileID: 1557505943042072745, guid: e43bb656950b4054a843ae4fe69f850d, type: 3}
-  positionsCsv: {fileID: 4900000, guid: 46f2ade23560ab0459491992847ee91e, type: 3}
-  techniqueManager: {fileID: 1420915274}
-  offsetHeight: 1
-  instanceCountText: {fileID: 1859495329}
 --- !u!4 &1596833447
 Transform:
   m_ObjectHideFlags: 0
@@ -5886,6 +5866,7 @@ MonoBehaviour:
   areaHighlighterPrefab: {fileID: 1238555729981231504, guid: 3278b53bf04d1e74e95052f04e8dbb13, type: 3}
   positionsCsv: {fileID: 4900000, guid: 46f2ade23560ab0459491992847ee91e, type: 3}
   techniqueManager: {fileID: 1420915274}
+  dense_csvWriter: {fileID: 677237745}
   offsetHeight: 1
   instanceCountText: {fileID: 1859495329}
 --- !u!1 &1600503737
@@ -5897,7 +5878,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1600503738}
-  - component: {fileID: 1600503739}
   - component: {fileID: 1600503740}
   m_Layer: 0
   m_Name: EventHandler
@@ -5921,21 +5901,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 485112931}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1600503739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600503737}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70d54ae07afaa9e4f98c6f35b9b2fced, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectDistanceCreator: {fileID: 1596833445}
-  countdownValueStatic: 3
-  countdownText: {fileID: 386062067}
 --- !u!114 &1600503740
 MonoBehaviour:
   m_ObjectHideFlags: 0

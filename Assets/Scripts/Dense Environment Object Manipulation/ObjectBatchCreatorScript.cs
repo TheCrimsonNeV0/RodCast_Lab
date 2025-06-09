@@ -19,6 +19,9 @@ public class ObjectBatchCreatorScript : MonoBehaviour
     private GameObject objectInstance;
     private GameObject areaHighlighterInstance;
 
+    public GameObject dense_csvWriter;
+    private Dense_CsvWriterScript dense_csvWriterScript;
+
     public float offsetHeight = 1;
 
     public TextMeshProUGUI instanceCountText;
@@ -37,12 +40,20 @@ public class ObjectBatchCreatorScript : MonoBehaviour
 
     private float lastObjectInstantiationTime;
 
+    private int resetCountInstance = 0;
+    private bool isLogged = false;
+
     // Start is called before the first frame update
     void Start()
     {
         if (timeLoggerObject != null)
         {
             timeLogger = timeLoggerObject.GetComponent<TimeLoggerScript>();
+        }
+
+        if (dense_csvWriter != null)
+        {
+            dense_csvWriterScript = dense_csvWriter.GetComponent<Dense_CsvWriterScript>();
         }
 
         coordinates = ReadCSV(positionsCsv);
@@ -63,18 +74,13 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                 // Add new tag 'DenseBatchTargetObject' and implement the same logic as Distance Perception task
                 if (GameObject.FindGameObjectsWithTag("AreaHighlighter").Length == 0 && GameObject.FindGameObjectsWithTag("DenseBatchTargetObject").Length == 0)
                 {
+                    resetCountInstance = 0; // Reset before every instance
+                    isLogged = false;
+
                     techniqueManagerScript.DeactivateAll();
-
-                    // Area tag: AreaHighlighter
-                    // Highlight should be on when no object exists
-                    //SetAreaVisibility(true);
-
-                    // TODO: Make a sequential flow to enable the area highlight and dense object back after button click
                     areaHighlighterInstance.SetActive(true);
                     areaHighlighterInstance.transform.position = new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x);
                     areaHighlighterInstance.transform.rotation = Quaternion.identity;
-                    //Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
-
 
                     if (GameObject.FindGameObjectsWithTag("AreaHighlighter").Length > 0)
                     {
@@ -92,24 +98,24 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                     instanceCountText.text = "" + instanceCount;
                 }
 
-                /*
+                
                 else
                 {
-                    if (areaHighlighterInstance.activeSelf)
+                    if (instanceCount >= 1 && GameObject.FindGameObjectsWithTag("DenseBatchTargetObject").Length != 0)
                     {
-                        areaHighlighterInstance.SetActive(false);
+                        // Triggers after area is removed and target is crated
+                        // TODO: Implement a way to penalize the user when the target object touches decoy objects
+                        if (dense_csvWriterScript != null)
+                        {
+                            if (!isLogged)
+                            {
+                                Vector3 coordinateVector = new Vector3(coordinates[(instanceCount - 1) % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[(instanceCount - 1) % coordinates.Length].x);
+                                dense_csvWriterScript.RecordData(techniqueManagerScript.GetActiveTechnique(), coordinateVector, resetCountInstance);
+                                isLogged = true;
+                            }
+                        }
                     }
-                }
-                */
-
-                // TODO: Add new logic here to highlight area and spawn the batch back to back
-                /*
-                if (viewBlockerInstance.activeSelf && !techniqueManagerScript.IsActiveTechnique(techniqueToActivate))
-                {
-                    techniqueManagerScript.ActivateTechnique(techniqueToActivate);
-                    techniqueToActivate = "";
-                }
-                */
+                }               
             }
         }
     }
@@ -183,5 +189,12 @@ public class ObjectBatchCreatorScript : MonoBehaviour
     public void ToggleObjectCreation()
     {
         isObjectCreationActive = !isObjectCreationActive;
+    }
+
+    public void IncrementResetCount()
+    {
+        // Detects collision
+        resetCountInstance += 1;
+        Debug.Log("Collision detected");
     }
 }

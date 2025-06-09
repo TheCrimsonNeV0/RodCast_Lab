@@ -11,6 +11,7 @@ TagManager:
   - TargetSurface
   - AreaHighlighter
   - DenseBatchDecoyObject
+  - ObjectBatchCreatorTag
   layers:
   - Default
   - TransparentFX

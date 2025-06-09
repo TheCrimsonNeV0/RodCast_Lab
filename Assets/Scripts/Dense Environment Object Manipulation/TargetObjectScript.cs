@@ -3,11 +3,22 @@ using UnityEngine;
 
 public class TargetObjectScript : MonoBehaviour
 {
+    public GameObject objectBatchCreator;
+    private ObjectBatchCreatorScript objectBatchCreatorScript;
+
     public event Action OnTargetStay;
 
     private bool isColliding = false;
     private float collisionTimer = 0f;
     private const float requiredTime = 1.0f;
+    
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("DenseBatchDecoyObject"))
+        {
+            objectBatchCreatorScript.IncrementResetCount();
+        }
+    }
 
     void OnCollisionStay(Collision collision)
     {
@@ -23,6 +34,19 @@ public class TargetObjectScript : MonoBehaviour
         {
             isColliding = false;
             collisionTimer = 0f;
+        }
+    }
+
+    void Start()
+    {
+        GameObject creatorObject = GameObject.FindWithTag("ObjectBatchCreatorTag");
+        if (creatorObject != null)
+        {
+            objectBatchCreatorScript = creatorObject.GetComponent<ObjectBatchCreatorScript>();
+        }
+        else
+        {
+            Debug.LogWarning("ObjectBatchCreator not found in the scene.");
         }
     }
 
