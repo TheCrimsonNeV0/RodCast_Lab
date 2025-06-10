@@ -41,7 +41,6 @@ public class ObjectBatchCreatorScript : MonoBehaviour
     private float lastObjectInstantiationTime;
 
     private int resetCountInstance = 0;
-    private bool isLogged = false;
 
     // Start is called before the first frame update
     void Start()
@@ -74,8 +73,16 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                 // Add new tag 'DenseBatchTargetObject' and implement the same logic as Distance Perception task
                 if (GameObject.FindGameObjectsWithTag("AreaHighlighter").Length == 0 && GameObject.FindGameObjectsWithTag("DenseBatchTargetObject").Length == 0)
                 {
+                    // Get collision count
+                    if (instanceCount >= 1)
+                    {
+                        if (dense_csvWriterScript != null)
+                        {
+                            Vector3 coordinateVector = new Vector3(coordinates[(instanceCount - 1) % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[(instanceCount - 1) % coordinates.Length].x);
+                            dense_csvWriterScript.RecordData(techniqueManagerScript.GetActiveTechnique(), coordinateVector, resetCountInstance);
+                        }
+                    }
                     resetCountInstance = 0; // Reset before every instance
-                    isLogged = false;
 
                     techniqueManagerScript.DeactivateAll();
                     areaHighlighterInstance.SetActive(true);
@@ -96,26 +103,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
 
                     instanceCount++;
                     instanceCountText.text = "" + instanceCount;
-                }
-
-                
-                else
-                {
-                    if (instanceCount >= 1 && GameObject.FindGameObjectsWithTag("DenseBatchTargetObject").Length != 0)
-                    {
-                        // Triggers after area is removed and target is crated
-                        // TODO: Implement a way to penalize the user when the target object touches decoy objects
-                        if (dense_csvWriterScript != null)
-                        {
-                            if (!isLogged)
-                            {
-                                Vector3 coordinateVector = new Vector3(coordinates[(instanceCount - 1) % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[(instanceCount - 1) % coordinates.Length].x);
-                                dense_csvWriterScript.RecordData(techniqueManagerScript.GetActiveTechnique(), coordinateVector, resetCountInstance);
-                                isLogged = true;
-                            }
-                        }
-                    }
-                }               
+                }             
             }
         }
     }
