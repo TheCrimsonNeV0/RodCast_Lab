@@ -7,7 +7,7 @@ public class DenseBatchScript : MonoBehaviour
 {
     void Start()
     {
-        int[] randomNumbers = GetRandomNumbers(10, 4);
+        int[] randomNumbers = GetRandomNumbers(16, 6);
 
         // Disable all children
         foreach (Transform child in transform)

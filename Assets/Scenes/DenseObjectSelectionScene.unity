@@ -320,11 +320,11 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 651161273}
+  - {fileID: 1190873752}
   - {fileID: 677237747}
   - {fileID: 1456966154}
   - {fileID: 389576986}
   - {fileID: 1596833447}
-  - {fileID: 1190873752}
   - {fileID: 1420915276}
   - {fileID: 1220550123}
   m_Father: {fileID: 0}
@@ -3936,7 +3936,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1190873752
 Transform:
   m_ObjectHideFlags: 0
