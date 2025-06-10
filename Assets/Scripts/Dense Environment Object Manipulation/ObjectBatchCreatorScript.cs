@@ -41,6 +41,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
     private float lastObjectInstantiationTime;
 
     private int resetCountInstance = 0;
+    private Vector3 coordinateRecord = new Vector3();
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +61,8 @@ public class ObjectBatchCreatorScript : MonoBehaviour
         techniqueManagerScript = techniqueManager.GetComponent<TechniqueManagerScript>();
 
         areaHighlighterInstance = Instantiate(areaHighlighterPrefab);
+        areaHighlighterInstance.transform.position = new Vector3(0, areaHighlighterPrefab.transform.localScale.y / 2, areaHighlighterPrefab.transform.localScale.z * 3 / 2);
+        areaHighlighterInstance.transform.rotation = Quaternion.identity;
         areaHighlighterInstance.SetActive(false);
         techniqueManagerScript.DeactivateAll();
     }
@@ -78,24 +81,27 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                     {
                         if (dense_csvWriterScript != null)
                         {
-                            Vector3 coordinateVector = new Vector3(coordinates[(instanceCount - 1) % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[(instanceCount - 1) % coordinates.Length].x);
-                            dense_csvWriterScript.RecordData(techniqueManagerScript.GetActiveTechnique(), coordinateVector, resetCountInstance);
+                            // Vector3 coordinateVector = new Vector3(coordinates[(instanceCount - 1) % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[(instanceCount - 1) % coordinates.Length].x);
+                            dense_csvWriterScript.RecordData(techniqueManagerScript.GetActiveTechnique(), coordinateRecord, resetCountInstance);
                         }
                     }
                     resetCountInstance = 0; // Reset before every instance
 
                     techniqueManagerScript.DeactivateAll();
                     areaHighlighterInstance.SetActive(true);
-                    areaHighlighterInstance.transform.position = new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x);
-                    areaHighlighterInstance.transform.rotation = Quaternion.identity;
+                    // areaHighlighterInstance.transform.position = new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x);
+                    // areaHighlighterInstance.transform.rotation = Quaternion.identity;
 
                     if (GameObject.FindGameObjectsWithTag("AreaHighlighter").Length > 0)
                     {
                         techniqueToActivate = coordinates[instanceCount % coordinates.Length].technique;
                         techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
                     }
-                    
-                    objectInstance = Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
+
+                    // objectInstance = Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
+                    float bufferAreaLength = 1.0f;
+                    coordinateRecord = GetRandomPointInCube(areaHighlighterInstance.transform.position, areaHighlighterPrefab.transform.localScale.x - bufferAreaLength);
+                    objectInstance = Instantiate(objectPrefab, coordinateRecord, Quaternion.identity);
                     objectInstance.SetActive(false);
 
                     lastObjectInstantiationTime = Time.time;
@@ -106,6 +112,17 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                 }             
             }
         }
+    }
+
+    Vector3 GetRandomPointInCube(Vector3 center, float edgeLength)
+    {
+        float halfEdge = edgeLength / 2f;
+
+        float x = Random.Range(center.x - halfEdge, center.x + halfEdge);
+        float y = Random.Range(center.y - halfEdge, center.y + halfEdge);
+        float z = Random.Range(center.z - halfEdge, center.z + halfEdge);
+
+        return new Vector3(x, y, z);
     }
 
     public void ToggleAreaVisibility()
