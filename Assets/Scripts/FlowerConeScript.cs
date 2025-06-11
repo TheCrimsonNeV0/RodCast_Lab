@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -266,6 +267,7 @@ public class FlowerConeScript : MonoBehaviour
         {
             collidingObjects.Remove(obj);
         }
+        collidingObjects = collidingObjects.Where(o => o != null).ToList();
         Vector3 sphereCenter = coneBottomOrb.transform.position;
         collidingObjects.Sort((a, b) =>
         {

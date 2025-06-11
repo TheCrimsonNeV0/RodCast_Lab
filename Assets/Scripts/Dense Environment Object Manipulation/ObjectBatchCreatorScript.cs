@@ -99,7 +99,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                     }
 
                     // objectInstance = Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
-                    float bufferAreaLength = 1.0f;
+                    float bufferAreaLength = 1.5f;
                     coordinateRecord = GetRandomPointInCube(areaHighlighterInstance.transform.position, areaHighlighterPrefab.transform.localScale.x - bufferAreaLength);
                     objectInstance = Instantiate(objectPrefab, coordinateRecord, Quaternion.identity);
                     objectInstance.SetActive(false);

@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class DenseBatchScript : MonoBehaviour
 {
+    private static System.Random random = new System.Random();
     void Start()
     {
-        int[] randomNumbers = GetRandomNumbers(16, 6);
+        int[] randomNumbers = GetRandomNumbers(16, GenerateRandomInt(5, 8));
 
         // Disable all children
         foreach (Transform child in transform)
@@ -37,5 +39,14 @@ public class DenseBatchScript : MonoBehaviour
         System.Random rand = new System.Random();
         List<int> numbers = Enumerable.Range(1, upperBound).ToList();
         return numbers.OrderBy(x => rand.Next()).Take(numberCount).ToArray();
+    }
+
+    static int GenerateRandomInt(int lowerBound, int upperBound)
+    {
+        if (lowerBound > upperBound)
+            throw new ArgumentException("Lower bound must be less than or equal to upper bound.");
+
+        // Add +1 to make upperBound inclusive
+        return random.Next(lowerBound, upperBound + 1);
     }
 }
