@@ -26,7 +26,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
 
     public TextMeshProUGUI instanceCountText;
 
-    private TechniqueData[] coordinates;
+    private Dense_TechniqueData[] dense_techniqueData;
 
     private int instanceCount = 0;
 
@@ -40,7 +40,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
 
     private float lastObjectInstantiationTime;
 
-    private int resetCountInstance = 0;
+    private int decoyTouchCount = 0;
     private Vector3 coordinateRecord = new Vector3();
 
     // Start is called before the first frame update
@@ -56,7 +56,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
             dense_csvWriterScript = dense_csvWriter.GetComponent<Dense_CsvWriterScript>();
         }
 
-        coordinates = ReadCSV(positionsCsv);
+        dense_techniqueData = ReadCSV(positionsCsv);
 
         techniqueManagerScript = techniqueManager.GetComponent<TechniqueManagerScript>();
 
@@ -71,7 +71,7 @@ public class ObjectBatchCreatorScript : MonoBehaviour
     {
         if (isObjectCreationActive)
         {
-            if (coordinates != null)
+            if (dense_techniqueData != null)
             {
                 // Add new tag 'DenseBatchTargetObject' and implement the same logic as Distance Perception task
                 if (GameObject.FindGameObjectsWithTag("AreaHighlighter").Length == 0 && GameObject.FindGameObjectsWithTag("DenseBatchTargetObject").Length == 0)
@@ -82,10 +82,10 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                         if (dense_csvWriterScript != null)
                         {
                             // Vector3 coordinateVector = new Vector3(coordinates[(instanceCount - 1) % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[(instanceCount - 1) % coordinates.Length].x);
-                            dense_csvWriterScript.RecordData(techniqueManagerScript.GetActiveTechnique(), coordinateRecord, resetCountInstance);
+                            dense_csvWriterScript.RecordData(techniqueManagerScript.GetActiveTechnique(), dense_techniqueData[(instanceCount - 1) % dense_techniqueData.Length].density, coordinateRecord, decoyTouchCount);
                         }
                     }
-                    resetCountInstance = 0; // Reset before every instance
+                    decoyTouchCount = 0; // Reset before every instance
 
                     techniqueManagerScript.DeactivateAll();
                     areaHighlighterInstance.SetActive(true);
@@ -94,18 +94,27 @@ public class ObjectBatchCreatorScript : MonoBehaviour
 
                     if (GameObject.FindGameObjectsWithTag("AreaHighlighter").Length > 0)
                     {
-                        techniqueToActivate = coordinates[instanceCount % coordinates.Length].technique;
-                        techniqueManagerScript.ActivateTechnique(coordinates[instanceCount % coordinates.Length].technique);
+                        techniqueToActivate = dense_techniqueData[instanceCount % dense_techniqueData.Length].technique;
+                        techniqueManagerScript.ActivateTechnique(dense_techniqueData[instanceCount % dense_techniqueData.Length].technique);
                     }
 
                     // objectInstance = Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
                     float bufferAreaLength = 1.5f;
                     coordinateRecord = GetRandomPointInCube(areaHighlighterInstance.transform.position, areaHighlighterPrefab.transform.localScale.x - bufferAreaLength);
                     objectInstance = Instantiate(objectPrefab, coordinateRecord, Quaternion.identity);
-                    
+
                     // TODO: Read from CSV and determine density level
-                    objectInstance.GetComponent<DenseBatchScript>().ApplyDensityLevel(DenseBatchScript.DensityLevel.Low);
-                    
+                    string density_string = dense_techniqueData[instanceCount % dense_techniqueData.Length].density;
+                    var script = objectInstance.GetComponent<DenseBatchScript>();
+
+                    if (density_string == "low")
+                        script.densityLevel = DenseBatchScript.DensityLevel.Low;
+                    else if (density_string == "medium")
+                        script.densityLevel = DenseBatchScript.DensityLevel.Medium;
+                    else if (density_string == "high")
+                        script.densityLevel = DenseBatchScript.DensityLevel.High;
+
+
                     objectInstance.SetActive(false);
 
                     lastObjectInstantiationTime = Time.time;
@@ -153,30 +162,30 @@ public class ObjectBatchCreatorScript : MonoBehaviour
         objectInstance.SetActive(batch_isVisible);
     }
 
-    TechniqueData[] ReadCSV(TextAsset file)
+    Dense_TechniqueData[] ReadCSV(TextAsset file)
     {
-        string[] lines = file.text.Split('\n'); // Split file into lines
-        List<TechniqueData> dataList = new List<TechniqueData>(); // Store technique, x, z
+        string[] lines = file.text.Split('\n');
+        List<Dense_TechniqueData> dataList = new List<Dense_TechniqueData>();
 
-        for (int i = 1; i < lines.Length; i++) // Start from index 1 to skip header
+        for (int i = 1; i < lines.Length; i++) // Skip header
         {
             string line = lines[i].Trim();
-            if (string.IsNullOrWhiteSpace(line)) continue; // Skip empty lines
+            if (string.IsNullOrWhiteSpace(line)) continue;
 
-            string[] values = line.Split(','); // Split each line by comma
+            string[] values = line.Split(',');
 
-            if (values.Length >= 3 &&
+            if (values.Length >= 2 &&
                 !string.IsNullOrWhiteSpace(values[0]) &&
-                float.TryParse(values[1], out float x) &&
-                float.TryParse(values[2], out float z))
+                !string.IsNullOrWhiteSpace(values[1]))
             {
-                dataList.Add(new TechniqueData(values[0], x, z)); // Store in list
+                dataList.Add(new Dense_TechniqueData(values[0].Trim(), values[1].Trim()));
             }
             else
             {
-                Debug.LogError($"Invalid CSV format at line {i + 1}: " + line);
+                Debug.LogWarning($"Invalid or incomplete data at line {i + 1}: {line}");
             }
         }
+
         return dataList.ToArray();
     }
 
@@ -200,10 +209,10 @@ public class ObjectBatchCreatorScript : MonoBehaviour
         isObjectCreationActive = !isObjectCreationActive;
     }
 
-    public void IncrementResetCount()
+    public void IncrementTouchCount()
     {
         // Detects collision
-        resetCountInstance += 1;
+        decoyTouchCount += 1;
         Debug.Log("Collision detected");
     }
 }

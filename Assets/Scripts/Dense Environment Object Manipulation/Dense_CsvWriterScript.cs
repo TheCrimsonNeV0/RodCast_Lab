@@ -22,13 +22,13 @@ public class Dense_CsvWriterScript : MonoBehaviour
     {
         if (!File.Exists(filePath))
         {
-            File.WriteAllText(filePath, "technique,object_x,object_y,object_z,reset_count\n"); // Headers for the CSV
+            File.WriteAllText(filePath, "technique,density,object_x,object_y,object_z,reset_count\n"); // Headers for the CSV
         }
     }
 
-    public void RecordData(string technique, Vector3 objectPosition, int resetCount) // Call from the Manager component
+    public void RecordData(string technique, string density, Vector3 objectPosition, int resetCount) // Call from the Manager component
     {
-        string newLine = $"{technique},{objectPosition.x},{objectPosition.y},{objectPosition.z}," +
+        string newLine = $"{technique},{density},{objectPosition.x},{objectPosition.y},{objectPosition.z}," +
                          $"{resetCount}\n";
 
         File.AppendAllText(filePath, newLine);

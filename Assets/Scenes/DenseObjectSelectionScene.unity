@@ -5864,7 +5864,7 @@ MonoBehaviour:
   timeLoggerObject: {fileID: 1456966152}
   objectPrefab: {fileID: 6569125959003094467, guid: f18de867d15671d46b67326b18644592, type: 3}
   areaHighlighterPrefab: {fileID: 1238555729981231504, guid: 3278b53bf04d1e74e95052f04e8dbb13, type: 3}
-  positionsCsv: {fileID: 4900000, guid: 46f2ade23560ab0459491992847ee91e, type: 3}
+  positionsCsv: {fileID: 4900000, guid: a11a7f35b980a7542895c65f837569d4, type: 3}
   techniqueManager: {fileID: 1420915274}
   dense_csvWriter: {fileID: 677237745}
   offsetHeight: 1

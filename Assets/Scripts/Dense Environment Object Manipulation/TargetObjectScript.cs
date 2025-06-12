@@ -16,7 +16,7 @@ public class TargetObjectScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("DenseBatchDecoyObject"))
         {
-            objectBatchCreatorScript.IncrementResetCount();
+            objectBatchCreatorScript.IncrementTouchCount();
         }
     }
 

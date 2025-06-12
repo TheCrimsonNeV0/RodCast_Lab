@@ -31,7 +31,9 @@ public class DenseBatchScript : MonoBehaviour
     public DensityLevel densityLevel = DensityLevel.Low;
 
     private static System.Random random = new System.Random();
-    private bool hasInitialized = false;
+
+    // Track the last applied level to detect changes
+    private DensityLevel? lastAppliedLevel = null;
 
     void Start()
     {
@@ -45,10 +47,11 @@ public class DenseBatchScript : MonoBehaviour
 
     void Update()
     {
-        if (!hasInitialized)
+        if (lastAppliedLevel != densityLevel)
         {
+            Debug.Log($"[DenseBatchScript] Applying density level: {densityLevel}");
             ApplyDensityLevel(densityLevel);
-            hasInitialized = true;
+            lastAppliedLevel = densityLevel;
         }
     }
 
@@ -80,7 +83,6 @@ public class DenseBatchScript : MonoBehaviour
                 break;
         }
 
-        // Enable inner decoys
         int innerCount = GenerateRandomInt(innerLower, innerUpper);
         int[] innerIndices = GetRandomNumbers(16, innerCount);
         foreach (int i in innerIndices)
@@ -90,7 +92,6 @@ public class DenseBatchScript : MonoBehaviour
                 item.gameObject.SetActive(true);
         }
 
-        // Enable outer decoys
         int outerCount = GenerateRandomInt(outerLower, outerUpper);
         ActivateChildrenFromPairs(outerCount, 6, 9);
 
