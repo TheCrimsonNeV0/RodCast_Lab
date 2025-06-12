@@ -102,6 +102,10 @@ public class ObjectBatchCreatorScript : MonoBehaviour
                     float bufferAreaLength = 1.5f;
                     coordinateRecord = GetRandomPointInCube(areaHighlighterInstance.transform.position, areaHighlighterPrefab.transform.localScale.x - bufferAreaLength);
                     objectInstance = Instantiate(objectPrefab, coordinateRecord, Quaternion.identity);
+                    
+                    // TODO: Read from CSV and determine density level
+                    objectInstance.GetComponent<DenseBatchScript>().ApplyDensityLevel(DenseBatchScript.DensityLevel.Low);
+                    
                     objectInstance.SetActive(false);
 
                     lastObjectInstantiationTime = Time.time;
