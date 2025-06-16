@@ -74,7 +74,7 @@ public class SortingBatchCreatorScript : MonoBehaviour
             if (dense_techniqueData != null)
             {
                 // Add new tag 'DenseBatchTargetObject' and implement the same logic as Distance Perception task
-                if (GameObject.FindGameObjectsWithTag("AreaHighlighter").Length == 0 && GameObject.FindGameObjectsWithTag("SmallTarget").Length == 0)
+                if (GameObject.FindGameObjectsWithTag("AreaHighlighter").Length == 0 && GameObject.FindGameObjectsWithTag("SortingBatch").Length == 0)
                 {
                     // Get collision count
                     if (instanceCount >= 1)

@@ -2088,7 +2088,7 @@ GameObject:
   - component: {fileID: 918509201369551722}
   m_Layer: 0
   m_Name: Sorting Batch
-  m_TagString: Untagged
+  m_TagString: SortingBatch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2146,6 +2146,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetPrefab: {fileID: 7404089132081526972, guid: 7eba89f5adc15d7449566c0017ff79f6, type: 3}
+  smallTargetScale: {x: 0.5, y: 0.5, z: 0.5}
+  mediumTargetScale: {x: 1, y: 1, z: 1}
+  largeTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   LOW_DENSITY_LOWER_BOUND: 8
   LOW_DENSITY_UPPER_BOUND: 12
   MEDIUM_DENSITY_LOWER_BOUND: 15
