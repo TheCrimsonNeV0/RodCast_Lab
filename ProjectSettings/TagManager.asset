@@ -12,6 +12,10 @@ TagManager:
   - AreaHighlighter
   - DenseBatchDecoyObject
   - ObjectBatchCreatorTag
+  - SmallTarget
+  - MediumTarget
+  - LargeTarget
+  - SortingCreatorTag
   layers:
   - Default
   - TransparentFX

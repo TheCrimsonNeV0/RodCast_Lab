@@ -15,6 +15,10 @@ public class SortingBatchScript : MonoBehaviour
 
     public GameObject targetPrefab;
 
+    public Vector3 smallTargetScale = new Vector3(0.75f, 0.75f, 0.75f);
+    public Vector3 mediumTargetScale = new Vector3(1f, 1f, 1f);
+    public Vector3 largeTargetScale = new Vector3(1.25f, 1.25f, 1.25f);
+
     public int LOW_DENSITY_LOWER_BOUND = 4;
     public int LOW_DENSITY_UPPER_BOUND = 7;
 
@@ -93,16 +97,31 @@ public class SortingBatchScript : MonoBehaviour
     {
         int[] targetIndices = GetUniqueValues(activeObjects, 3); // Select 3 targets
 
-        foreach (int index in targetIndices)
+        if (targetIndices.Length < 3)
         {
+            Debug.LogWarning("Not enough target indices found.");
+            return;
+        }
+
+        Vector3[] targetScales = new Vector3[] { smallTargetScale, mediumTargetScale, largeTargetScale };
+        string[] targetTags = new string[] { "SmallTarget", "MediumTarget", "LargeTarget" };
+
+        for (int i = 0; i < 3; i++)
+        {
+            int index = targetIndices[i];
             Transform original = transform.Find(index.ToString());
             if (original != null)
             {
                 Vector3 position = original.position;
                 Quaternion rotation = original.rotation;
 
-                original.gameObject.SetActive(false); // Disable the original object
-                Instantiate(targetPrefab, position, rotation, transform); // Spawn targetPrefab at the same location
+                original.gameObject.SetActive(false);
+
+                GameObject newTarget = Instantiate(targetPrefab, position, rotation, transform);
+                newTarget.transform.localScale = targetScales[i];
+
+                // Make sure the tag exists in Unity before using this
+                newTarget.tag = targetTags[i];
             }
             else
             {
@@ -161,4 +180,17 @@ public class SortingBatchScript : MonoBehaviour
 
         return random.Next(lowerBound, upperBound + 1);
     }
+
+    void ScaleActiveDecoys()
+    {
+        foreach (Transform child in transform)
+        {
+            if (child.gameObject.activeSelf && !child.name.Contains("Target")) // avoid scaling newly created targets
+            {
+                float randomScale = UnityEngine.Random.Range(0.5f, 1.5f); // adjust range if needed
+                child.localScale = Vector3.one * randomScale;
+            }
+        }
+    }
+
 }

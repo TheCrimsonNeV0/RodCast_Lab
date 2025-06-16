@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3972264727957392628}
   - component: {fileID: 1385468525231151674}
   - component: {fileID: 2544822831012744528}
+  - component: {fileID: -6050125256103415172}
   m_Layer: 0
   m_Name: Sorting Target
   m_TagString: DenseBatchTargetObject
@@ -181,9 +182,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7404089132081526972}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43dc329834867a34c99a8ce0d4fba337, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectBatchCreator: {fileID: 0}
+--- !u!114 &-6050125256103415172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7404089132081526972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6728ab7aff502d94b9dd32953ec95910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   objectBatchCreator: {fileID: 0}
