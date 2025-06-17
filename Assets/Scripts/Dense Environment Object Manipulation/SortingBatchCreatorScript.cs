@@ -19,8 +19,8 @@ public class SortingBatchCreatorScript : MonoBehaviour
     private GameObject objectInstance;
     private GameObject areaHighlighterInstance;
 
-    public GameObject dense_csvWriter;
-    private Dense_CsvWriterScript dense_csvWriterScript;
+    // public GameObject dense_csvWriter;
+    // private Dense_CsvWriterScript dense_csvWriterScript;
 
     public float offsetHeight = 1;
 
@@ -51,10 +51,12 @@ public class SortingBatchCreatorScript : MonoBehaviour
             timeLogger = timeLoggerObject.GetComponent<TimeLoggerScript>();
         }
 
+        /*
         if (dense_csvWriter != null)
         {
             dense_csvWriterScript = dense_csvWriter.GetComponent<Dense_CsvWriterScript>();
         }
+        */
 
         dense_techniqueData = ReadCSV(positionsCsv);
 
@@ -77,6 +79,7 @@ public class SortingBatchCreatorScript : MonoBehaviour
                 if (GameObject.FindGameObjectsWithTag("AreaHighlighter").Length == 0 && GameObject.FindGameObjectsWithTag("SortingBatch").Length == 0)
                 {
                     // Get collision count
+                    /*
                     if (instanceCount >= 1)
                     {
                         if (dense_csvWriterScript != null)
@@ -86,6 +89,7 @@ public class SortingBatchCreatorScript : MonoBehaviour
                         }
                     }
                     decoyTouchCount = 0; // Reset before every instance
+                    */
 
                     techniqueManagerScript.DeactivateAll();
                     areaHighlighterInstance.SetActive(true);

@@ -172,7 +172,6 @@ MonoBehaviour:
   areaHighlighterPrefab: {fileID: 1238555729981231504, guid: 8902212058b1ac3499c462acc147eabf, type: 3}
   positionsCsv: {fileID: 4900000, guid: a11a7f35b980a7542895c65f837569d4, type: 3}
   techniqueManager: {fileID: 1562661110}
-  dense_csvWriter: {fileID: 1826156053}
   offsetHeight: 0.15
   instanceCountText: {fileID: 636220543}
 --- !u!1 &66724479
@@ -9127,7 +9126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1826156054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9590,7 +9589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90db9029b0202347a527bd162af48a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvName: TestUserName_times_dense.csv
+  csvName: TestUserName_times_sorting.csv
 --- !u!4 &1916026936
 Transform:
   m_ObjectHideFlags: 0
