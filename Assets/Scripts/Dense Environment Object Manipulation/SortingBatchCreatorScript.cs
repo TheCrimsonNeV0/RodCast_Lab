@@ -98,6 +98,8 @@ public class SortingBatchCreatorScript : MonoBehaviour
                         techniqueManagerScript.ActivateTechnique(dense_techniqueData[instanceCount % dense_techniqueData.Length].technique);
                     }
 
+                    Debug.Log("BURAYA GIRDIM");
+
                     // objectInstance = Instantiate(objectPrefab, new Vector3(coordinates[instanceCount % coordinates.Length].z, objectPrefab.transform.localScale.y / 2 + offsetHeight, coordinates[instanceCount % coordinates.Length].x), Quaternion.identity);
                     // float bufferAreaLength = 1.5f;
                     // coordinateRecord = GetRandomPointInCube(areaHighlighterInstance.transform.position, areaHighlighterPrefab.transform.localScale.x - bufferAreaLength);

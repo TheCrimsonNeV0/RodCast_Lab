@@ -6,6 +6,9 @@ public class Sorting_TargetListenerScript : MonoBehaviour
     public GameObject timeLoggerObject;
     private TimeLoggerScript timeLogger;
 
+    public GameObject sortingBatchCreatorObject;
+    private SortingBatchCreatorScript sortingBatchCreator;
+
     private readonly string[] targetTags = { "SmallTarget", "MediumTarget", "LargeTarget" };
     private Dictionary<string, Sorting_TargetObjectScript> activeTargets = new Dictionary<string, Sorting_TargetObjectScript>();
     private HashSet<string> completedTargets = new HashSet<string>();
@@ -16,6 +19,7 @@ public class Sorting_TargetListenerScript : MonoBehaviour
         if (timeLoggerObject != null)
         {
             timeLogger = timeLoggerObject.GetComponent<TimeLoggerScript>();
+            sortingBatchCreator = sortingBatchCreatorObject.GetComponent<SortingBatchCreatorScript>();
         }
     }
 
@@ -56,12 +60,15 @@ public class Sorting_TargetListenerScript : MonoBehaviour
                     DestroyAllWithTag(t);
 
                 DestroyAllWithTag("DenseBatchDecoyObject");
+                DestroyAllWithTag("AreaHighlighter");
 
                 float taskCompletionTime = Time.time;
                 timeLogger.LogDenseObjectManipulationTaskCompleted(taskCompletionTime);
 
                 completedTargets.Clear();
                 activeTargets.Clear();
+
+                DestroyAllWithTag("SortingBatch");
             }
         }
     }

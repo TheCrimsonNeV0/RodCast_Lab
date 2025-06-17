@@ -1741,6 +1741,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeLoggerObject: {fileID: 1916026934}
+  sortingBatchCreatorObject: {fileID: 31460899}
 --- !u!4 &313118137 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1670256625, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
