@@ -22,7 +22,7 @@ public class Dense_CsvWriterScript : MonoBehaviour
     {
         if (!File.Exists(filePath))
         {
-            File.WriteAllText(filePath, "technique,density,object_x,object_y,object_z,reset_count\n"); // Headers for the CSV
+            File.WriteAllText(filePath, "technique,density,object_x,object_y,object_z,decoy_touch_count\n"); // Headers for the CSV
         }
     }
 
