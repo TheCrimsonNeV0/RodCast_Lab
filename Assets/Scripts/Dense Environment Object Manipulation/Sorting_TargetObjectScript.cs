@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Sorting_TargetObjectScript : MonoBehaviour
 {
-    public GameObject objectBatchCreator;
-    private SortingBatchCreatorScript objectBatchCreatorScript;
+    // public GameObject objectBatchCreator;
+    // private SortingBatchCreatorScript objectBatchCreatorScript;
 
     public event Action OnTargetStay;
 
@@ -14,7 +14,11 @@ public class Sorting_TargetObjectScript : MonoBehaviour
 
     void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.CompareTag("TargetSurface"))
+        if (
+            (this.gameObject.CompareTag("SmallTarget") && collision.gameObject.CompareTag("SmallTargetSurface")) ||
+            (this.gameObject.CompareTag("MediumTarget") && collision.gameObject.CompareTag("MediumTargetSurface")) ||
+            (this.gameObject.CompareTag("LargeTarget") && collision.gameObject.CompareTag("LargeTargetSurface"))
+        )
         {
             isColliding = true;
         }
@@ -22,7 +26,11 @@ public class Sorting_TargetObjectScript : MonoBehaviour
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("TargetSurface"))
+        if (
+            (this.gameObject.CompareTag("SmallTarget") && collision.gameObject.CompareTag("SmallTargetSurface")) ||
+            (this.gameObject.CompareTag("MediumTarget") && collision.gameObject.CompareTag("MediumTargetSurface")) ||
+            (this.gameObject.CompareTag("LargeTarget") && collision.gameObject.CompareTag("LargeTargetSurface"))
+        )
         {
             isColliding = false;
             collisionTimer = 0f;
@@ -31,6 +39,7 @@ public class Sorting_TargetObjectScript : MonoBehaviour
 
     void Start()
     {
+        /*
         GameObject creatorObject = GameObject.FindWithTag("SortingCreatorTag");
         if (creatorObject != null)
         {
@@ -40,6 +49,7 @@ public class Sorting_TargetObjectScript : MonoBehaviour
         {
             Debug.LogWarning("ObjectBatchCreator not found in the scene.");
         }
+        */
     }
 
     void Update()

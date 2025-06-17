@@ -17,6 +17,9 @@ TagManager:
   - LargeTarget
   - SortingCreatorTag
   - SortingBatch
+  - SmallTargetSurface
+  - MediumTargetSurface
+  - LargeTargetSurface
   layers:
   - Default
   - TransparentFX

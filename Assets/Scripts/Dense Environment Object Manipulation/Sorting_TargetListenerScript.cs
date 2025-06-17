@@ -6,12 +6,13 @@ public class Sorting_TargetListenerScript : MonoBehaviour
     public GameObject timeLoggerObject;
     private TimeLoggerScript timeLogger;
 
-    private Sorting_TargetObjectScript currentTarget;
-
     private readonly string[] targetTags = { "SmallTarget", "MediumTarget", "LargeTarget" };
+    private Dictionary<string, Sorting_TargetObjectScript> activeTargets = new Dictionary<string, Sorting_TargetObjectScript>();
+    private HashSet<string> completedTargets = new HashSet<string>();
 
     void Start()
     {
+        Debug.Log("Target Listener Initialized");
         if (timeLoggerObject != null)
         {
             timeLogger = timeLoggerObject.GetComponent<TimeLoggerScript>();
@@ -20,9 +21,10 @@ public class Sorting_TargetListenerScript : MonoBehaviour
 
     void Update()
     {
-        if (currentTarget == null)
+        foreach (string tag in targetTags)
         {
-            foreach (string tag in targetTags)
+            // If not already completed and not already tracking the target or it got destroyed
+            if (!completedTargets.Contains(tag) && (!activeTargets.ContainsKey(tag) || activeTargets[tag] == null || activeTargets[tag].gameObject == null))
             {
                 GameObject targetObject = GameObject.FindGameObjectWithTag(tag);
                 if (targetObject != null)
@@ -30,34 +32,38 @@ public class Sorting_TargetListenerScript : MonoBehaviour
                     Sorting_TargetObjectScript script = targetObject.GetComponent<Sorting_TargetObjectScript>();
                     if (script != null)
                     {
-                        currentTarget = script;
-                        currentTarget.OnTargetStay += HandleTargetStay;
+                        activeTargets[tag] = script;
+                        script.OnTargetStay += () => HandleTargetStay(tag);
                         Debug.Log($"Listener attached to new target with tag {tag}.");
-                        break;
                     }
                 }
             }
         }
-        else if (currentTarget.gameObject == null)
-        {
-            currentTarget = null; // Target was destroyed
-        }
     }
 
-    void HandleTargetStay()
+    void HandleTargetStay(string tag)
     {
-        Debug.Log("Target stayed on surface for 1 second.");
-
-        foreach (string tag in targetTags)
+        if (!completedTargets.Contains(tag))
         {
-            DestroyAllWithTag(tag);
+            completedTargets.Add(tag);
+            Debug.Log($"Target {tag} stayed on surface.");
+
+            if (completedTargets.Count == targetTags.Length)
+            {
+                Debug.Log("All targets completed stay condition.");
+
+                foreach (string t in targetTags)
+                    DestroyAllWithTag(t);
+
+                DestroyAllWithTag("DenseBatchDecoyObject");
+
+                float taskCompletionTime = Time.time;
+                timeLogger.LogDenseObjectManipulationTaskCompleted(taskCompletionTime);
+
+                completedTargets.Clear();
+                activeTargets.Clear();
+            }
         }
-
-        DestroyAllWithTag("DenseBatchDecoyObject");
-        currentTarget = null;
-
-        float taskCompletionTime = Time.time;
-        timeLogger.LogDenseObjectManipulationTaskCompleted(taskCompletionTime);
     }
 
     void DestroyAllWithTag(string tag)
@@ -66,22 +72,6 @@ public class Sorting_TargetListenerScript : MonoBehaviour
         foreach (GameObject obj in objects)
         {
             Destroy(obj);
-        }
-    }
-
-    private void OnEnable()
-    {
-        if (currentTarget != null)
-        {
-            currentTarget.OnTargetStay += HandleTargetStay;
-        }
-    }
-
-    void OnDisable()
-    {
-        if (currentTarget != null)
-        {
-            currentTarget.OnTargetStay -= HandleTargetStay;
         }
     }
 }
