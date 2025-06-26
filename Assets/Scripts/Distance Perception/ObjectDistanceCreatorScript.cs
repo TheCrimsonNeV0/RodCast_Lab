@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using static UnityEngine.Rendering.DebugUI;
 using RodCast_Lab.Data;
+using UnityEngine.SceneManagement;
 
 public class ObjectDistanceCreatorScript : MonoBehaviour
 {
@@ -72,6 +73,13 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
     void Update()
     {
+        if (instanceCount > 36)
+        {
+            SceneManager.LoadScene("DenseObjectSelectionScene");
+        }
+        {
+
+        }
         if (isObjectCreationActive)
         {
             if (coordinates != null && distanceObject_isVisible)

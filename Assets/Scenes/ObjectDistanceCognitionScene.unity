@@ -2645,7 +2645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b98a233e74bd9044c97e867a939a3ac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvName: TestUserName.csv
+  csvName: user_data.csv
 --- !u!4 &1404205418
 Transform:
   m_ObjectHideFlags: 0
@@ -2824,7 +2824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90db9029b0202347a527bd162af48a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvName: TestUserName_times.csv
+  csvName: time_log.csv
 --- !u!4 &1460547219
 Transform:
   m_ObjectHideFlags: 0

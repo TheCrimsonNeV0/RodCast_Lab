@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using static UnityEngine.Rendering.DebugUI;
 using RodCast_Lab.Data;
+using UnityEngine.SceneManagement;
 
 public class SortingBatchCreatorScript : MonoBehaviour
 {
@@ -71,6 +72,10 @@ public class SortingBatchCreatorScript : MonoBehaviour
 
     void Update()
     {
+        if (instanceCount > 27)
+        {
+            SceneManager.LoadScene("FinalScene");
+        }
         if (isObjectCreationActive)
         {
             if (dense_techniqueData != null)

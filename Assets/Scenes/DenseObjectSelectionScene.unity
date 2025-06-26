@@ -5034,7 +5034,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90db9029b0202347a527bd162af48a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvName: TestUserName_times_dense.csv
+  csvName: times_dense.csv
 --- !u!4 &1456966154
 Transform:
   m_ObjectHideFlags: 0
