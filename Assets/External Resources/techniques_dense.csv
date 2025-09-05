@@ -1,0 +1,10 @@
+technique,density
+GoGoHand,low
+RodCast,low
+GoGoHand,medium
+FlowerCone,low
+RodCast,medium
+FlowerCone,high
+FlowerCone,medium
+RodCast,high
+GoGoHand,high

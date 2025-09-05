@@ -7,6 +7,19 @@ TagManager:
   - Anchor
   - RodCastNotInteractable
   - DistanceObject
+  - DenseBatchTargetObject
+  - TargetSurface
+  - AreaHighlighter
+  - DenseBatchDecoyObject
+  - ObjectBatchCreatorTag
+  - SmallTarget
+  - MediumTarget
+  - LargeTarget
+  - SortingCreatorTag
+  - SortingBatch
+  - SmallTargetSurface
+  - MediumTargetSurface
+  - LargeTargetSurface
   layers:
   - Default
   - TransparentFX

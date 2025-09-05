@@ -33,12 +33,6 @@ public class TimeLoggerScript : MonoBehaviour
         File.AppendAllText(filePath, newLine);
     }
 
-    public void LogTargetObjectCreated(float time)
-    {
-        string newLine = $"target_created,{time}\n";
-        File.AppendAllText(filePath, newLine);
-    }
-
     public void LogStartButtonClicked(float time)
     {
         string newLine = $"start_clicked,{time}\n";
@@ -51,9 +45,36 @@ public class TimeLoggerScript : MonoBehaviour
         File.AppendAllText(filePath, newLine);
     }
 
+    // DISTANCE PERCEPTION EVENTS START
+
+    public void LogTargetObjectCreated(float time)
+    {
+        string newLine = $"target_created,{time}\n";
+        File.AppendAllText(filePath, newLine);
+    }
+
     public void LogUserDistanceClick(float time)
     {
         string newLine = $"estimation_performed,{time}\n";
         File.AppendAllText(filePath, newLine);
     }
+
+    // DISTANCE PERCEPTION EVENTS END
+
+    // DENSE ENVIRONMENT OBJECT SELECTION EVENTS START
+
+    public void LogAreaDisplayStarted(float time)
+    {
+        string newLine = $"area_display_started,{time}\n";
+        File.AppendAllText(filePath, newLine);
+    }
+
+    public void LogDenseObjectManipulationTaskCompleted(float time)
+    {
+        string newLine = $"dense_object_manipulation_task_completed,{time}\n";
+        File.AppendAllText(filePath, newLine);
+    }
+
+    // DENSE ENVIRONMENT OBJECT SELECTION EVENTS END
+
 }

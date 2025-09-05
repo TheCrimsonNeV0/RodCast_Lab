@@ -3,20 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using static UnityEngine.Rendering.DebugUI;
-
-public class TechniqueData
-{
-    public string technique;
-    public float x;
-    public float z;
-
-    public TechniqueData(string technique, float x, float z)
-    {
-        this.technique = technique;
-        this.x = x;
-        this.z = z;
-    }
-}
+using RodCast_Lab.Data;
+using UnityEngine.SceneManagement;
 
 public class ObjectDistanceCreatorScript : MonoBehaviour
 {
@@ -85,6 +73,13 @@ public class ObjectDistanceCreatorScript : MonoBehaviour
 
     void Update()
     {
+        if (instanceCount > 36)
+        {
+            SceneManager.LoadScene("DenseObjectSelectionScene");
+        }
+        {
+
+        }
         if (isObjectCreationActive)
         {
             if (coordinates != null && distanceObject_isVisible)
